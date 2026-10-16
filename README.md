@@ -16,7 +16,9 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 
 - [STANDARD.md](STANDARD.md): autonomous execution, scope and delivery.
 - [SAFETY.md](SAFETY.md): scoped operational authorization and risk.
-- [QUALITY.md](QUALITY.md): adaptive testing, risk-based code review and evidence.
+- [QUALITY.md](QUALITY.md): adaptive testing, repository-first risk-based code review and evidence.
+- [docs/review-integration.md](docs/review-integration.md): optional pinned GitHub OCR integration and security setup.
+- [templates/github/ocr-review.yml.example](templates/github/ocr-review.yml.example): deliberately inactive GitHub OCR template.
 - [AGENTS.md](AGENTS.md): instructions for working **in ADS itself**.
 - [skills/](skills/): opt-in agent-native capabilities, including [review](skills/review/SKILL.md).
 - [profiles/](profiles/): optional stack hints, not mandatory architectures.
@@ -26,7 +28,7 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 
 ## Design principles
 
-Goal-driven execution; minimum sufficient implementation; a single canonical rule source; project-local operational constraints; adaptive multi-agent collaboration; truthful, layered verification; risk-adaptive code review with an optional OpenCodeReview provider; low-risk autonomous delivery; explicit approval for sensitive effects. Provide concise milestone reporting; do not gate on paperwork or per-stage owner confirmation.
+Goal-driven execution; minimum sufficient implementation; a single canonical rule source; project-local operational constraints; adaptive multi-agent collaboration; truthful, layered verification; repository-first advisory PR code review with an optional OpenCodeReview provider; low-risk autonomous delivery; explicit approval for sensitive effects. Provide concise milestone reporting; do not gate on paperwork or per-stage owner confirmation.
 
 ## Migration and publication
 
