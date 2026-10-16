@@ -1,14 +1,16 @@
-# Risk-adaptive review acceptance scenarios
+# Repository-first review acceptance scenarios
 
-Apply these cases during live agent validation. The expected disposition must be visible in the PR or deliver summary; do not manufacture a pass from a model response.
+These scenarios are specifications, not claims that OCR has run.
 
-1. **Docs-only:** validate links/format and deliver without mandatory model invocation.
-2. **Ordinary code:** run relevant deterministic checks; review once when available; validate a concrete finding against code/tests before fixing.
-3. **False positive:** agent explains why the finding does not apply and does not modify working code just to satisfy a model.
-4. **OCR unavailable:** missing secret, HTTP error or timeout reported as `review unavailable`, not `passed`; unrelated low-risk PR can proceed when required checks pass.
-5. **Sensitive code:** auth/secret/migration change triggers stronger focused review and negative tests; confirmed material defect prevents delivery until addressed under local policy.
-6. **Untrusted fork:** credentialed reviewer must not execute external PR code or expose tokens/secrets; run an isolated unprivileged workflow or skip OCR. Verify workflow permissions before installing it.
-7. **Scoped automation:** agent does not auto-merge, deploy or spend model budget outside existing authorization. Avoid unbounded repeat review loops.
-8. **Project-local policy:** stricter local security/CI rules override advisory default.
+1. **Docs-only:** relevant deterministic checks pass without compulsory local/PR model invocation.
+2. **Ordinary code PR:** optional repository OCR posts incremental findings; required CI runs independently, never waits for OCR.
+3. **False positive:** agent inspects real code/tests, replies with a concise rationale and does not change correct code merely to satisfy a model.
+4. **Model outage:** missing secret, LLM 401/429 or timeout is disclosed as unavailable, not passed; unrelated low-risk PR is not automatically blocked.
+5. **Sensitive PR:** focused security review and negative tests apply; confirmed consequential flaw still blocks under project policy.
+6. **Fork threat model:** `pull_request_target` credentialed job must not checkout/execute fork head or fetch untrusted scripts/config into privileged execution. Ensure PR content is treated only as untrusted review input.
+7. **Pinned action:** verify complete 40-character official Action commit plus exact CLI version, upstream implementation and relevant security advisories before copying template into active workflow.
+8. **Resource controls:** obsolete PR pushes cancel older OCR job; comment-triggered model spending is disabled by default; no review-triggered merge/deploy.
+9. **Local policy:** stricter project rules supersede ADS defaults. Review Skill is optional assistance for triaging PR feedback.
+10. **Integration rollout:** exercise a real PR in an approved test repository; verify comments, error reporting, fork/permission boundaries and no credentials in logs.
 
-**Status:** specification only; no live OCR/CLI/GitHub credentialed workflow has been exercised by adding this document.
+**Status:** documentary design only; no authenticated OCR/CLI or integration tests have run here.
