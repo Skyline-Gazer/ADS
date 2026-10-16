@@ -1,0 +1,2 @@
+# Astro / TypeScript
+Prefer Astro's existing project configuration, chosen adapter and package manager. Avoid adding a server runtime, database or image proxy for a static feature. Validate typecheck, build and affected UI behavior; add browser tests when real interaction or rendering warrants it. If GitHub push triggers Vercel/Pages production, apply SAFETY.md before merging consequential changes.
