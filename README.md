@@ -23,6 +23,7 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 - [scenarios/](scenarios/): acceptance scenarios.
 - [docs/agent-adoption.md](docs/agent-adoption.md): practical, pinned adoption and skill discovery.
 - [scenarios/migration-recon.md](scenarios/migration-recon.md): read-only findings for KIRARI and AiringCal (not a passed migration).
+- [scenarios/v0.2-acceptance.md](scenarios/v0.2-acceptance.md): real-host acceptance protocol before release; OCR deferred to v0.3.
 
 ## Design principles
 
