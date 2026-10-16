@@ -1,22 +1,31 @@
-# PAS — Personal Agent Development Standard
+# ADS — Agent Development Standard
 
-A lightweight, tool-neutral standard for personal projects developed with AI coding agents. The objective is reliable software delivery with minimal ceremony, not a new agent framework.
+**Status:** v0.2 development candidate (not released or adopted).
 
-**Status: v0.1 draft.** No other project adopts these rules automatically.
+ADS is an agent-native, minimal-ceremony development standard for personal software projects. It reuses the coding agent, GitHub and the host platform rather than introducing a CLI, approval engine, task database, orchestrator or deployment controller.
 
-## Documents
+## Start here
 
-- [STANDARD.md](STANDARD.md): Agent autonomy, ordinary development flow, Git and PR policy.
-- [SAFETY.md](SAFETY.md): Risk and operational authorization boundaries.
-- [QUALITY.md](QUALITY.md): Tests, CI, review, and truthful delivery claims.
-- [templates/AGENTS.md](templates/AGENTS.md): Minimal project adoption template.
+1. For a new repository, read [skills/bootstrap/SKILL.md](skills/bootstrap/SKILL.md).
+2. For an existing repository, read [skills/adopt/SKILL.md](skills/adopt/SKILL.md).
+3. Use [templates/AGENTS.md](templates/AGENTS.md) as a short project-local entrypoint.
+4. Pin an immutable ADS commit or release; make the chosen guidance locally accessible to the agent. A private URL without connector access is **not** an effective policy.
+5. Keep the project's own architecture, tests and production boundaries. ADS is opt-in and never automatically rewrites other repositories.
 
-## Agreed decisions
+## Reference
 
-Low-risk PRs may be merged autonomously after relevant CI succeeds and no justified blocker remains, provided the repository's deployment policy permits it. Review effort is risk-based; ordinary work does not need double review. Trellis, Comet and OpenSpec remain optional tools, not mandatory approval stages.
+- [STANDARD.md](STANDARD.md): autonomous execution, scope and delivery.
+- [SAFETY.md](SAFETY.md): scoped operational authorization and risk.
+- [QUALITY.md](QUALITY.md): adaptive testing, review and evidence.
+- [AGENTS.md](AGENTS.md): instructions for working **in ADS itself**.
+- [skills/](skills/): opt-in agent-native capabilities.
+- [profiles/](profiles/): optional stack hints, not mandatory architectures.
+- [scenarios/](scenarios/): acceptance scenarios.
 
-## Adoption after approval
+## Design principles
 
-Pin a specific PAS revision. Add a short local AGENTS.md identifying the project's architecture, test commands, merge-to-production effects and sensitive actions. Audit and adjust enforcement hooks, CI and agent instructions: merely linking PAS cannot remove old hard gates. Try the revised flow on a small task first.
+Goal-driven execution; minimum sufficient implementation; a single canonical rule source; project-local operational constraints; adaptive multi-agent collaboration; truthful, layered verification; low-risk autonomous delivery; explicit approval for sensitive effects. Provide concise milestone reporting; do not gate on paperwork or per-stage owner confirmation.
 
-Initial research reviewed KIRARI, AiringCal and CFWorker4AliCDT. InfraTools was inaccessible and is not claimed as audited.
+## Migration and publication
+
+This branch is a development candidate. Existing draft PR #1 and main remain separate. Validate in isolated KIRARI and AiringCal trials before release. Those projects do not adopt ADS merely because this repository is updated.
