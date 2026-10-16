@@ -1,0 +1,35 @@
+# COPY TO .github/workflows/ocr-review.yml ONLY AFTER PIN REVIEW.
+# Non-executable ADS distribution example: no action will run from this .example file.
+# Resolve the verified upstream v1.12.11 Action tag to its FULL 40-character
+# immutable commit SHA and replace the placeholder; do not substitute @main.
+# Review exact pinned upstream action.yml behavior before enabling.
+name: OpenCodeReview (advisory)
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: ocr-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    # Intentionally disabled by default; enable only after complete pin/security review.
+    if: ${{ false }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      # Pin both Action and CLI. Do not checkout or execute untrusted PR head.
+      - uses: alibaba/open-code-review@REPLACE_WITH_VERIFIED_40_CHARACTER_COMMIT_SHA
+        with:
+          ocr_version: '1.12.11'
+          llm_url: ${{ secrets.OCR_LLM_URL }}
+          llm_auth_token: ${{ secrets.OCR_LLM_AUTH_TOKEN }}
+          llm_model: ${{ vars.OCR_LLM_MODEL }}
+          llm_use_anthropic: 'false'
+          upload_artifacts: 'false'
