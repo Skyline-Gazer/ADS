@@ -1,15 +1,18 @@
-# Repository Agent Instructions
+# Project Agent Instructions
 
-PAS policy: https://github.com/Skyline-Gazer/PAS
+## ADS adoption
+Source: https://github.com/Skyline-Gazer/ADS
+Pinned revision: <full immutable ADS commit SHA or release tag>
+Locally available guidance: <vendored path or agent-accessible pinned source>
+Primary rules: STANDARD.md, SAFETY.md, QUALITY.md at that revision.
+If private content is inaccessible, report it rather than pretending these rules were loaded.
 
-Pin an approved PAS revision before adopting these guidelines. Ensure your agent has access to the pinned text; private links alone are insufficient.
+## Project facts
+Purpose: <one sentence>
+Source and architecture: <paths and key constraints>
+Build/test: <actual commands>
+Default branch and delivery: <does merging trigger production?>
+Sensitive operations: <targets, data/credentials, explicit approval boundaries>
 
-## Project profile
-
-Describe project purpose, source locations, build and test commands, and important architectural boundaries.
-
-## Operational limits
-
-Describe the default branch, whether merging triggers production deployment, which low-risk changes qualify for autonomous merge, and which actions require explicit Owner approval.
-
-Prefer direct implementation and relevant verification. Avoid mandatory task stages, repeated approvals or session journals unless a specific project safety concern justifies them.
+## Working agreement
+Implement minimum sufficient changes, verify relevant behavior, repair CI inside task scope and give concise milestones. Use project-specific rules for real constraints without bypassing host or ADS safety. No extra task state machine or mandatory session journal.
