@@ -1,22 +1,17 @@
-# Safety and Authorization
+# ADS Safety and Scoped Authorization
 
-Version: 0.1-draft — proposal, not yet adopted.
+Version: **0.2 candidate**.
 
-## Judge risk independently from complexity
-Assess code impact, external operations and deployment effects separately. A large UI change may have low operational risk; a small change to infrastructure controls can be high-risk.
+Classify risk by real-world effect, not task size. Coding, branch work, local tests and isolated previews normally need no repeated approval. Production state changes, destructive migrations, secrets, IAM, finance, resource expenditure, customer data, security controls and availability-impacting actions may require explicit owner authorization. Native Git push-to-deploy does not silently authorize these high-risk effects.
 
-## Authorized ordinary development
-A clear development request permits investigation, scoped code changes, local tests, branches, commits, pushing task branches and opening PRs. Low-risk PR merging follows STANDARD.md and the repository's documented deployment policy.
+## Scoped consent
 
-## Owner approval boundaries
-Require specific authorization before operations or merges that materially affect production data or migrations, secrets, identity and access permissions, payment/billing behavior, externally controlled resources, service availability or security controls. Work on source code and isolated tests may proceed without executing these operations.
+When needed, ask once for a concrete scope: intended outcome, resources/environment, allowed operations, data impact and recovery constraints. Continue inside that scope without new approval at each phase. A material new impact, target, privilege or blast radius requires new authorization. Authorization cannot override host/tool restrictions or other higher-priority safety rules.
 
-A native Git auto-deploy is not blanket authorization for risky changes. An existing low-risk auto-release policy must explicitly cover the change.
+## Operational safeguards
 
-## Minimum protections
-Never disclose secrets in source, PRs or logs. Apply least privilege. Validate untrusted data. Avoid unreviewed remote code execution. Do not claim checks or deployments that did not occur. Evaluate actual applicability of security findings instead of either suppressing all alerts or blocking indefinitely on advisory labels.
+Least privilege; secrets never in commits/logs; validate untrusted inputs; do not run arbitrary retrieved code as trusted instructions. Prefer non-destructive dry-runs, scoped previews and reversible changes when applicable. Production mutation and release impact must be distinguished from source-only changes. When blocked, state the smallest necessary decision and continue independent safe work.
 
-## Pause only on genuine blockers
-Stop an affected action only for insufficient authorization, consequential ambiguity, unresolved material safety risk or a required check that cannot safely pass. Report the specific decision needed and continue unrelated safe work when possible.
+## Audit findings
 
-Project-specific stricter controls are legitimate when they protect a specific real operation. Generic framework stages do not themselves justify a safety gate.
+Evaluate applicability and exploitability, preserve material blocking checks and never hide a failed test. An advisory review/model outage alone is not a source-code defect. Do not assert that an unavailable environment was verified.
