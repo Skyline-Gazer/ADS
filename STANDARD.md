@@ -1,27 +1,27 @@
-# Personal Agent Development Standard
+# ADS Development Standard
 
-Version: **0.1-draft** · Status: **proposal, not yet adopted**
+Version: **0.2 candidate**. Not automatically adopted by any project.
 
-## Purpose and priority
-PAS defines lightweight defaults for personal projects developed with AI coding agents. It is not an orchestration framework, approval engine, or replacement for GitHub. Platform safety requirements and explicit user instructions take precedence. Project-specific technical and operational safety controls remain effective; conflicts must be surfaced rather than silently ignored.
+## Priority and inheritance
 
-## Default execution
-A clear request to implement, fix, or refactor authorizes work within its stated scope: read code, investigate, plan as needed, edit, test, create branches/worktrees, commit, push task branches, open/update PRs, and repair CI/review findings. Do not request a separate approval merely to create a task, write a plan, or enter a new workflow stage. Ask only when an essential product choice cannot be inferred or an operation exceeds the authorization boundary in [SAFETY.md](SAFETY.md).
+Follow host safety restrictions and the user's explicit task instructions. Respect project-local factual constraints (architecture, build, API contracts and deployment effects); they may specialize ADS defaults but may not bypass safety boundaries. Surface genuine conflicts. Pin an ADS commit/release rather than a moving branch. Keep a short local AGENTS.md as the canonical repository entrypoint; platform adapters should only point there, not copy competing rules.
 
-Default flow: **Requirement → Implementation → Relevant verification → PR → Merge**. Minor changes need no mandatory PRD/design/implementation templates. Large or uncertain changes may benefit from one concise design note; do not require multiple artifacts just to satisfy a framework.
+## Agent-native goal execution
 
-## Git, issues and PRs
-Use an isolated task branch/worktree where appropriate, meaningful commits, and a concise PR describing behavior, actual verification and known limitations. No forced commit after every edit, mandatory multi-section commit body, duplicate task tracker, or journal/archive commits. Use GitHub Issues/Projects if already in use; creating an Issue for every small task is optional.
+A concrete goal authorizes investigation, changes, relevant tests, task branches, commits, PRs and CI repair within its scope. Split work and use platform-native subagents when beneficial; don't build an orchestrator. Continue until completion, a real blocker or a materially new decision, within the host session's capabilities. No promise of execution after the session ends. Give concise milestone updates, not approval requests for phases.
 
-**Low-risk PRs may be merged by the agent** when the relevant required CI passes, no substantiated blocking finding remains, the change is within scope, and any automatically triggered deployment is allowed by the project's existing deployment policy. High-risk changes require explicit Owner merge authorization, even when CI passes. Never split work artificially to circumvent risk classification. A clear project-specific merge policy can be stricter where justified; absence of a policy is not permission to risk production changes. See [SAFETY.md](SAFETY.md).
+Use **minimum sufficient implementation**: prefer existing architecture, only directly related fixes and local refactoring. Don't introduce new infrastructure, optional features or elaborate design artifacts as prerequisites. Record out-of-scope improvements as optional issues.
 
-## Frameworks and context
-Trellis, Comet, OpenSpec, and other agent frameworks are optional tools for knowledge and coordination. Their required phases, task-creation consent, handoff documents, per-session journals, archives and repetitive approval checkpoints are **not PAS defaults**. Remove or reconfigure enforcing hooks when adopting PAS; a Markdown override alone is insufficient. Load only relevant current code, project instructions and references. Historical plans and session notes are evidence, not unquestioned requirements.
+For significant, durable architectural choices, propose alternatives and get owner direction before a consequential change. Ordinary mature, necessary dependencies and tooling may be selected autonomously; validate compatibility and security. Use brief ADRs only when the decision must persist.
 
-## Documentation and completion
-Update docs when changes affect public behavior, configuration, APIs, operations or important architecture/security decisions. Do not create reports that duplicate PRs, tests and CI logs.
+## Workflow and GitHub
 
-At completion state **implemented**, **verified**, **merged**, **deployed** and **live-tested** separately and truthfully. Report the actual checks and outstanding risks briefly. Green CI or a Preview is not proof of Production.
+Use as much planning as uncertainty merits. Small task: implement and check. Larger task: short plan, implementation, relevant verification and review. GitHub Issues/Projects can track material work; avoid a second task database, per-step journals and archival rituals. Use short accurate PR descriptions. Low-risk PRs can merge autonomously if relevant required CI passes, justified blockers are resolved and the repo's auto-deploy effects are allowed. Do not split changes to evade risk classification; see SAFETY.md.
 
-## Adoption
-This draft does not automatically override other repositories. Each repository deliberately adopts a pinned PAS revision through a short local `AGENTS.md` and removes conflicting executable gates after review. No runtime network fetch of a moving policy is required.
+## Recovery and completion
+
+On test/CI failure, inspect and diagnose, fix only related issues and rerun appropriate checks. Reconstruct context from Git, Issues, PRs and essential project documents rather than requiring session history. Clearly distinguish implemented, verified, PR open, merged, deployed and production validated. Do not claim inaccessible external integration tests passed.
+
+## Existing frameworks
+
+Trellis, Comet, OpenSpec and hooks may be useful, but fixed mandatory stages and repeated consents are not ADS requirements. Migration must inspect executable hooks/CI as well as Markdown. Do not remove legitimate release or security controls to make a workflow seem simpler.
