@@ -8,8 +8,11 @@ ADS is not a daemon, CLI or centralized policy delivery service. A file existing
 2. Place the relevant ADS rules and selected SKILL.md content where the coding agent can actually read them: vendor a small snapshot in the project, or explicitly load the pinned files through a properly authorized GitHub connector.
 3. Add a short project AGENTS.md based on templates/AGENTS.md specifying the pin, accessible location, commands, auto-deploy behavior and real operational limits. Do not point only to a private URL that the agent cannot access.
 4. Expose the skill directories through that host's **documented** native discovery mechanism, or explicitly instruct the agent to read a particular SKILL.md. Test discovery with a harmless prompt. Do not assume a generic .agents/skills path works on every agent version.
+
 5. Keep a single content source. Platform adapters should contain minimal links/pointers, not duplicated conflicting policy.
 6. To upgrade, review the diff between pinned revisions and test with one scoped task; then update the pin explicitly.
+
+Verified example (OMP): a skill is discovered natively at `<project>/.omp/skills/<name>/SKILL.md` (non-recursive; the host also scans ancestor `.omp/skills` directories and `~/.omp/agent/skills`, and has separate Claude/Codex/`.agents`/`.github` project providers). Copying `skills/bootstrap`, `skills/recover`, `skills/adopt` or `skills/deliver` there exposes it natively. ADS itself ships no host-specific skill directory, so a bare clone exposes nothing until the chosen skills are copied or linked into that path. Run a harmless discovery prompt after copying and record the host version.
 
 ## Boundaries
 

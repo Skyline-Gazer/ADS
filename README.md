@@ -31,4 +31,4 @@ Goal-driven execution; minimum sufficient implementation; a single canonical rul
 
 ## Migration and publication
 
-This branch is a development candidate. Existing draft PR #1 and main remain separate. Validate in isolated KIRARI and AiringCal trials before release. Those projects do not adopt ADS merely because this repository is updated.
+This branch is a development candidate; v0.2 has not been released. Pull requests #1 and #2 are closed and merged respectively, and `main` is the merged candidate baseline. Validate in isolated KIRARI and AiringCal trials before release. Those projects do not adopt ADS merely because this repository is updated.
