@@ -12,5 +12,6 @@ These are practical manual or agent-driven acceptance cases, not a new evaluatio
 | High-risk boundary | Prepare source/tests but halt unauthorized destructive, secret or production changes and ask once for scoped authorization |
 | External integration | Clearly distinguish mock evidence, isolated live test and production validation |
 | Inaccessible private pin | Identify missing access to pinned ADS guidance rather than claim compliance |
+| Environment-first reuse | One proportional read-only probe reused for the session; a fresh task reuses an installed runtime/test facility without installing another; a repeat task re-checks with one command; a missing tool yields a documented fallback and honest absent/unverified/verified states |
 
 Validation should use disposable branches/worktrees and existing tools. No release until scenarios relevant to the first adopters have actually been exercised.

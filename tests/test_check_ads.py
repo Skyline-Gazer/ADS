@@ -119,5 +119,42 @@ class CheckerTests(unittest.TestCase):
         self.assertNotEqual(self.check().returncode, 0)
 
 
+    def test_secret_disclosing_probe_in_code_block_is_rejected(self):
+        (self.root / "README.md").write_text(
+            "# ADS\n```sh\nprintenv | grep TOKEN\n```\n", encoding="utf-8"
+        )
+        result = self.check()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("unsafe environment probe", result.stderr)
+
+    def test_credential_interpolation_is_rejected(self):
+        (self.root / "README.md").write_text(
+            '# ADS\n```sh\ncurl -H "Authorization: $GITHUB_TOKEN" https://example.com\n```\n',
+            encoding="utf-8",
+        )
+        result = self.check()
+        self.assertIn("credential variable", result.stderr)
+
+    def test_env_file_read_is_rejected(self):
+        (self.root / "README.md").write_text(
+            "# ADS\n```sh\ncat ../.env\n```\n", encoding="utf-8"
+        )
+        result = self.check()
+        self.assertIn("reads a .env file", result.stderr)
+
+    def test_safe_capability_probe_is_accepted(self):
+        (self.root / "README.md").write_text(
+            "# ADS\n```sh\ncommand -v python3\nnode --version\ngit status --short\n```\n",
+            encoding="utf-8",
+        )
+        self.assertEqual(self.check().returncode, 0)
+
+    def test_probe_prohibition_in_prose_is_not_rejected(self):
+        (self.root / "README.md").write_text(
+            "# ADS\nNever run printenv or export -p while recording host capabilities.\n",
+            encoding="utf-8",
+        )
+        self.assertEqual(self.check().returncode, 0)
+
 if __name__ == "__main__":
     unittest.main()

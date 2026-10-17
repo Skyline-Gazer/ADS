@@ -1,10 +1,18 @@
 # ADS Development Standard
 
-Version: **0.2 candidate**. Not automatically adopted by any project.
+Version: **0.3 candidate**. Not automatically adopted by any project. The v0.2 release remains the tag `v0.2`; this candidate adds environment-first guidance without changing v0.2 semantics.
 
 ## Priority and inheritance
 
 Follow host safety restrictions and the user's explicit task instructions. Respect project-local factual constraints (architecture, build, API contracts and deployment effects); they may specialize ADS defaults but may not bypass safety boundaries. Surface genuine conflicts. Pin an ADS commit/release rather than a moving branch. Keep a short local AGENTS.md as the canonical repository entrypoint; platform adapters should only point there, not copy competing rules.
+
+## Environment first, reuse first
+
+Before choosing how to build, test or integrate, check what the host and the project already provide: agent and platform capabilities, native Skills, installed runtimes and package managers, lockfiles, caches, declared build/test commands and reachable local services. Prefer the smallest existing facility that can satisfy the task instead of installing a second runtime, rebuilding a container, provisioning cloud resources or adding another service.
+
+Keep that scan proportional: one short read-only check for ordinary tasks; deeper investigation only for a first bootstrap, a host migration, an expensive integration or known drift. Reuse the findings for the rest of the session and re-verify stale assumptions rather than maintaining an inventory database or a mandatory discovery phase.
+
+Probe with availability checks, versions, file metadata and repository scripts. Do not print environment variable values, tokens or credential-bearing configuration, and do not change global host settings to make a check pass. Report states distinctly: **installed**, **configured** and actually **verified**. When a capability is absent or unverified, take the smallest documented fallback or report the real blocker; never replace a required live integration with a mock.
 
 ## Agent-native goal execution
 
