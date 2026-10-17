@@ -42,6 +42,6 @@ git status --short --branch
 
 ## Boundaries
 
-- Only OMP 18.11.3 on macOS arm64 was exercised. Codex CLI, OpenCode and Claude Code binaries exist on this host but were **not** driven, so cross-host reuse is unverified.
+- OMP 18.11.3 on macOS arm64 was exercised here; OpenCode v2.0.32 was additionally driven in a separate acceptance run ([v0.3-opencode-acceptance.md](v0.3-opencode-acceptance.md)). Codex CLI and Claude Code binaries exist on this host but were **not** driven, so their cross-host reuse is unverified.
 - No container, cloud resource, global package or credential was created, modified or required.
 - A hosted CI run is separate evidence from these local runs; report both distinctly.
