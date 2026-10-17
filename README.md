@@ -27,6 +27,7 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 - [scenarios/environment-first.md](scenarios/environment-first.md): environment-first probe, local reuse and fallback evidence.
 - [scenarios/v0.3-omp-acceptance.md](scenarios/v0.3-omp-acceptance.md): OMP 18.11.3 v0.3 acceptance archive.
 - [scenarios/v0.3-opencode-acceptance.md](scenarios/v0.3-opencode-acceptance.md): OpenCode v2.0.32 v0.3 acceptance archive.
+- [scenarios/v0.3-codex-acceptance.md](scenarios/v0.3-codex-acceptance.md): Codex CLI 0.163.0 acceptance; functional checks verified, overall PARTIAL due to a restored global-config side effect.
 - [scenarios/auth-scope-regression.md](scenarios/auth-scope-regression.md): authorization-scope regression (path attributes are not authorization).
 - [scenarios/v0.2-acceptance.md](scenarios/v0.2-acceptance.md): real-host acceptance protocol before release; OCR deferred to v0.3.
 
