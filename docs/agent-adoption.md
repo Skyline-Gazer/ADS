@@ -12,7 +12,7 @@ ADS is not a daemon, CLI or centralized policy delivery service. A file existing
 5. Keep a single content source. Platform adapters should contain minimal links/pointers, not duplicated conflicting policy.
 6. To upgrade, review the diff between pinned revisions and test with one scoped task; then update the pin explicitly.
 
-Verified example (OMP): a skill is discovered only at `<project>/.omp/skills/<name>/SKILL.md`; copying `skills/bootstrap`, `skills/recover`, `skills/adopt` or `skills/deliver` there exposes it natively. ADS itself ships no host-specific skill directory, so a bare clone exposes nothing until the chosen skills are copied or linked into that path. Run a harmless discovery prompt after copying and record the host version.
+Verified example (OMP): a skill is discovered natively at `<project>/.omp/skills/<name>/SKILL.md` (non-recursive; the host also scans ancestor `.omp/skills` directories and `~/.omp/agent/skills`, and has separate Claude/Codex/`.agents`/`.github` project providers). Copying `skills/bootstrap`, `skills/recover`, `skills/adopt` or `skills/deliver` there exposes it natively. ADS itself ships no host-specific skill directory, so a bare clone exposes nothing until the chosen skills are copied or linked into that path. Run a harmless discovery prompt after copying and record the host version.
 
 ## Boundaries
 

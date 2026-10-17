@@ -63,6 +63,36 @@ class CheckerTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("missing skill asset skill://bootstrap/templates/AGENTS.md", result.stderr)
 
+    def test_standard_markdown_forms_are_accepted(self):
+        (self.root / "docs").mkdir()
+        (self.root / "docs" / "a b.md").write_text("# a\n", encoding="utf-8")
+        (self.root / "README.md").write_text(
+            "Text.[^1]\n\n"
+            "[^1]: Footnote prose is not a link.\n\n"
+            "[x](skills/bootstrap/SKILL.md (Bootstrap))\n"
+            "[x](docs/a\\ b.md)\n"
+            "[x][ref]\n\n"
+            "   [ref]: <docs/a b.md>\n\n"
+            "```\n[x](missing.md)\n[r]: also-missing.md\n```\n",
+            encoding="utf-8",
+        )
+        result = self.check()
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_skill_references_accept_fragments_punctuation_and_bare_names(self):
+        (self.root / "README.md").write_text(
+            "Read `skill://bootstrap#usage` and skill://bootstrap/SKILL.md, then `skill://other/x`.\n",
+            encoding="utf-8",
+        )
+        self.assertEqual(self.check().returncode, 0)
+        (self.root / "README.md").write_text("Read `skill://bootstrap#usage`.\n", encoding="utf-8")
+        self.assertEqual(self.check().returncode, 0)
+        (self.root / "README.md").write_text("Read `skill://bootstrap/missing.md`.\n", encoding="utf-8")
+        result = self.check()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("missing skill asset skill://bootstrap/missing.md", result.stderr)
+
+
 
     def test_missing_link_is_rejected(self):
         (self.root / "README.md").write_text("[Missing](unknown.md)\n", encoding="utf-8")
