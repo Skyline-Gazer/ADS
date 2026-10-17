@@ -1,6 +1,6 @@
 # ADS — Agent Development Standard
 
-**Status:** v0.2 development candidate (not released or adopted).
+**Status:** v0.3 development candidate (not released or adopted). v0.2 is released at tag `v0.2`.
 
 ADS is an agent-native, minimal-ceremony development standard for personal software projects. It reuses the coding agent, GitHub and the host platform rather than introducing a CLI, approval engine, task database, orchestrator or deployment controller.
 
@@ -23,12 +23,13 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 - [scenarios/](scenarios/): acceptance scenarios.
 - [docs/agent-adoption.md](docs/agent-adoption.md): practical, pinned adoption and skill discovery.
 - [scenarios/migration-recon.md](scenarios/migration-recon.md): read-only findings for KIRARI and AiringCal (not a passed migration).
+- [scenarios/environment-first.md](scenarios/environment-first.md): environment-first probe, local reuse and fallback evidence.
 - [scenarios/v0.2-acceptance.md](scenarios/v0.2-acceptance.md): real-host acceptance protocol before release; OCR deferred to v0.3.
 
 ## Design principles
 
-Goal-driven execution; minimum sufficient implementation; a single canonical rule source; project-local operational constraints; adaptive multi-agent collaboration; truthful, layered verification; low-risk autonomous delivery; explicit approval for sensitive effects. Provide concise milestone reporting; do not gate on paperwork or per-stage owner confirmation.
+Goal-driven execution; environment-first reuse of existing host and project capability; minimum sufficient implementation; a single canonical rule source; project-local operational constraints; adaptive multi-agent collaboration; truthful, layered verification; low-risk autonomous delivery; explicit approval for sensitive effects. Provide concise milestone reporting; do not gate on paperwork or per-stage owner confirmation.
 
 ## Migration and publication
 
-This branch is a development candidate; v0.2 has not been released. Pull requests #1 and #2 are closed and merged respectively, and `main` is the merged candidate baseline. Validate in isolated KIRARI and AiringCal trials before release. Those projects do not adopt ADS merely because this repository is updated.
+The v0.2 release baseline is tag `v0.2` (merged PRs #2 and #5); this branch is an unreleased v0.3 development candidate that adds environment-first guidance without changing v0.2 semantics. Validate in isolated KIRARI and AiringCal trials before any v0.3 release. Those projects do not adopt ADS merely because this repository is updated.
