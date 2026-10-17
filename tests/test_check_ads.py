@@ -31,6 +31,39 @@ class CheckerTests(unittest.TestCase):
     def test_valid_fixture(self):
         self.assertEqual(self.check().returncode, 0)
 
+    def test_link_titles_and_angle_brackets_are_accepted(self):
+        (self.root / "README.md").write_text(
+            '[Skill](skills/bootstrap/SKILL.md "Bootstrap")\n'
+            "[Skill](<skills/bootstrap/SKILL.md>)\n",
+            encoding="utf-8",
+        )
+        self.assertEqual(self.check().returncode, 0)
+
+    def test_missing_angle_bracket_link_is_rejected(self):
+        (self.root / "README.md").write_text("[Missing](<unknown.md>)\n", encoding="utf-8")
+        result = self.check()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("missing link unknown.md", result.stderr)
+
+    def test_reference_style_links_are_checked(self):
+        (self.root / "README.md").write_text(
+            "[Skill][ref]\n\n[ref]: skills/bootstrap/SKILL.md\n", encoding="utf-8"
+        )
+        self.assertEqual(self.check().returncode, 0)
+        (self.root / "README.md").write_text("[Missing][ref]\n\n[ref]: unknown.md\n", encoding="utf-8")
+        result = self.check()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("missing link unknown.md", result.stderr)
+
+    def test_skill_asset_reference_is_checked(self):
+        (self.root / "README.md").write_text("Read `skill://bootstrap/SKILL.md`.\n", encoding="utf-8")
+        self.assertEqual(self.check().returncode, 0)
+        (self.root / "README.md").write_text("Read `skill://bootstrap/templates/AGENTS.md`.\n", encoding="utf-8")
+        result = self.check()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("missing skill asset skill://bootstrap/templates/AGENTS.md", result.stderr)
+
+
     def test_missing_link_is_rejected(self):
         (self.root / "README.md").write_text("[Missing](unknown.md)\n", encoding="utf-8")
         result = self.check()
