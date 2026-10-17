@@ -4,7 +4,7 @@
 
 ## Decision
 
-Repository-first review, using the coding agent host's built-in review capability on demand, with required deterministic CI as the only blocking gate. No third-party review service was adopted, and no bespoke review orchestrator, extra agent client or mandatory per-step local review call was added. Repository-level vendors remain optional per-repository candidates with conditions, not commitments.
+Repository-first review, using the coding agent host's built-in review capability on demand, with deterministic CI as the only blocking gate (required by convention on the repository's current plan, see below). No third-party review service was adopted, and no bespoke review orchestrator, extra agent client or mandatory per-step local review call was added. Repository-level vendors remain optional per-repository candidates with conditions, not commitments.
 
 ## Already available before choosing anything
 
@@ -17,22 +17,24 @@ Repository-first review, using the coding agent host's built-in review capabilit
 
 ## Measured trial (safe, isolated, real PR)
 
-PR #7, 2026-10-17, OMP 18.11.3, host review subagent over `origin/main...feat/v0.3-environment-first` (13 files: Markdown guidance plus one dependency-free Python checker):
+PR #7, 2026-10-17, OMP 18.11.3, host review subagent over `origin/main...feat/v0.3-environment-first` (13 changed files: Markdown guidance, skill files, one dependency-free Python checker, an added `.gitignore` and one removed bytecode file):
 
 - 7m47s wall time, one session, no installs, no third-party service, no repository credentials, no billed service.
 - 7 findings: 3 major (fence-detection bypass, incomplete disclosure patterns, an undisclosed normative rule) and 4 minor (unpinned rules, unpinned code-region scoping, missing exit-code assertions, false positives).
 - Disposition: all 7 addressed in `977e16c`; one false-positive class accepted and documented by design.
-- Reviewer claims independently re-verified rather than trusted: the reviewer's 28-case escape list re-ran 28/28 as expected, a mutation harness confirmed 13/13 probe rules are pinned by tests, and the suite reached 18 passing tests before the CI run went green.
+- Reviewer claims independently re-verified rather than trusted: the reviewer's 28-case escape list re-ran 28/28 as expected, a mutation harness confirmed 13/13 probe rules are pinned by tests, and the suite reached 18 passing tests before the CI run went green. Those two harnesses were session-scoped scripts and were not kept; their results are corroborated by commit `977e16c` and by the recorded row in [scenarios/environment-first.md](../scenarios/environment-first.md).
 - Not exercised: other agent hosts, fork pull-request threat model, multi-repository scale.
 
 ## Alternatives considered
 
-| Option | Access and license (verified at the primary source) | Assessment |
+| Option | Access, license and cost (verified at the primary source) | Assessment |
 | --- | --- | --- |
 | OpenCodeReview (`alibaba/open-code-review`) | Apache-2.0 (`LICENSE`) | Rejected as a default. The observed third-party run spent 17m04s and 51,106 tokens on two selected files, both reviews timed out and produced zero findings (Issue #4). The prior design is preserved only as history in closed PR #3 |
 | reviewdog | MIT (`LICENSE`) | A findings transporter, not a reviewer: it still needs a separately pinned analyzer or LLM action, its own credentials and a per-PR budget. Viable later only alongside a repository-level reviewer |
 | PR-Agent (`The-PR-Agent/pr-agent`, formerly Qodo Merge) | MIT (`LICENSE`, Copyright 2026 The PR Agent); stewardship moved from Qodo to a community organization; self-hostable in Actions with your own model keys | The strongest optional candidate if a repository later wants an in-CI reviewer. Pin an exact revision, because license metadata and stewardship changed across the hand-over |
-| CodeRabbit | Commercial SaaS: Essentials $24/user/mo, Team $48, Advanced $72, Enterprise on request (pricing page) | Not adopted: per-seat cost plus a third-party GitHub App holding repository access, which is disproportionate for personal projects |
+| CodeRabbit | Commercial SaaS: monthly list price — Essentials $24/user/mo, Team $48, Advanced $72, Enterprise on request; annual billing is discounted (pricing page) | Not adopted: per-seat cost plus a third-party GitHub App holding repository access, which is disproportionate for personal projects |
+
+Criteria coverage and gaps: licensing, access model and maintenance burden were judged from primary sources, and no alternative was installed or trialled here. Inline-comment quality, per-option review latency, incremental re-review behaviour, cost per pull request and fork handling under a credentialed `pull_request_target` were therefore **not** evaluated for the alternatives; only the host review capability was measured.
 
 ## Rollout guidance (optional, advisory)
 
@@ -43,9 +45,9 @@ PR #7, 2026-10-17, OMP 18.11.3, host review subagent over `origin/main...feat/v0
 
 ## References
 
-- https://github.com/alibaba/open-code-review
-- https://github.com/reviewdog/reviewdog
-- https://github.com/The-PR-Agent/pr-agent
-- https://www.coderabbit.ai/pricing
+- [OpenCodeReview (alibaba)](https://github.com/alibaba/open-code-review)
+- [reviewdog](https://github.com/reviewdog/reviewdog)
+- [PR-Agent (The-PR-Agent)](https://github.com/The-PR-Agent/pr-agent)
+- [CodeRabbit pricing](https://www.coderabbit.ai/pricing)
 
 No production state, secret, IAM scope or repository configuration was changed to obtain this evaluation.
