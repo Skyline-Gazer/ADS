@@ -13,5 +13,6 @@ These are practical manual or agent-driven acceptance cases, not a new evaluatio
 | External integration | Clearly distinguish mock evidence, isolated live test and production validation |
 | Inaccessible private pin | Identify missing access to pinned ADS guidance rather than claim compliance |
 | Environment-first reuse | One proportional read-only probe reused for the session; a fresh task reuses an installed runtime/test facility without installing another; a repeat task re-checks with one command; a missing tool yields a documented fallback and honest absent/unverified/verified states |
+| Review option selection | Inspect existing host review capability before choosing a service; document the decision with verified licenses, one real isolated trial and advisory rollout rules; adopt no vendor or Action without a per-repository trial |
 
 Validation should use disposable branches/worktrees and existing tools. No release until scenarios relevant to the first adopters have actually been exercised.
