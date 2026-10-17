@@ -25,6 +25,9 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 - [docs/code-review-options.md](docs/code-review-options.md): v0.3 review-option decision and the native review trial evidence.
 - [scenarios/migration-recon.md](scenarios/migration-recon.md): read-only findings for KIRARI and AiringCal (not a passed migration).
 - [scenarios/environment-first.md](scenarios/environment-first.md): environment-first probe, local reuse and fallback evidence.
+- [scenarios/v0.3-omp-acceptance.md](scenarios/v0.3-omp-acceptance.md): OMP 18.11.3 v0.3 acceptance archive.
+- [scenarios/v0.3-opencode-acceptance.md](scenarios/v0.3-opencode-acceptance.md): OpenCode v2.0.32 v0.3 acceptance archive.
+- [scenarios/auth-scope-regression.md](scenarios/auth-scope-regression.md): authorization-scope regression (path attributes are not authorization).
 - [scenarios/v0.2-acceptance.md](scenarios/v0.2-acceptance.md): real-host acceptance protocol before release; OCR deferred to v0.3.
 
 ## Design principles
