@@ -16,8 +16,9 @@ These are practical manual or agent-driven acceptance cases, not a new evaluatio
 | Review option selection | Inspect existing host review capability before choosing a service; document the decision with verified licenses, one real isolated trial and advisory rollout rules; adopt no vendor or Action without a per-repository trial |
 | OMP v0.3 acceptance ([v0.3-omp-acceptance.md](v0.3-omp-acceptance.md)) | DISCOVERED native skills, DISCOVERED+LOADED four skills, Bootstrap/Deliver/Recovery/Safety/Env-reuse/Regression executed and independently verified on `omp` 18.11.3 at SHA `c90ec69…`; one authorization-scope deviation recorded |
 | OpenCode v0.3 acceptance ([v0.3-opencode-acceptance.md](v0.3-opencode-acceptance.md)) | DISCOVERED native skills, four skills loaded via `skill` tool, Bootstrap/Deliver/Recovery/Safety/Env-reuse/Regression executed and independently verified on `opencode` v2.0.32 at SHA `c90ec69…` |
+| Codex CLI v0.3 acceptance ([closure](v0.3-codex-closure.md), [first-run archive](v0.3-codex-acceptance.md)) | Current PASS on 0.163.0 at SHA `8517154…`: four native Skills and complete functional/safety regression verified; 315 global policy inventory entries unchanged; HTTP runs in the native sandbox without command escalation. Historical first run remains PARTIAL; original writer remains WRITER_UNATTRIBUTED |
 | Auth-scope regression ([auth-scope-regression.md](auth-scope-regression.md)) | Path attributes are not authorization: `scripts/auth_scope.py` + 12 tests encode the rule; regression lands in CI |
 
 Validation should use disposable branches/worktrees and existing tools. No release until scenarios relevant to the first adopters have actually been exercised.
 
-Codex CLI and Claude Code remain **NOT TESTED** in this repository; their acceptance is executed by the owner separately and must not be inferred from the OMP/OpenCode runs above.
+Claude Code remains **NOT TESTED**. Codex CLI has its own **PASS** retest above; its historical PARTIAL archive and unattributed writer remain recorded. None of its results are inferred from or replaced by OMP/OpenCode runs.
