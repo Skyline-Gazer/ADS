@@ -30,7 +30,7 @@ Delegation **never creates or enlarges authorization**. Children must remain ins
 
 Set bounded parallel work and recovery conditions. On timeout, failure, missing native capability or inconsistent child claims, collect usable evidence, cancel or stop affected children where the host supports it, then retry narrowly, reassign or continue serially. Do not treat a child's claimed success as verification; re-run the appropriate integrated checks. Report actual multi-agent execution separately from proposed delegation, including time and cost where observable, conflicts, failed attempts and unverified boundaries. See [QUALITY.md](QUALITY.md) and [scenarios/v0.3-multi-agent-acceptance.md](scenarios/v0.3-multi-agent-acceptance.md).
 
-: prefer existing architecture, only directly related fixes and local refactoring. Don't introduce new infrastructure, optional features or elaborate design artifacts as prerequisites. Record out-of-scope improvements as optional issues.
+Use **minimum sufficient implementation**: prefer existing architecture, only directly related fixes and local refactoring. Don't introduce new infrastructure, optional features or elaborate design artifacts as prerequisites. Record out-of-scope improvements as optional issues.
 
 For significant, durable architectural choices, propose alternatives and get owner direction before a consequential change. Ordinary mature, necessary dependencies and tooling may be selected autonomously; validate compatibility and security. Use brief ADRs only when the decision must persist.
 
