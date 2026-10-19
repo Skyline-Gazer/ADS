@@ -49,8 +49,40 @@
       "total_tokens": 3506574
     },
     "spend": "NOT OBSERVED",
-    "global_policy_final_differences": [],
-    "global_policy_entries": 315
+    "global_policy_final_differences": [
+      {
+        "path": "/Users/ian/.codex/rules/default.rules",
+        "kind": "explained mtime/ctime only after precise delivery approval-rule removal"
+      }
+    ],
+    "global_policy_entries": 315,
+    "delivery_policy_restoration": {
+      "recorded_utc": "2026-10-19T08:25:14.561928+00:00",
+      "removed_exact_line": "prefix_rule(pattern=[\"rtk\", \"git\", \"push\", \"-u\", \"origin\", \"test/codex-native-multi-agent-20261019\"], decision=\"allow\")\n",
+      "removed_bytes": 120,
+      "source": "Outer tool saved the task-branch push approval rule after formal testing.",
+      "before": {
+        "mode": 420,
+        "size": 31161,
+        "mtime_ns": 1792398269115652697,
+        "ctime_ns": 1792398269115652697,
+        "kind": "file",
+        "sha256": "919fa9717eb2594bdf1e3bf82f9a8994e1e256eed45bbcc13418338cc1735552"
+      },
+      "after": {
+        "mode": 420,
+        "size": 31041,
+        "mtime_ns": 1792398314545086692,
+        "ctime_ns": 1792398314545086692,
+        "kind": "file",
+        "sha256": "a5cfe0a5ea39675fbdfc9ec3c76ab7f1136dc661e8e7e61e26078523ce77ba9c"
+      },
+      "formal_content_restored": true,
+      "remaining_metadata_difference": "default.rules mtime and ctime reflect this precise restoration; all other 314 policy entries match formal baseline.",
+      "protocol_result": "PARTIAL remains; no claim that the entire task had zero global-policy writes."
+    },
+    "delivery_updated_utc": "2026-10-19T08:25:54.784182+00:00",
+    "global_policy_final_content_differences": []
   },
   "plan": {
     "started_utc": "2026-10-19T07:57:52.922946+00:00",
