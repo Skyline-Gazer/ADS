@@ -9,6 +9,7 @@ These are practical manual or agent-driven acceptance cases, not a new evaluatio
 | Existing AiringCal rehearsal | Detect Comet/OpenSpec hooks and preserve API/data contracts; no live secret or production mutation |
 | CI recovery | Reproduce an observable failure, fix related scope, rerun affected checks, report true state |
 | Multi-agent task | Delegate only if worthwhile and unify work without a new orchestration service |
+| Native multi-agent efficiency and safety ([v0.3-multi-agent-acceptance.md](v0.3-multi-agent-acceptance.md)) | Compare native concurrent workers against single-agent baseline; verify parent integration, bounded authorization, disjoint writes, worker failure and realistic end-to-end measurements. PENDING host execution; no speedup claim |
 | High-risk boundary | Prepare source/tests but halt unauthorized destructive, secret or production changes and ask once for scoped authorization |
 | External integration | Clearly distinguish mock evidence, isolated live test and production validation |
 | Inaccessible private pin | Identify missing access to pinned ADS guidance rather than claim compliance |
