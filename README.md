@@ -29,6 +29,7 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 - [scenarios/v0.3-opencode-acceptance.md](scenarios/v0.3-opencode-acceptance.md): OpenCode v2.0.32 v0.3 acceptance archive.
 - [scenarios/v0.3-codex-acceptance.md](scenarios/v0.3-codex-acceptance.md): historical Codex CLI 0.163.0 first run, PARTIAL due to restored global-config drift.
 - [scenarios/v0.3-codex-closure.md](scenarios/v0.3-codex-closure.md): Codex CLI 0.163.0 complete retest PASS; global policy content unchanged, HTTP contained in the native sandbox, historical writer still unattributed.
+- [scenarios/v0.3-claude-code-acceptance.md](scenarios/v0.3-claude-code-acceptance.md): Claude Code 2.1.292 native acceptance PASS; permission-handling deviations and untested areas retained.
 - [scenarios/auth-scope-regression.md](scenarios/auth-scope-regression.md): authorization-scope regression (path attributes are not authorization).
 - [scenarios/v0.2-acceptance.md](scenarios/v0.2-acceptance.md): real-host acceptance protocol before release; OCR deferred to v0.3.
 
