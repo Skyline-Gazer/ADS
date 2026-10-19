@@ -10,7 +10,13 @@ Reuse the project's existing runtimes, declared test commands, fixtures and cach
 
 Keep evidence classes distinct and report the one actually performed: local deterministic tests, reuse of an existing test facility, isolated live exercise against real dependencies and production validation are not interchangeable. Reusing a local facility never stands in for an unperformed live integration, and a missing capability is a stated boundary rather than an implicit pass.
 
-## Verification layers
+## Multi-agent integration and efficiency evidence
+
+A child agent's summary, self-tested branch or reviewer finding is input to the main agent, not final verification. The main agent checks the combined diff, re-runs affected contract/integration checks after merging independent changes and reports skipped or unavailable checks. A delegated security review cannot widen authorization, and an AI-only review is not a substitute for deterministic CI.
+
+For multi-agent efficiency claims, compare against a **single-agent baseline** with the same goal, pinned code, test criteria and reasonably comparable host/model/tool permissions. Measure end-to-end wall time (including startup, integration, reruns and recovery), observable tokens/cost, independently verified outcome, retries and merge conflicts. Separate independent subtasks from coupled negative cases. Record missing metering as **NOT OBSERVED**, and absent or unexercised native capabilities as **NOT TESTED**, never zero cost or PASS. Compare multiple trials where practical and do not assert a universal speedup from one fixture. The acceptance protocol is [scenarios/v0.3-multi-agent-acceptance.md](scenarios/v0.3-multi-agent-acceptance.md).
+
+
 
 1. **Local:** deterministic tests, fixtures and mocks for fast feedback.
 2. **Integration:** real dependencies in an authorized isolated/test environment when behavior actually depends on them.
