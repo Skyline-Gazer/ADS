@@ -50,5 +50,196 @@
     }
   ],
   "validation": "PASS",
-  "acceptance_verdict": "FAIL"
+  "acceptance_verdict": "FAIL",
+  "pr_url": "https://github.com/Skyline-Gazer/ADS/pull/15",
+  "initial_commit": "26e2405038a1653bd18e98e368b81956cb0477b6",
+  "delivery_utc": "2026-10-20T01:30:29.346280+00:00",
+  "outer_approval_restoration": [
+    {
+      "recorded_utc": "2026-10-19T10:14:14.175922+00:00",
+      "source": "Outer Codex approval tool auto-saved rules, not Claude.",
+      "removed_exact_lines": [
+        "prefix_rule(pattern=[\"rtk\", \"git\", \"fetch\", \"https://github.com/Skyline-Gazer/ADS\", \"0a91631620008c96b63981b6572d8efad9fa709f\"], decision=\"allow\")\n",
+        "prefix_rule(pattern=[\"python3\", \"-B\", \"/private/tmp/ads-claude-ma-20261019/execute.py\", \"run\"], decision=\"allow\")\n"
+      ],
+      "removed_bytes": 261,
+      "before": {
+        "mode": 420,
+        "size": 31302,
+        "mtime_ns": 1792404854044270759,
+        "ctime_ns": 1792404854044270759,
+        "kind": "file",
+        "sha256": "6954af6706eba55e19d47b42853a7fe51b3b066f04de89a5e1a49effec6d5e51"
+      },
+      "after": {
+        "mode": 420,
+        "size": 31041,
+        "mtime_ns": 1792404854172584345,
+        "ctime_ns": 1792404854172584345,
+        "kind": "file",
+        "sha256": "a5cfe0a5ea39675fbdfc9ec3c76ab7f1136dc661e8e7e61e26078523ce77ba9c"
+      },
+      "initial_content_restored": true,
+      "known_remaining_metadata": "Rule-file mtime/ctime reflect precise restoration; Claude config was not edited."
+    },
+    {
+      "recorded_utc": "2026-10-20T01:21:42.378256+00:00",
+      "source": "Outer Codex approval tool auto-saved rules, not Claude.",
+      "removed_exact_lines": [
+        "prefix_rule(pattern=[\"python3\", \"-B\", \"/private/tmp/ads-claude-ma-20261019/watch_recovery.py\"], decision=\"allow\")\n"
+      ],
+      "removed_bytes": 114,
+      "before": {
+        "mode": 420,
+        "size": 31155,
+        "mtime_ns": 1792459105013365456,
+        "ctime_ns": 1792459105013365456,
+        "kind": "file",
+        "sha256": "dcc631ad2ab6ee8b9220779cb5e70470146f6fb8e438852e8173a8c635f40523"
+      },
+      "after": {
+        "mode": 420,
+        "size": 31041,
+        "mtime_ns": 1792459302373360037,
+        "ctime_ns": 1792459302373360037,
+        "kind": "file",
+        "sha256": "a5cfe0a5ea39675fbdfc9ec3c76ab7f1136dc661e8e7e61e26078523ce77ba9c"
+      },
+      "initial_content_restored": true,
+      "known_remaining_metadata": "Rule-file mtime/ctime reflect precise restoration; Claude config was not edited."
+    },
+    {
+      "recorded_utc": "2026-10-20T01:30:04.307564+00:00",
+      "source": "Outer Codex approval tool auto-saved rules, not Claude.",
+      "removed_exact_lines": [
+        "prefix_rule(pattern=[\"rtk\", \"git\", \"push\", \"-u\", \"origin\", \"test/claude-native-multi-agent-20261019\"], decision=\"allow\")\n"
+      ],
+      "removed_bytes": 121,
+      "before": {
+        "mode": 420,
+        "size": 31162,
+        "mtime_ns": 1792459792043113383,
+        "ctime_ns": 1792459792043113383,
+        "kind": "file",
+        "sha256": "5ad16e6930a53caea1abc855e2dad131f7266540b23a92276892ef4f299e27d9"
+      },
+      "after": {
+        "mode": 420,
+        "size": 31041,
+        "mtime_ns": 1792459804303096430,
+        "ctime_ns": 1792459804303096430,
+        "kind": "file",
+        "sha256": "a5cfe0a5ea39675fbdfc9ec3c76ab7f1136dc661e8e7e61e26078523ce77ba9c"
+      },
+      "initial_content_restored": true,
+      "known_remaining_metadata": "Rule-file mtime/ctime reflect precise restoration; Claude config was not edited."
+    }
+  ],
+  "original_repository": {
+    "recorded_utc": "2026-10-20T01:24:13.381394+00:00",
+    "checks": [
+      {
+        "command": [
+          "git",
+          "status",
+          "--short"
+        ],
+        "cwd": "/Users/REDACTED/Desktop/Projects/ADS",
+        "exit_code": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.020853292000000002
+      },
+      {
+        "command": [
+          "git",
+          "branch",
+          "--show-current"
+        ],
+        "cwd": "/Users/REDACTED/Desktop/Projects/ADS",
+        "exit_code": 0,
+        "stdout": "test/codex-v03-native-acceptance\n",
+        "stderr": "",
+        "seconds": 0.012164208000000003
+      },
+      {
+        "command": [
+          "git",
+          "rev-parse",
+          "main"
+        ],
+        "cwd": "/Users/REDACTED/Desktop/Projects/ADS",
+        "exit_code": 0,
+        "stdout": "851715493ddb377bf50e367cf0c715d47ce3dd72\n",
+        "stderr": "",
+        "seconds": 0.014162499999999995
+      }
+    ]
+  },
+  "execution_archive_freeze_utc": "2026-10-20T01:24:14.431354+00:00",
+  "post_archive_records": "Delivery/push/PR/CI receipts are retained locally in addition to the frozen execution archive.",
+  "initial_commit_ci": {
+    "commit": "26e2405038a1653bd18e98e368b81956cb0477b6",
+    "run_url": "https://github.com/Skyline-Gazer/ADS/actions/runs/39353788131",
+    "jobs": [
+      {
+        "id": 118403832671,
+        "name": "validate",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 39353788131,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Test ADS checker",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Validate documentation and skills",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Post Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11
+          }
+        ]
+      }
+    ]
+  }
 }
