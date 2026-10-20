@@ -1,0 +1,76 @@
+{
+  "recorded_utc": "2026-10-20T06:26:57Z",
+  "branch": "test/omp-subagent-model-matrix-20261020",
+  "base_sha": "2fe9ca015e7530b873bdbabf659894e0d83956b5",
+  "scope": "One acceptance report, one scenario-index row, one protocol status/table update and a redacted evidence capsule; no application fixture, global configuration or ADS Skill changed",
+  "merge_performed": false,
+  "release_created": false,
+  "production_changed": false,
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "scripts/check-ads.py"
+      ],
+      "cwd": "<HOME>/Desktop/Projects/ADS",
+      "exit_code": 0,
+      "stdout": "ADS validation passed: 4 skills, Markdown links and probe examples checked\n",
+      "stderr": "",
+      "seconds": 0.083
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests"
+      ],
+      "cwd": "<HOME>/Desktop/Projects/ADS",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "..............................\n----------------------------------------------------------------------\nRan 30 tests in 1.335s\n\nOK\n",
+      "seconds": 1.398
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "<HOME>/Desktop/Projects/ADS",
+      "exit_code": 0,
+      "stdout": "2fe9ca015e7530b873bdbabf659894e0d83956b5\n",
+      "stderr": "",
+      "seconds": 0.013
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain"
+      ],
+      "cwd": "<HOME>/Desktop/Projects/ADS",
+      "exit_code": 0,
+      "stdout": " M scenarios/README.md\n M scenarios/v0.3-subagent-model-matrix.md\n?? scenarios/evidence/omp-subagent-model-matrix-2026-10-20/\n?? scenarios/v0.3-omp-subagent-model-matrix.md\n",
+      "stderr": "",
+      "seconds": 0.016
+    },
+    {
+      "command": [
+        "shasum",
+        "-a",
+        "256",
+        "scenarios/evidence/omp-subagent-model-matrix-2026-10-20/evidence.redacted.tar.gz"
+      ],
+      "cwd": "<HOME>/Desktop/Projects/ADS",
+      "exit_code": 0,
+      "stdout": "483b736affced210fdd48e4a817a6668d843f1fffb1f336d49666a1f3040c80d  scenarios/evidence/omp-subagent-model-matrix-2026-10-20/evidence.redacted.tar.gz\n",
+      "stderr": "",
+      "seconds": 0.016
+    }
+  ]
+}
