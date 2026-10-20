@@ -3,8 +3,10 @@
 **Overall: `isolated: true` is Git worktree/patch isolation, not filesystem containment. Worktree isolation VERIFIED; default filesystem containment FAIL; no OS sandbox is available in OMP 18.12.3. A project-local `tool_call` allowlist plus approval deny passed the tested negative/positive vectors, but remains a tool-level boundary, not an OS sandbox. `task.batch` children are disposed when the parent ends its turn unless the parent explicitly waits.**
 
 This revalidates the OMP half of Issue [#28](https://github.com/Skyline-Gazer/ADS/issues/28) at ADS baseline
-`420c369341524e240482537332e515d701bcf1fb`. It preserves [PR #25](https://github.com/Skyline-Gazer/ADS/pull/25),
-the earlier OpenCode work, and the historical FAIL/PARTIAL archives. Nothing is merged, closed or released.
+`420c369341524e240482537332e515d701bcf1fb`. Historical [PR #25](https://github.com/Skyline-Gazer/ADS/pull/25)
+is already merged into that baseline; its absolute-path failure and evidence remain authoritative and are
+not superseded by this archive. The earlier OpenCode work and every historical FAIL/PARTIAL archive remain
+unchanged. Nothing was merged, closed or released by this revalidation.
 
 ## Scope and reproducibility
 
@@ -225,4 +227,6 @@ MCP/extension tools and must not be called an OS sandbox. If the task needs an O
 execution, a separately sandboxed process, or abstain. If the parent uses `task.batch`, it must await
 the actual children; a spawn receipt is not completion.
 
-No merge, release or issue closure. #28 and #21 remain open; PR #25 remains the historical record.
+No merge, release or issue closure. #28 and #21 remain open. PR #25 is already merged into the
+reported baseline; its absolute-path failure and evidence remain the historical record and are not
+superseded by this archive.

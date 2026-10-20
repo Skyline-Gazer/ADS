@@ -2,7 +2,8 @@
 
 Issue [#28](https://github.com/Skyline-Gazer/ADS/issues/28), ADS baseline
 `420c369341524e240482537332e515d701bcf1fb`. Historical [PR #25](https://github.com/Skyline-Gazer/ADS/pull/25)
-remains open and unchanged.
+is already merged into that baseline; its absolute-path containment failure and evidence are preserved
+unchanged and are not superseded by this archive.
 
 **Summary:** `isolated: true` is a Git worktree/patch workspace, not a filesystem sandbox. The default
 configuration **failed** every tested escape vector. A project-local `tool_call` allowlist plus
