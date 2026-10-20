@@ -1,0 +1,18 @@
+c=0: PASS
+c=100: PASS
+c=-40: PASS
+c=2.5: PASS
+c=21/3: PASS
+c_bool: PASS
+c_none: PASS
+c_str: PASS
+c_inf: PASS
+c_nan: PASS
+t_basic: PASS
+t_empty: PASS
+t_none: PASS
+t_str: PASS
+t_int_member: PASS
+t_bool_member: PASS
+t_tuple: PASS
+ORACLE PASS (17/17)

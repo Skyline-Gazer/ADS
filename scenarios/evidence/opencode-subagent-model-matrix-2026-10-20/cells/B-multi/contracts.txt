@@ -1,0 +1,10 @@
+test_tags (__main__.Implementation) ... ok
+test_tags_empty (__main__.Implementation) ... ok
+test_tags_invalid (__main__.Implementation) ... ok
+test_temperature (__main__.Implementation) ... ok
+test_temperature_invalid (__main__.Implementation) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.000s
+
+OK

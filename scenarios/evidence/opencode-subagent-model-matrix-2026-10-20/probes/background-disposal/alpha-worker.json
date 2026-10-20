@@ -1,0 +1,66 @@
+{
+  "info": {
+    "id": "ses_ea7f45dacffewBTY7FJuGrnCwt",
+    "parentID": "ses_ea7f46748ffeKG3RMVScG6sLP2",
+    "projectID": "global",
+    "agent": "alpha-worker",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "reasoning": 0,
+      "cache": {
+        "read": 0,
+        "write": 0
+      }
+    },
+    "time": {
+      "created": 1792478519951,
+      "updated": 1792478522504
+    },
+    "title": "Append ALPHA to alpha.txt",
+    "location": {
+      "directory": "<SCRATCH>/probe2"
+    }
+  },
+  "messages": [
+    {
+      "id": "msg_1580ba290002zYkpo4elOiGUqi",
+      "time": {
+        "created": 1792478519964
+      },
+      "text": "You are a subagent spawned by another session.\nIn the working directory <SCRATCH>/probe2, append the single line \"ALPHA\" to the file alpha.txt (create the file if it does not exist, preserving any existing content and ending with a newline before the appended line). Do not modify beta.txt or any other file. Report the final content of alpha.txt when done.",
+      "type": "user"
+    },
+    {
+      "id": "msg_1580ba29f001hEBl3js8hwVMFE",
+      "time": {
+        "created": 1792478519973,
+        "completed": 1792478522504
+      },
+      "type": "assistant",
+      "agent": "alpha-worker",
+      "model": {
+        "id": "deepseek-flash",
+        "providerID": "deepseek",
+        "variant": "default"
+      },
+      "content": [],
+      "snapshot": {
+        "start": "9ebdfe844bc1606d60ecc1727536f1993bc52fc7",
+        "end": "9ebdfe844bc1606d60ecc1727536f1993bc52fc7",
+        "files": []
+      },
+      "finish": "error",
+      "error": {
+        "type": "aborted",
+        "message": "Step interrupted"
+      }
+    }
+  ]
+}
