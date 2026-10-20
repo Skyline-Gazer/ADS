@@ -4,7 +4,7 @@
 
 This is an independent post-mitigation revalidation of the [minimum effective gate](../docs/native-subagent-safety.md) and the [containment protocol](subagent-permission-containment.md) on OpenCode `2.0.32`. It preserves the earlier [PR #26 model-matrix archive](v0.3-opencode-subagent-model-matrix.md) and its [evidence capsule](evidence/opencode-subagent-model-matrix-2026-10-20/README.md); nothing in that archive is upgraded or erased. The only new evidence is this report and its [capsule](evidence/issue28-opencode-containment-2026-10-20/README.md).
 
-Delivery: PR #TBD (open, unmerged).
+Delivery: [PR #30](https://github.com/Skyline-Gazer/ADS/pull/30), open and unmerged. Refs [#28](https://github.com/Skyline-Gazer/ADS/issues/28) and [#21](https://github.com/Skyline-Gazer/ADS/issues/21); it does not close either issue.
 
 ## Scope and reproducibility
 
