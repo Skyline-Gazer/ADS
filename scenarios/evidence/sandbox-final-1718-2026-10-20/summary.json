@@ -1,0 +1,93 @@
+{
+  "run_date": "2026-10-20",
+  "ADS_BASELINE_SHA": "c24d0b8edc1e56ee4464d107c5257722c3683a8f",
+  "SANDBOX_REPO": "https://github.com/Skyline-Gazer/ADS-Acceptance-Sandbox",
+  "PROJECT_URL": "https://github.com/orgs/Skyline-Gazer/projects/9",
+  "PROJECT_ID": "PVT_kwDOEwGMMc4Bn1h-",
+  "ISSUE_17_RESULT": "PASS",
+  "ISSUE_18_RESULT": "PARTIAL",
+  "PROJECT_DRIFT_FOUND": [
+    "#1 automatic closure with Project In Progress",
+    "#2 Done with failed security CI, later transient CLOSED",
+    "#3 merged/green but Todo/OPEN",
+    "draft stale scope references completed #1 rather than unresolved #2"
+  ],
+  "REPAIRED": true,
+  "REREAD": true,
+  "PROJECT_FINAL": {
+    "1": "Done/CLOSED",
+    "2": "Todo/OPEN",
+    "3": "Done/CLOSED",
+    "draft": "Todo; no Issue; corrected scope"
+  },
+  "PROJECT_OWNED_ITEMS": {
+    "1": "PVTI_lADOEwGMMc4Bn1h-zhCAgcI",
+    "2": "PVTI_lADOEwGMMc4Bn1h-zhCAgdM",
+    "3": "PVTI_lADOEwGMMc4Bn1h-zhCAgeQ",
+    "draft": "PVTI_lADOEwGMMc4Bn1h-zhCAgfQ"
+  },
+  "SUBMODULE_OLD_SHA": "ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f",
+  "SUBMODULE_NEW_SHA": "c24d0b8edc1e56ee4464d107c5257722c3683a8f",
+  "REMOTE_PR": {
+    "issue_1": 4,
+    "issue_3": 5,
+    "security_negative": 6,
+    "install_merged": 7,
+    "upgrade_open": 8
+  },
+  "HOSTED_CI": {
+    "upgrade_run": 39365129536,
+    "contract": "success; 3 Python tests",
+    "guidance": "failure at actual recursive checkout: Repository not found",
+    "nested_guidance_and_contract_steps": "SKIPPED"
+  },
+  "CONTRACT_TESTS": "PASS locally at install, old replay, upgrade, new replay, rollback and rollback replay; unchanged source/test hashes. Hosted existing contract PASS; hosted materialized-guidance contract NOT EXECUTED.",
+  "SKILL_DISCOVERY": "Codex CLI 0.163.0 app-server skills/list: enabled scope=repo at install/upgrade/rollback and replays; negative directory has no repo deliver. Actual read-only codex exec loads Skill and passes 3 tests after rollback.",
+  "CLI_SMOKE": {
+    "exit": 0,
+    "command_exits": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "usage": {
+      "input_tokens": 137940,
+      "cached_input_tokens": 121216,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 1899,
+      "reasoning_output_tokens": 988
+    },
+    "policy_unchanged": true,
+    "caveat": "Native read-only sandbox denied xcrun cache writes; all verification commands exited zero."
+  },
+  "RECOVERY": {
+    "old": "ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f",
+    "new": "c24d0b8edc1e56ee4464d107c5257722c3683a8f",
+    "upgrade_commit": "79b5a4e6c8a2dbd67875502dcf14783222f993ca",
+    "rollback_commit": "08c3be7c667a1551f7e74f3e5e670b9430390e26",
+    "history_preserved": true,
+    "rollback_tree_equals_main": true,
+    "contract_and_tests_unchanged": true,
+    "dirty_preserved": true,
+    "unavailable_target": "UNKNOWN",
+    "incompatible": "HOLD"
+  },
+  "REMAINING_BLOCKERS": [
+    "Default Actions credential cannot read private Skyline-Gazer/ADS; successful hosted nested checkout and subsequent guidance/consumer checks remain unverified. No secrets or access configuration was changed."
+  ],
+  "NOT_TESTED": [
+    "Project-specific missing-scope permission denial",
+    "Split Issue or parent/child Issue topology",
+    "Renamed Status field/custom option layout (live #9 option IDs and absent Blocked option were exercised)",
+    "Other agents/CLI versions/production",
+    "Recurring scheduler and automatic task-start/phase trigger (explicit owner request exercised)"
+  ],
+  "GLOBAL_POLICY_DEVIATION": "config.toml hash unchanged; host saved 5 prefix rules in default.rules; exact redacted diff retained; not silently restored; selected files only, not a full filesystem audit.",
+  "FINAL_DECISION": "#17 acceptance supported; recommend owner closure after report review. #18 remains OPEN/HOLD; overall PARTIAL. ADS report PR must remain unmerged; no release."
+}
