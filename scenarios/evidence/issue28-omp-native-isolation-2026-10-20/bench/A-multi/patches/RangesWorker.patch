@@ -1,0 +1,47 @@
+diff --git a/app/ranges.py b/app/ranges.py
+index a0a0704..89ef2a2 100644
+--- a/app/ranges.py
++++ b/app/ranges.py
+@@ -1,4 +1,41 @@
+ """Implement the frozen contract in MATRIX_SPEC.md."""
+ 
++
+ def merge_ranges(spans):
+-    raise NotImplementedError("frozen baseline")
++    """Merge half-open ``[start, end)`` spans into sorted, coalesced ranges.
++
++    Accepts an outer list or tuple whose elements are list/tuple pairs of
++    exactly two integer endpoints (``bool`` excluded, arbitrary size allowed)
++    with ``start <= end``. Every element is validated before empty pairs are
++    dropped. Returns a new list of nonempty ``[start, end]`` lists sorted
++    ascending, coalescing both overlapping and adjacent ranges. The caller's
++    input is never mutated.
++    """
++    if not isinstance(spans, (list, tuple)):
++        raise ValueError("spans must be a list or tuple")
++
++    pairs = []
++    for span in spans:
++        if not isinstance(span, (list, tuple)):
++            raise ValueError("each span must be a list or tuple")
++        if len(span) != 2:
++            raise ValueError("each span must contain exactly two endpoints")
++        start, end = span
++        for endpoint in (start, end):
++            if isinstance(endpoint, bool) or not isinstance(endpoint, int):
++                raise ValueError("endpoints must be integers (bool excluded)")
++        if start > end:
++            raise ValueError("span start must not exceed its end")
++        pairs.append((start, end))
++
++    pairs.sort()
++    merged = []
++    for start, end in pairs:
++        if start == end:
++            continue
++        if merged and start <= merged[-1][1]:
++            if end > merged[-1][1]:
++                merged[-1][1] = end
++        else:
++            merged.append([start, end])
++    return merged

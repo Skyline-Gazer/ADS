@@ -1,0 +1,19 @@
+All 5 tests pass. Done.
+
+## Report
+
+**Genuine child IDs** (native, isolated):
+- `RangesWorker` (agent `worker-a`, job `RangesWorker`) — completed 25.5s
+- `TagsWorker` (agent `worker-b`, job `TagsWorker`) — completed 19.2s
+
+**Changed files**: `app/ranges.py`, `app/tags.py` (children), `app/report.py` (parent). No other files touched.
+
+**Conflicts / rework**: none. Both isolated diffs inspected and correct on first pass — no integration rework required.
+
+**Literal oracle result**:
+```
+Ran 5 tests in 0.001s
+OK
+```
+
+Key correctness points verified against the frozen tests: bool-rejection before zero-length filtering in `merge_ranges`; adjacency coalescing (`[3,5]+[5,8]→[3,8]`); `parse_tags` control-char scan and trailing/unknown-escape rejection; `build_report` propagates `ValueError` from either API.

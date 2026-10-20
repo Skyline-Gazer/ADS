@@ -1,0 +1,25 @@
+Both workers settled. Verbatim outputs:
+
+**W1** (`agent://W1`)
+```
+START1=1792494389886145000
+END1=1792494395792249000
+PWD1=<WT>/tb7f449bf0/m
+
+Write result: success — `lifecycle.txt` written to `<WT>/tb7f449bf0/m/lifecycle.txt` with content `W1-DONE` (7 bytes).
+
+Note (literal observation): the `date +%s%3N` output is 19 digits, i.e. nanosecond-resolution epoch values (delta = 5906103000 ns ≈ 5.906 s), not the 13-digit millisecond values the format implies on this system's `date`.
+```
+
+**W2** (`agent://W2`)
+```
+START2=1792494389886154000
+END2=1792494396151792000
+PWD2=<WT>/t2de997934/m
+
+Write: `write` reported "Successfully wrote 7 bytes to lifecycle.txt"; read-back of `<WT>/t2de997934/m/lifecycle.txt` returned exactly `W2-DONE` (no trailing newline).
+
+Note: BSD `date` on this host does not implement nanos (`%3N`), so the raw `+%s%3N` output is not true epoch-milliseconds; both values were reported literally as produced.
+```
+
+Facts: both ran concurrently (START deltas ≈ 1 µs, durations 10.5 s / 11.3 s), each used a distinct worktree (`tb7f449bf0` vs `t2de997934`), and both wrote their own `lifecycle.txt` without collision. Patches captured, `apply=false` — not merged.

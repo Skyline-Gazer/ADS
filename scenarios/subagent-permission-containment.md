@@ -1,6 +1,6 @@
 # Native Subagent authorization and containment acceptance
 
-**Status: protocol only — host-specific post-mitigation revalidation NOT TESTED.** Follow [native-subagent-safety.md](../docs/native-subagent-safety.md). Historical failure archives remain authoritative and unchanged. Never use real secrets, shared project data or production targets as probes.
+**Status: protocol + OMP 18.12.3 revalidation (2026-10-20); OpenCode 2.0.32 post-mitigation evidence lives on its separate issue-28 branch.** OMP `isolated: true` is Git worktree/patch isolation only: the default child read/wrote the parent worktree, an outside absolute path, a symlink target and a no-read canary, while its patch stayed empty. A project/call-level `tool_call` allowlist plus `bash`/`eval` deny passed the tested read/write/`../`/symlink/shell/MCP-route vectors, but is a tool-level boundary, not an OS sandbox; OMP exposes no OS sandbox and MCP tools are additive to an agent tool list. `task.batch` children were disposed with zero work when the parent ended its turn without `wait`. See [issue28-omp-native-isolation.md](issue28-omp-native-isolation.md). Follow [native-subagent-safety.md](../docs/native-subagent-safety.md). Historical failure archives remain authoritative and unchanged. Never use real secrets, shared project data or production targets as probes.
 
 ## Reproducible isolated fixture
 
