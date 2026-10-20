@@ -1,0 +1,90 @@
+{
+  "ADS_SHA": "2fe9ca015e7530b873bdbabf659894e0d83956b5",
+  "FIXTURE_SHA": "c59ef24cefcbd020fa9b58e60a253a533c94bc90",
+  "fixture_publication_commit": "48c7943996e462d4b30d4161c200d32007b4464d",
+  "HOST": "Codex CLI 0.163.0",
+  "FIXTURE_RESULT": "PASS: complete frozen bundle; 7 reference self-checks pass; wrong implementations rejected; baseline stubs fail",
+  "OVERALL": "PARTIAL delivery; benchmark BLOCKED before inference; whole-task no-global-policy-write gate FAIL",
+  "MODEL_CANDIDATES": [
+    "gpt-6.1-sol",
+    "gpt-6-sol"
+  ],
+  "actual_availability": "NOT VERIFIED; catalog only",
+  "MATRIX": [
+    {
+      "candidate": "gpt-6.1-sol",
+      "mode": "serial",
+      "N": 0,
+      "status": "NOT TESTED",
+      "actual_root_model": "NOT OBSERVED",
+      "actual_child_models": "NOT OBSERVED",
+      "sessions": "NOT OBSERVED",
+      "overlap": "NOT OBSERVED",
+      "end_to_end": "NOT OBSERVED",
+      "integration_rework": "NOT OBSERVED",
+      "tokens_cache": "NOT OBSERVED",
+      "actual_cost": "NOT OBSERVED",
+      "efficiency": "NOT COMPARABLE"
+    },
+    {
+      "candidate": "gpt-6.1-sol",
+      "mode": "multi",
+      "N": 0,
+      "status": "NOT TESTED",
+      "actual_root_model": "NOT OBSERVED",
+      "actual_child_models": "NOT OBSERVED",
+      "sessions": "NOT OBSERVED",
+      "overlap": "NOT OBSERVED",
+      "end_to_end": "NOT OBSERVED",
+      "integration_rework": "NOT OBSERVED",
+      "tokens_cache": "NOT OBSERVED",
+      "actual_cost": "NOT OBSERVED",
+      "efficiency": "NOT COMPARABLE"
+    },
+    {
+      "candidate": "gpt-6-sol",
+      "mode": "serial",
+      "N": 0,
+      "status": "NOT TESTED",
+      "actual_root_model": "NOT OBSERVED",
+      "actual_child_models": "NOT OBSERVED",
+      "sessions": "NOT OBSERVED",
+      "overlap": "NOT OBSERVED",
+      "end_to_end": "NOT OBSERVED",
+      "integration_rework": "NOT OBSERVED",
+      "tokens_cache": "NOT OBSERVED",
+      "actual_cost": "NOT OBSERVED",
+      "efficiency": "NOT COMPARABLE"
+    },
+    {
+      "candidate": "gpt-6-sol",
+      "mode": "multi",
+      "N": 0,
+      "status": "NOT TESTED",
+      "actual_root_model": "NOT OBSERVED",
+      "actual_child_models": "NOT OBSERVED",
+      "sessions": "NOT OBSERVED",
+      "overlap": "NOT OBSERVED",
+      "end_to_end": "NOT OBSERVED",
+      "integration_rework": "NOT OBSERVED",
+      "tokens_cache": "NOT OBSERVED",
+      "actual_cost": "NOT OBSERVED",
+      "efficiency": "NOT COMPARABLE"
+    }
+  ],
+  "native_capability": "INSTALLED; runtime configuration and genuine children NOT VERIFIED; metadata probe blocked by outer sandbox state-runtime initialization",
+  "stop_reason": "Host persisted one global allow rule despite explicit one-time/no-save request. Actual policy hash and exact 118-byte delta independently verified. No benchmark launched afterward.",
+  "global_policy_restored": false,
+  "global_policy_new_baseline_adopted": false,
+  "dispatch_guidance": "No model-specific performance conclusion. Protocol hypotheses only: tiny serial, independent medium conditional parallel, coupled serial or one writer/read-only workers.",
+  "NOT_TESTED": [
+    "all actual model workload cells",
+    "native children/overlap",
+    "model fallback and effective reasoning",
+    "tiny/coupled workload execution",
+    "repetitions",
+    "cross-host/mixed model",
+    "production"
+  ],
+  "FINAL_DECISION": "Do not close #21, merge report or release ADS. Resume unchanged fixture only after a path satisfying no-global-policy-write and actual-response-model evidence exists."
+}

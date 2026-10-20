@@ -1,0 +1,41 @@
+{
+  "time": "2026-10-20T05:37:08.386013+00:00",
+  "before": [
+    {
+      "path": "$USER_HOME/.codex/config.toml",
+      "sha256": "756c6de2a4f1453f901577caafd394e632882b4edf23c51331fcf5bb19c45295",
+      "bytes": 5643
+    },
+    {
+      "path": "$USER_HOME/.codex/rules/default.rules",
+      "sha256": "d287c3fb38dc3dff7f7af40cce0e677a6925d95d1974034203d4e1f2beec4221",
+      "bytes": 35674
+    }
+  ],
+  "after": [
+    {
+      "path": "$USER_HOME/.codex/config.toml",
+      "sha256": "756c6de2a4f1453f901577caafd394e632882b4edf23c51331fcf5bb19c45295",
+      "bytes": 5643
+    },
+    {
+      "path": "$USER_HOME/.codex/rules/default.rules",
+      "sha256": "534ff5fef8d4d9afaa59dba322a9fa95c6da21abb484e0f9c949efed3b544851",
+      "bytes": 35792
+    }
+  ],
+  "changes": [
+    {
+      "path": "$USER_HOME/.codex/rules/default.rules",
+      "added_lines": [
+        "prefix_rule(pattern=[\"rtk\", \"git\", \"push\", \"-u\", \"origin\", \"test/codex-cross-model-acceptance-21\"], decision=\"allow\")"
+      ],
+      "removed_lines": [],
+      "diff": "--- before/default.rules\n+++ after/default.rules\n@@ -225,0 +226 @@\n+prefix_rule(pattern=[\"rtk\", \"git\", \"push\", \"-u\", \"origin\", \"test/codex-cross-model-acceptance-21\"], decision=\"allow\")\n"
+    }
+  ],
+  "classification": "FAIL: whole-task no-global-policy-write boundary; benchmark STOP before inference",
+  "attribution": "Host tool reported saved prefix despite one-time/no-save request. Actual added rule independently checked. No agent command edits global policy. No silent restoration.",
+  "inference_runs_started": 0,
+  "scope": "config.toml and rules files; not a whole filesystem audit"
+}
