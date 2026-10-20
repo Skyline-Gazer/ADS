@@ -2,6 +2,8 @@
 
 These are practical manual or agent-driven acceptance cases, not a new evaluation platform. Record evidence in normal GitHub PR discussion or a short results summary.
 
+The [2026-10-20 Codex model-matrix preflight](v0.3-codex-model-matrix-2026-10-20.md) provides a [frozen portable fixture](fixtures/subagent-model-matrix/README.md); execution stopped before inference after a host-saved global approval rule violated the no-global-write boundary. N=0, model comparison BLOCKED; no performance claim.
+
 | Scenario | Pass condition |
 | --- | --- |
 | New Astro bootstrap | Runnable minimal app, lockfile, relevant CI/tests, correct AGENTS.md, no empty architecture or mandatory gate scaffolding |
