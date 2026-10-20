@@ -12,6 +12,7 @@ description: Execute an approved software goal through implementation, relevant 
 6. Prefer existing architecture and minimum sufficient implementation; reuse existing test facilities, caches and lockfiles before adding frameworks, containers or services. Use necessary mature dependencies; escalate consequential architecture changes.
 7. Run relevant tests, examine CI and fix related failures. Use the lowest-cost check that can actually detect the changed behavior, and do not claim offline mocks or reused local fixtures prove live integration.
 8. Make a focused PR or use the repository's authorized direct-commit path; report checks and risks. Merge autonomously only if low risk, required checks pass and auto-deploy effects are within authorization.
-9. Distinguish implemented, tested, merged, deployed and live-tested in the summary. Continue working within the current session until goal completion or genuine blocker.
+9. When the current Phase or milestone is actually complete, reconcile linked GitHub Project items and Issues against PR/CI/acceptance before dependent Phase work. Fix only verified drift, close only proved complete work and retain FAIL/PARTIAL blockers; unavailable Project API means PROJECT_UNVERIFIED. See [docs/milestone-reconciliation.md](../../docs/milestone-reconciliation.md). At that boundary, check whether the project's ADS submodule pin has an approved update without auto-upgrading it; use [docs/how-to-update.md](../../docs/how-to-update.md).
+10. Distinguish implemented, tested, merged, deployed and live-tested in the summary. Continue working within the current session until goal completion or genuine blocker.
 
 No compulsory per-stage approval, duplicate evidence archive or always-on maintenance scope.
