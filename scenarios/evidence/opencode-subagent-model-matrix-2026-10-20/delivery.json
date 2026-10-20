@@ -65,9 +65,18 @@
   "reporting_commit": "eb9e890",
   "ci": {
     "workflow": "Validate ADS",
-    "run": 39385207104,
-    "conclusion": "SUCCESS",
-    "commit": "eb9e890",
-    "note": "delivery-metadata commit not separately triggered"
+    "runs": [
+      {
+        "run": 39385207104,
+        "commit": "eb9e890",
+        "conclusion": "SUCCESS"
+      },
+      {
+        "run": 39385705404,
+        "commit": "e73cce4",
+        "conclusion": "SUCCESS"
+      }
+    ],
+    "note": "no workflow run was observed for the final evidence-receipt commit at delivery time; local check-ads and unit tests pass on the working tree"
   }
 }
