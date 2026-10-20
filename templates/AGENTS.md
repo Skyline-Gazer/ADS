@@ -2,9 +2,11 @@
 
 ## ADS adoption
 Source: https://github.com/Skyline-Gazer/ADS
-Pinned revision: <full immutable ADS commit SHA or release tag>
-Locally available guidance: <vendored path or agent-accessible pinned source>
-Primary rules: STANDARD.md, SAFETY.md, QUALITY.md at that revision.
+Pinned revision: <full immutable ADS commit SHA recorded by the consumer gitlink>
+Locally available guidance: .ads/ (Git submodule; use another explicit path if already occupied)
+Primary rules: .ads/STANDARD.md, .ads/SAFETY.md, .ads/QUALITY.md at that revision.
+Install/update guide: .ads/docs/how-to-update.md; use approved release diff + tested gitlink PR, never an unchecked moving-branch update.
+Phase checkpoint: .ads/docs/milestone-reconciliation.md; reconcile real GitHub Project issues/items/PR/CI when a Phase or goal ends.
 If private content is inaccessible, report it rather than pretending these rules were loaded.
 
 ## Project facts
