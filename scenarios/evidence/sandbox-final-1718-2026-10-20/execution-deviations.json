@@ -1,0 +1,18 @@
+{
+  "preserved_historical_archive": "scenarios/issues-17-18-native-acceptance.md and its evidence remain byte-identical to the baseline.",
+  "initial_checkout": "Original clean worktree was on an older acceptance branch without the two requested guides; a separate baseline-pinned task worktree was created.",
+  "startup_errors": [
+    "Sandbox gh network request failed; rerun with host escalation succeeded.",
+    "Worktree creation could not write read-only shared .git; approved host escalation succeeded.",
+    "Temporary evidence helper was initially named operator.py and shadowed Python stdlib; it failed before API execution, then was renamed acceptance_io.py.",
+    "Initial gh Actions log capture rejected terminal escape sequences; raw exit retained, retry captured stdout to JSON with --allow-escape-sequences.",
+    "RTK intercepted gh help; rtk proxy was used to obtain actual help."
+  ],
+  "merge_conflict": "PR #5 overlapped #4 in tests/test_health.py; ordinary merge preserved both tests and was pushed without force. Updated-head hosted CI passed before merge.",
+  "false_done_side_effect": "Injected #2 Done was initially OPEN; a later read observed CLOSED with no close API call by this agent. Issue timeline actor is markd3ng with null commit_id. Consistent with Project automation; exact workflow/writer not independently attributed. Corrected Todo then reopened, independently reread OPEN.",
+  "negative_fixture": "Security PR #6 intentionally fails a synthetic unresolved acceptance assertion. It is not a demonstrated production vulnerability and remains unmerged.",
+  "rollback_fixture": "Synthetic release-only consumer rejects the unreleased candidate; a new rollback commit restores only upgrade-introduced changes. No real consumer incompatibility is claimed.",
+  "hosted_checkout_force": "actions/checkout@v4 internally invokes submodule update --force on its fresh disposable runner. The agent did not force-checkout or clean any dirty consumer workspace; the dirty preservation test is local and passed.",
+  "cli_native_sandbox": "Read-only CLI smoke emitted denied xcrun temporary cache writes; all read/test commands and turn exited 0. Exact warnings retained.",
+  "host_policy": "Host-reported prefix saves changed default.rules; exact selected-file diff is retained. config.toml unchanged. No claim that the entire host filesystem was write-free."
+}

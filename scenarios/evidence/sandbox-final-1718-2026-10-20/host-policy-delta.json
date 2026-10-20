@@ -1,0 +1,42 @@
+{
+  "time": "2026-10-20T03:38:48.732313+00:00",
+  "before": [
+    {
+      "path": "$USER_HOME/.codex/config.toml",
+      "sha256": "756c6de2a4f1453f901577caafd394e632882b4edf23c51331fcf5bb19c45295",
+      "bytes": 5643
+    },
+    {
+      "path": "$USER_HOME/.codex/rules/default.rules",
+      "sha256": "e2015d98899d4533026bce54262abac8ca7aabc8793db5abf4d8ca0a6f87d4ce",
+      "bytes": 33911
+    }
+  ],
+  "after": [
+    {
+      "path": "$USER_HOME/.codex/config.toml",
+      "sha256": "756c6de2a4f1453f901577caafd394e632882b4edf23c51331fcf5bb19c45295",
+      "bytes": 5643
+    },
+    {
+      "path": "$USER_HOME/.codex/rules/default.rules",
+      "sha256": "d287c3fb38dc3dff7f7af40cce0e677a6925d95d1974034203d4e1f2beec4221",
+      "bytes": 35674
+    }
+  ],
+  "changes": [
+    {
+      "path": "$USER_HOME/.codex/rules/default.rules",
+      "added_lines": [
+        " prefix_rule(pattern=[\"rtk\", \"gh\", \"api\", \"graphql\", \"-f\", \"query=query { viewer { login } organization(login:\\\"Skyline-Gazer\\\") { projectV2(number:9) { id title url } } }\"], decision=\"allow\")",
+        " prefix_rule(pattern=[\"rtk\", \"git\", \"worktree\", \"add\", \"-b\", \"test/sandbox-final-acceptance-1718\", \"$RUN/ads\", \"c24d0b8edc1e56ee4464d107c5257722c3683a8f\"], decision=\"allow\")",
+        " prefix_rule(pattern=[\"rtk\", \"gh\", \"api\", \"graphql\", \"-f\", \"query=query { organization(login:\\\"Skyline-Gazer\\\") { projectV2(number:9) { id title url fields(first:100) { nodes { ... on ProjectV2FieldCommon { id name dataType } ... on ProjectV2SingleSelectField { options { id name } } } pageInfo { hasNextPage endCursor } } items(first:100) { nodes { id type isArchived content { __typename ... on Issue { id number title state url repository { nameWithOwner } body } ... on PullRequest { id number title state url repository { nameWithOwner } } ... on DraftIssue { id title body } } fieldValues(first:100) { nodes { ... on ProjectV2ItemFieldSingleSelectValue { name optionId field { ... on ProjectV2FieldCommon { id name } } } } } } pageInfo { hasNextPage endCursor } } } } repository(owner:\\\"Skyline-Gazer\\\",name:\\\"ADS-Acceptance-Sandbox\\\") { id nameWithOwner isPrivate defaultBranchRef { name target { oid } } issues(first:10) { nodes { id number title body state url } } pullRequests(first:30,orderBy:{field:CREATED_AT,direction:DESC}) { nodes { number title url state headRefName baseRefName headRefOid mergeCommit { oid } } } } }\"], decision=\"allow\")",
+        " prefix_rule(pattern=[\"python3\", \"$RUN/operator.py\"], decision=\"allow\")",
+        " prefix_rule(pattern=[\"python3\", \"$RUN/acceptance_io.py\"], decision=\"allow\")"
+      ],
+      "diff": "--- before/default.rules\n+++ after/default.rules\n@@ -218,3 +218,8 @@\n prefix_rule(pattern=[\"rtk\", \"gh\", \"pr\", \"create\", \"--repo\", \"Skyline-Gazer/ADS\", \"--base\", \"main\", \"--head\", \"test/issues-17-18-native-acceptance\", \"--title\", \"test: archive issues 17 and 18 partial native integration acceptance\", \"--body-file\", \"/private/tmp/ads-1718-acceptance-C6V37r/pr-body.md\"], decision=\"allow\")\n prefix_rule(pattern=[\"rtk\", \"gh\", \"issue\", \"comment\", \"17\", \"--repo\", \"Skyline-Gazer/ADS\", \"--body-file\", \"/private/tmp/ads-1718-acceptance-C6V37r/issue-17-comment.md\"], decision=\"allow\")\n prefix_rule(pattern=[\"rtk\", \"gh\", \"issue\", \"comment\", \"18\", \"--repo\", \"Skyline-Gazer/ADS\", \"--body-file\", \"/private/tmp/ads-1718-acceptance-C6V37r/issue-18-comment.md\"], decision=\"allow\")\n+prefix_rule(pattern=[\"rtk\", \"gh\", \"api\", \"graphql\", \"-f\", \"query=query { viewer { login } organization(login:\\\"Skyline-Gazer\\\") { projectV2(number:9) { id title url } } }\"], decision=\"allow\")\n+prefix_rule(pattern=[\"rtk\", \"git\", \"worktree\", \"add\", \"-b\", \"test/sandbox-final-acceptance-1718\", \"$RUN/ads\", \"c24d0b8edc1e56ee4464d107c5257722c3683a8f\"], decision=\"allow\")\n+prefix_rule(pattern=[\"rtk\", \"gh\", \"api\", \"graphql\", \"-f\", \"query=query { organization(login:\\\"Skyline-Gazer\\\") { projectV2(number:9) { id title url fields(first:100) { nodes { ... on ProjectV2FieldCommon { id name dataType } ... on ProjectV2SingleSelectField { options { id name } } } pageInfo { hasNextPage endCursor } } items(first:100) { nodes { id type isArchived content { __typename ... on Issue { id number title state url repository { nameWithOwner } body } ... on PullRequest { id number title state url repository { nameWithOwner } } ... on DraftIssue { id title body } } fieldValues(first:100) { nodes { ... on ProjectV2ItemFieldSingleSelectValue { name optionId field { ... on ProjectV2FieldCommon { id name } } } } } } pageInfo { hasNextPage endCursor } } } } repository(owner:\\\"Skyline-Gazer\\\",name:\\\"ADS-Acceptance-Sandbox\\\") { id nameWithOwner isPrivate defaultBranchRef { name target { oid } } issues(first:10) { nodes { id number title body state url } } pullRequests(first:30,orderBy:{field:CREATED_AT,direction:DESC}) { nodes { number title url state headRefName baseRefName headRefOid mergeCommit { oid } } } } }\"], decision=\"allow\")\n+prefix_rule(pattern=[\"python3\", \"$RUN/operator.py\"], decision=\"allow\")\n+prefix_rule(pattern=[\"python3\", \"$RUN/acceptance_io.py\"], decision=\"allow\")\n"
+    }
+  ],
+  "scope": "config.toml hash only; default.rules actual diff; not a complete filesystem audit",
+  "attribution": "Host reported saving approval prefix rules. No agent command writes these global policy files. Exact differences retained; not silently restored."
+}

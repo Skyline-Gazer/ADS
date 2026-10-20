@@ -1,0 +1,309 @@
+{
+  "data": {
+    "organization": {
+      "projectV2": {
+        "id": "PVT_kwDOEwGMMc4Bn1h-",
+        "title": "ADS Acceptance Sandbox",
+        "url": "https://github.com/orgs/Skyline-Gazer/projects/9",
+        "fields": {
+          "nodes": [
+            {
+              "id": "PVTF_lADOEwGMMc4Bn1h-zhmYUtU",
+              "name": "Title",
+              "dataType": "TITLE"
+            },
+            {
+              "id": "PVTF_lADOEwGMMc4Bn1h-zhmYUtc",
+              "name": "Assignees",
+              "dataType": "ASSIGNEES"
+            },
+            {
+              "id": "PVTSSF_lADOEwGMMc4Bn1h-zhmYUtk",
+              "name": "Status",
+              "dataType": "SINGLE_SELECT",
+              "options": [
+                {
+                  "id": "f75ad846",
+                  "name": "Todo"
+                },
+                {
+                  "id": "47fc9ee4",
+                  "name": "In Progress"
+                },
+                {
+                  "id": "98236657",
+                  "name": "Done"
+                }
+              ]
+            },
+            {
+              "id": "PVTF_lADOEwGMMc4Bn1h-zhmYUts",
+              "name": "Labels",
+              "dataType": "LABELS"
+            },
+            {
+              "id": "PVTF_lADOEwGMMc4Bn1h-zhmYUt0",
+              "name": "Linked pull requests",
+              "dataType": "LINKED_PULL_REQUESTS"
+            },
+            {
+              "id": "PVTF_lADOEwGMMc4Bn1h-zhmYUt8",
+              "name": "Milestone",
+              "dataType": "MILESTONE"
+            },
+            {
+              "id": "PVTF_lADOEwGMMc4Bn1h-zhmYUuE",
+              "name": "Repository",
+              "dataType": "REPOSITORY"
+            },
+            {
+              "id": "PVTF_lADOEwGMMc4Bn1h-zhmYUuU",
+              "name": "Reviewers",
+              "dataType": "REVIEWERS"
+            },
+            {
+              "id": "PVTF_lADOEwGMMc4Bn1h-zhmYUuc",
+              "name": "Parent issue",
+              "dataType": "PARENT_ISSUE"
+            },
+            {
+              "id": "PVTF_lADOEwGMMc4Bn1h-zhmYUug",
+              "name": "Sub-issues progress",
+              "dataType": "SUB_ISSUES_PROGRESS"
+            },
+            {
+              "id": "PVTF_lADOEwGMMc4Bn1h-zhmYUuk",
+              "name": "Created",
+              "dataType": "CREATED"
+            },
+            {
+              "id": "PVTF_lADOEwGMMc4Bn1h-zhmYUuo",
+              "name": "Updated",
+              "dataType": "UPDATED"
+            },
+            {
+              "id": "PVTF_lADOEwGMMc4Bn1h-zhmYUus",
+              "name": "Closed",
+              "dataType": "CLOSED"
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "MTM"
+          }
+        },
+        "items": {
+          "nodes": [
+            {
+              "id": "PVTI_lADOEwGMMc4Bn1h-zhCAgcI",
+              "type": "ISSUE",
+              "isArchived": false,
+              "content": {
+                "__typename": "Issue",
+                "id": "I_kwDOVQWCts8AAAABYcJN1g",
+                "number": 1,
+                "title": "[ADS TEST] Phase completion: close only after verified merged PR and CI",
+                "state": "CLOSED",
+                "url": "https://github.com/Skyline-Gazer/ADS-Acceptance-Sandbox/issues/1",
+                "repository": {
+                  "nameWithOwner": "Skyline-Gazer/ADS-Acceptance-Sandbox"
+                },
+                "body": "Sandbox-only fixture for ADS #17. Initially OPEN/unfinished. The acceptance agent may create a small scoped PR against this sandbox repository with a demonstrably passing contract test, merge it if required checks pass, then reconcile the associated **Skyline-Gazer Project #9** item and this sandbox Issue to Done/CLOSED. Record exact PR/head/merge SHA, Actions run and Project item IDs; re-read both final states. Do not use this Issue as evidence until an actual PR and CI verify acceptance. No production resources."
+              },
+              "fieldValues": {
+                "nodes": [
+                  {},
+                  {},
+                  {},
+                  {
+                    "name": "Done",
+                    "optionId": "98236657",
+                    "field": {
+                      "id": "PVTSSF_lADOEwGMMc4Bn1h-zhmYUtk",
+                      "name": "Status"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PVTI_lADOEwGMMc4Bn1h-zhCAgdM",
+              "type": "ISSUE",
+              "isArchived": false,
+              "content": {
+                "__typename": "Issue",
+                "id": "I_kwDOVQWCts8AAAABYcJPHw",
+                "number": 2,
+                "title": "[ADS TEST] False Done: maintain Open when security acceptance is unresolved",
+                "state": "OPEN",
+                "url": "https://github.com/Skyline-Gazer/ADS-Acceptance-Sandbox/issues/2",
+                "repository": {
+                  "nameWithOwner": "Skyline-Gazer/ADS-Acceptance-Sandbox"
+                },
+                "body": "Sandbox-only **negative** fixture for ADS #17. Intentionally set this issue's corresponding Project #9 test item to Done temporarily while its required negative authorization/security oracle is explicitly NOT PASSED. The reconciliation agent must detect the false Done, change *only this test item's* Project status back to an appropriate non-Done option and **keep this Issue OPEN**. Never fabricate security PASS or close for green documentation CI; read back the Project item state and Issue state."
+              },
+              "fieldValues": {
+                "nodes": [
+                  {},
+                  {},
+                  {
+                    "name": "Todo",
+                    "optionId": "f75ad846",
+                    "field": {
+                      "id": "PVTSSF_lADOEwGMMc4Bn1h-zhmYUtk",
+                      "name": "Status"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PVTI_lADOEwGMMc4Bn1h-zhCAgeQ",
+              "type": "ISSUE",
+              "isArchived": false,
+              "content": {
+                "__typename": "Issue",
+                "id": "I_kwDOVQWCts8AAAABYcJQfg",
+                "number": 3,
+                "title": "[ADS TEST] Status mismatch: verified task initially marked Open",
+                "state": "OPEN",
+                "url": "https://github.com/Skyline-Gazer/ADS-Acceptance-Sandbox/issues/3",
+                "repository": {
+                  "nameWithOwner": "Skyline-Gazer/ADS-Acceptance-Sandbox"
+                },
+                "body": "Sandbox-only fixture for ADS #17. Create and verify a distinct narrow consumer task on a sandbox PR with passing hosted CI, but deliberately keep the Issue OPEN and Project #9 item in an open status during initial reconciliation. Reconciliation must detect acceptance-backed completion, set Done, close only this fixture Issue, and re-read the final state. No cross-project updates."
+              },
+              "fieldValues": {
+                "nodes": [
+                  {},
+                  {},
+                  {
+                    "name": "Todo",
+                    "optionId": "f75ad846",
+                    "field": {
+                      "id": "PVTSSF_lADOEwGMMc4Bn1h-zhmYUtk",
+                      "name": "Status"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "PVTI_lADOEwGMMc4Bn1h-zhCAgfQ",
+              "type": "DRAFT_ISSUE",
+              "isArchived": false,
+              "content": {
+                "__typename": "DraftIssue",
+                "id": "DI_lADOEwGMMc4Bn1h-zgLbEx8",
+                "title": "[ADS TEST] Draft acceptance stays unresolved",
+                "body": "Disposable draft for this acceptance only. No Issue exists; security acceptance is unresolved. Do not infer Done from other merged PRs."
+              },
+              "fieldValues": {
+                "nodes": [
+                  {},
+                  {
+                    "name": "Todo",
+                    "optionId": "f75ad846",
+                    "field": {
+                      "id": "PVTSSF_lADOEwGMMc4Bn1h-zhmYUtk",
+                      "name": "Status"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "Y3Vyc29yOnYyOpKrMDAwMDAwMDAuMjXOEICB9A=="
+          }
+        }
+      }
+    },
+    "repository": {
+      "id": "R_kgDOVQWCtg",
+      "nameWithOwner": "Skyline-Gazer/ADS-Acceptance-Sandbox",
+      "isPrivate": true,
+      "defaultBranchRef": {
+        "name": "main",
+        "target": {
+          "oid": "d3ec6db3189db85f74a8963fc6360a5f960ba275"
+        }
+      },
+      "issues": {
+        "nodes": [
+          {
+            "id": "I_kwDOVQWCts8AAAABYcJN1g",
+            "number": 1,
+            "title": "[ADS TEST] Phase completion: close only after verified merged PR and CI",
+            "body": "Sandbox-only fixture for ADS #17. Initially OPEN/unfinished. The acceptance agent may create a small scoped PR against this sandbox repository with a demonstrably passing contract test, merge it if required checks pass, then reconcile the associated **Skyline-Gazer Project #9** item and this sandbox Issue to Done/CLOSED. Record exact PR/head/merge SHA, Actions run and Project item IDs; re-read both final states. Do not use this Issue as evidence until an actual PR and CI verify acceptance. No production resources.",
+            "state": "CLOSED",
+            "url": "https://github.com/Skyline-Gazer/ADS-Acceptance-Sandbox/issues/1"
+          },
+          {
+            "id": "I_kwDOVQWCts8AAAABYcJPHw",
+            "number": 2,
+            "title": "[ADS TEST] False Done: maintain Open when security acceptance is unresolved",
+            "body": "Sandbox-only **negative** fixture for ADS #17. Intentionally set this issue's corresponding Project #9 test item to Done temporarily while its required negative authorization/security oracle is explicitly NOT PASSED. The reconciliation agent must detect the false Done, change *only this test item's* Project status back to an appropriate non-Done option and **keep this Issue OPEN**. Never fabricate security PASS or close for green documentation CI; read back the Project item state and Issue state.",
+            "state": "OPEN",
+            "url": "https://github.com/Skyline-Gazer/ADS-Acceptance-Sandbox/issues/2"
+          },
+          {
+            "id": "I_kwDOVQWCts8AAAABYcJQfg",
+            "number": 3,
+            "title": "[ADS TEST] Status mismatch: verified task initially marked Open",
+            "body": "Sandbox-only fixture for ADS #17. Create and verify a distinct narrow consumer task on a sandbox PR with passing hosted CI, but deliberately keep the Issue OPEN and Project #9 item in an open status during initial reconciliation. Reconciliation must detect acceptance-backed completion, set Done, close only this fixture Issue, and re-read the final state. No cross-project updates.",
+            "state": "OPEN",
+            "url": "https://github.com/Skyline-Gazer/ADS-Acceptance-Sandbox/issues/3"
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "Y3Vyc29yOnYyOpK0MjAyNi0xMC0yMFQwMjo1NDoyOVrPAAAAAWHCUH4="
+        }
+      },
+      "pullRequests": {
+        "nodes": [
+          {
+            "number": 6,
+            "title": "test: unresolved security negative control (DO NOT MERGE)",
+            "url": "https://github.com/Skyline-Gazer/ADS-Acceptance-Sandbox/pull/6",
+            "state": "OPEN",
+            "headRefName": "test/issue-2-security-negative",
+            "baseRefName": "main",
+            "headRefOid": "6ce07b781e89d7e325fa9bdd8db4a50df4b7902b",
+            "mergeCommit": null
+          },
+          {
+            "number": 5,
+            "title": "test: verify JSON consumer contract (sandbox #3)",
+            "url": "https://github.com/Skyline-Gazer/ADS-Acceptance-Sandbox/pull/5",
+            "state": "MERGED",
+            "headRefName": "test/issue-3-json-contract",
+            "baseRefName": "main",
+            "headRefOid": "23228827f5325377a0ba4caf8558ffef40d2ee53",
+            "mergeCommit": {
+              "oid": "d3ec6db3189db85f74a8963fc6360a5f960ba275"
+            }
+          },
+          {
+            "number": 4,
+            "title": "test: verify health response isolation (sandbox #1)",
+            "url": "https://github.com/Skyline-Gazer/ADS-Acceptance-Sandbox/pull/4",
+            "state": "MERGED",
+            "headRefName": "test/issue-1-health-isolation",
+            "baseRefName": "main",
+            "headRefOid": "18451fec6dd78695d290d06d7be975013112e397",
+            "mergeCommit": {
+              "oid": "97f492060062aba2a9294a78a811a7a325ab1d44"
+            }
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": "Y3Vyc29yOnYyOpK0MjAyNi0xMC0yMFQwMzozMDozOVrPAAAAASXi3tU="
+        }
+      }
+    }
+  }
+}

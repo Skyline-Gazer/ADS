@@ -1,0 +1,202 @@
+{
+  "node": {
+    "id": "PVT_kwDOEwGMMc4Bn1h-",
+    "title": "ADS Acceptance Sandbox",
+    "items": {
+      "totalCount": 4,
+      "pageInfo": {
+        "hasNextPage": false,
+        "endCursor": "Y3Vyc29yOnYyOpKrMDAwMDAwMDAuMjXOEICB9A=="
+      },
+      "nodes": [
+        {
+          "id": "PVTI_lADOEwGMMc4Bn1h-zhCAgcI",
+          "type": "ISSUE",
+          "isArchived": false,
+          "content": {
+            "__typename": "Issue",
+            "number": 1,
+            "state": "CLOSED",
+            "url": "https://github.com/Skyline-Gazer/ADS-Acceptance-Sandbox/issues/1"
+          },
+          "fieldValueByName": {
+            "name": "Done",
+            "optionId": "98236657",
+            "field": {
+              "id": "PVTSSF_lADOEwGMMc4Bn1h-zhmYUtk",
+              "name": "Status",
+              "options": [
+                {
+                  "id": "f75ad846",
+                  "name": "Todo"
+                },
+                {
+                  "id": "47fc9ee4",
+                  "name": "In Progress"
+                },
+                {
+                  "id": "98236657",
+                  "name": "Done"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "PVTI_lADOEwGMMc4Bn1h-zhCAgdM",
+          "type": "ISSUE",
+          "isArchived": false,
+          "content": {
+            "__typename": "Issue",
+            "number": 2,
+            "state": "OPEN",
+            "url": "https://github.com/Skyline-Gazer/ADS-Acceptance-Sandbox/issues/2"
+          },
+          "fieldValueByName": {
+            "name": "Todo",
+            "optionId": "f75ad846",
+            "field": {
+              "id": "PVTSSF_lADOEwGMMc4Bn1h-zhmYUtk",
+              "name": "Status",
+              "options": [
+                {
+                  "id": "f75ad846",
+                  "name": "Todo"
+                },
+                {
+                  "id": "47fc9ee4",
+                  "name": "In Progress"
+                },
+                {
+                  "id": "98236657",
+                  "name": "Done"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "PVTI_lADOEwGMMc4Bn1h-zhCAgeQ",
+          "type": "ISSUE",
+          "isArchived": false,
+          "content": {
+            "__typename": "Issue",
+            "number": 3,
+            "state": "CLOSED",
+            "url": "https://github.com/Skyline-Gazer/ADS-Acceptance-Sandbox/issues/3"
+          },
+          "fieldValueByName": {
+            "name": "Done",
+            "optionId": "98236657",
+            "field": {
+              "id": "PVTSSF_lADOEwGMMc4Bn1h-zhmYUtk",
+              "name": "Status",
+              "options": [
+                {
+                  "id": "f75ad846",
+                  "name": "Todo"
+                },
+                {
+                  "id": "47fc9ee4",
+                  "name": "In Progress"
+                },
+                {
+                  "id": "98236657",
+                  "name": "Done"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "PVTI_lADOEwGMMc4Bn1h-zhCAgfQ",
+          "type": "DRAFT_ISSUE",
+          "isArchived": false,
+          "content": {
+            "__typename": "DraftIssue",
+            "id": "DI_lADOEwGMMc4Bn1h-zgLbEx8",
+            "title": "[ADS TEST] Draft dependency: unresolved security acceptance",
+            "body": "Canonical dependency: https://github.com/Skyline-Gazer/ADS-Acceptance-Sandbox/issues/2\nScope corrected from the completed health fixture to the actual unresolved security acceptance. This standalone test draft has no Issue of its own; keep Todo and do not close or delete it."
+          },
+          "fieldValueByName": {
+            "name": "Todo",
+            "optionId": "f75ad846",
+            "field": {
+              "id": "PVTSSF_lADOEwGMMc4Bn1h-zhmYUtk",
+              "name": "Status",
+              "options": [
+                {
+                  "id": "f75ad846",
+                  "name": "Todo"
+                },
+                {
+                  "id": "47fc9ee4",
+                  "name": "In Progress"
+                },
+                {
+                  "id": "98236657",
+                  "name": "Done"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "repository": {
+    "nameWithOwner": "Skyline-Gazer/ADS-Acceptance-Sandbox",
+    "defaultBranchRef": {
+      "name": "main",
+      "target": {
+        "oid": "d56db0b469792da9bc42a9a09b5a966d881b3945"
+      }
+    },
+    "one": {
+      "number": 1,
+      "state": "CLOSED",
+      "url": "https://github.com/Skyline-Gazer/ADS-Acceptance-Sandbox/issues/1"
+    },
+    "two": {
+      "number": 2,
+      "state": "OPEN",
+      "url": "https://github.com/Skyline-Gazer/ADS-Acceptance-Sandbox/issues/2"
+    },
+    "three": {
+      "number": 3,
+      "state": "CLOSED",
+      "url": "https://github.com/Skyline-Gazer/ADS-Acceptance-Sandbox/issues/3"
+    },
+    "install": {
+      "state": "MERGED",
+      "merged": true,
+      "headRefOid": "626c65f7e0ab9102126654090141397ab472ce6d",
+      "mergeCommit": {
+        "oid": "d56db0b469792da9bc42a9a09b5a966d881b3945"
+      }
+    },
+    "upgrade": {
+      "state": "OPEN",
+      "merged": false,
+      "headRefOid": "79b5a4e6c8a2dbd67875502dcf14783222f993ca",
+      "mergeCommit": null
+    }
+  },
+  "ads": {
+    "isPrivate": true,
+    "defaultBranchRef": {
+      "name": "main",
+      "target": {
+        "oid": "c24d0b8edc1e56ee4464d107c5257722c3683a8f"
+      }
+    },
+    "one": {
+      "number": 17,
+      "state": "OPEN"
+    },
+    "two": {
+      "number": 18,
+      "state": "OPEN"
+    }
+  }
+}
