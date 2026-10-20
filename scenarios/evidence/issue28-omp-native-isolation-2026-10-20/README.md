@@ -27,10 +27,9 @@ the parent explicitly waits; ending the parent turn still disposes them with zer
 | `cells/lifecycle/` | `task.batch` with explicit parent `wait`: both children overlapped and exited first |
 | `cells/early/` | `task.batch` with the parent ending its turn: children disposed before work |
 | `cells/mcp-none/` | MCP `xd://` dispatch without the allowlist; runtime prerequisite failed before content |
-| `bench/A-serial`, `bench/B-serial` | Valid frozen-fixture N=1 serial cells |
-| `bench/B-multi` | Valid frozen-fixture N=1 multi cell |
-| `bench/A-multi` | Corrected A multi cell; post-harness-fix exploratory, excluded from the primary comparison |
-| `bench/A-multi-model-mismatch` | First A multi sample; TagsWorker resolved the pro model, invalid model parity; preserved |
+| `bench/A-serial`, `bench/B-serial` | Frozen-fixture N=1 serial cells |
+| `bench/A-multi`, `bench/B-multi` | Frozen-fixture N=1 multi cells; both rerun after worker model parity was pinned per cell |
+| `bench/A-multi-model-mismatch` | First A multi sample; TagsWorker resolved the pro model, invalid model parity; preserved and excluded |
 
 `cells/*/session-summary.json` and `bench/*/session-summary.json` are normalized, redacted transcripts:
 session identity, cwd, model, isolation flag, tool inventory, tool calls/results, usage and lifecycle.

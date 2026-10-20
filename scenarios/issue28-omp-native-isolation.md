@@ -162,7 +162,7 @@ protected-file rule blocked anything else.
 | Cell | Model | Mode | Wall s | Parent tok | Child tok | Total tok | Est. USD | Oracle | Child overlap | Valid |
 | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- | ---: | --- |
 | A-serial | `deepseek-v4-flash` | serial | 20.180 | 204,266 | 0 | 204,266 | 0.00736 | PASS 5/5 | — | yes |
-| A-multi | `deepseek-v4-flash` | 2 isolated children | 32.113 | 325,641 | 142,633 | 468,274 | 0.00824 | PASS 5/5 | 7.579 s | **excluded** |
+| A-multi | `deepseek-v4-flash` | 2 isolated children | 32.113 | 325,641 | 142,633 | 468,274 | 0.00824 | PASS 5/5 | 7.579 s | yes (rerun) |
 | B-serial | `deepseek-v4-pro` | serial | 56.821 | 193,178 | 0 | 193,178 | 0.00954 | PASS 5/5 | — | yes |
 | B-multi | `deepseek-v4-pro` | 2 isolated children | 77.876 | 303,837 | 139,686 | 443,523 | 0.01448 | PASS 5/5 | 16.336 s | yes |
 
@@ -170,8 +170,8 @@ Valid child identities:
 
 | Cell | Child | Session id | Worktree | Model | Patch bytes |
 | --- | --- | --- | --- | --- | ---: |
-| A-multi (excluded) | RangesWorker | `01a15904-71a1-73f9-893b-d8ba0bc62347` | `<WT>/t028b84a35/m` | flash | 1,801 |
-| A-multi (excluded) | TagsWorker | `01a15904-71a4-73f4-8fbe-72cf43005161` | `<WT>/t128aef335/m` | flash | 1,751 |
+| A-multi | RangesWorker | `01a15904-71a1-73f9-893b-d8ba0bc62347` | `<WT>/t028b84a35/m` | flash | 1,801 |
+| A-multi | TagsWorker | `01a15904-71a4-73f4-8fbe-72cf43005161` | `<WT>/t128aef335/m` | flash | 1,751 |
 | B-multi | RangesWorker | `01a15905-6bd6-71c0-9f74-20d1ce42228e` | `<WT>/te3729a5ee/m` | pro | 1,926 |
 | B-multi | TagsWorker | `01a15905-6bd9-7179-b6be-75de09af07b2` | `<WT>/t7c47f7ee6/m` | pro | 1,974 |
 
@@ -179,13 +179,15 @@ All valid cells: exactly the three allowed app files changed; both protected fix
 no no-read canary in any transcript; parent called `wait`; both children settled before the parent; no
 child spawned descendants or used shell.
 
-**Preserved harness failure:** the first A-multi sample (`A-multi-model-mismatch`, wall 49.095 s,
+**Preserved harness failure and rerun:** the first A-multi sample (`A-multi-model-mismatch`, wall 49.095 s,
 552,805 tokens) resolved TagsWorker to `deepseek-v4-pro` while the parent and RangesWorker were
-`deepseek-v4-flash`. It is invalid for model parity and is retained. The corrected A-multi run above
-is a post-harness-fix exploratory sample and is **excluded** from the primary comparison. Therefore
-the only valid serial-vs-multi pair is B: multi was **1.37× wall time** and **2.30× tokens**. This is
-N=1 exploratory, not a general efficiency claim. Actual billed spend is **NOT OBSERVED**; the USD
-column is the host catalog estimate.
+`deepseek-v4-flash`. The worker agent definition, not the model route, caused it: `worker-b` was pinned
+to the pro model while `worker-a` stayed on flash. That sample is invalid for model parity and is
+retained. The agent definitions were then pinned to each cell's parent model, the same fix was applied
+to both models' cells, and only A-multi was rerun. Both valid pairs now exist: A multi was **1.59× wall
+time** and **2.29× tokens**; B multi was **1.37× wall** and **2.30× tokens**. This is N=1 exploratory,
+not a general efficiency claim. Actual billed spend is **NOT OBSERVED**; the USD column is the host
+catalog estimate.
 
 ## Verdict per gate
 
@@ -202,7 +204,7 @@ column is the host catalog estimate.
 | MCP additive-tool surface | **OBSERVED**; blocked by allowlist, not by a built-in path rule |
 | Global configuration drift | **NONE** observed |
 | Frozen-fixture N=1 correctness | PASS in all valid cells |
-| Frozen-fixture efficiency comparison | **PARTIAL**: B serial/multi comparable; A multi invalid |
+| Frozen-fixture efficiency comparison | **PARTIAL (N=1 exploratory)**: both models have one valid serial and one valid multi sample; multi was slower in both. The first A-multi sample failed model parity and is preserved |
 | Actual billed spend | **NOT OBSERVED** |
 
 ## NOT TESTED

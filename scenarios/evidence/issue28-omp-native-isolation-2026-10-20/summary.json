@@ -7,6 +7,8 @@
     "oracle_sha256": "0405270d940a1817b7730aa4e612edd07081c1c0023e9a9438a6fa83e1b2e40f"
   },
   "benchmark": {
+    "a_serial_to_multi_token_ratio": 2.292,
+    "a_serial_to_multi_wall_ratio": 1.591,
     "actual_billed_spend": "NOT OBSERVED; host catalog estimate only",
     "b_serial_to_multi_token_ratio": 2.296,
     "b_serial_to_multi_wall_ratio": 1.371,
@@ -57,7 +59,7 @@
         "mode": "multi",
         "model": "deepseek/deepseek-v4-flash",
         "model_parity": true,
-        "note": "post-harness-fix exploratory; excluded from the primary comparison",
+        "note": "valid: per-cell worker model parity enforced; the earlier mismatched sample is preserved as invalid_cell",
         "oracle_rc": 0,
         "parent_called_wait": true,
         "parent_tokens": 325641,
@@ -68,7 +70,7 @@
         "protected_unchanged": true,
         "scope_ok": true,
         "total_tokens": 468274,
-        "valid_for_comparison": false,
+        "valid_for_comparison": true,
         "wall_seconds": 32.113
       },
       {
@@ -132,7 +134,7 @@
         "wall_seconds": 77.876
       }
     ],
-    "comparable": "B serial vs B multi only; A multi has no valid N=1 sample",
+    "comparable": "A and B each have one valid N=1 serial and one valid N=1 multi sample",
     "invalid_cell": {
       "canary_hits": 0,
       "cell": "A-multi-model-mismatch",
@@ -326,7 +328,7 @@
   "schema": "ads.issue28.omp-containment-revalidation.v1",
   "verdicts": {
     "default_isolated_filesystem_containment": "FAIL",
-    "model_matrix": "PARTIAL: B serial/multi valid; A multi invalid; corrected A multi excluded",
+    "model_matrix": "PARTIAL (N=1 exploratory): both models have one valid serial and one valid multi sample; the first A-multi sample failed model parity and is preserved as invalid",
     "os_filesystem_sandbox": "BLOCKED / NOT AVAILABLE",
     "project_tool_layer_containment": "VERIFIED_BOUNDED for the tested OMP version, hook revision, tool set and vectors; not an OS sandbox",
     "task_batch_lifecycle_with_explicit_wait": "VERIFIED",
