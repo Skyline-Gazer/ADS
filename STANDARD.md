@@ -34,6 +34,14 @@ Use **minimum sufficient implementation**: prefer existing architecture, only di
 
 For significant, durable architectural choices, propose alternatives and get owner direction before a consequential change. Ordinary mature, necessary dependencies and tooling may be selected autonomously; validate compatibility and security. Use brief ADRs only when the decision must persist.
 
+## Phase / Milestone convergence
+
+At the completion of a meaningful Phase, milestone or owner-defined goal, reconcile the real GitHub Project work items and Issues against actual commits, PRs, CI and acceptance evidence **before** advancing dependent work. Discover the live board/fields and stable item IDs; never treat Markdown, a merged evidence PR or a closed Issue alone as Project alignment. Repair scope/status drift in the existing tracker, verify the repaired state and close only genuinely completed issues. Retain unresolved safety FAIL/PARTIAL items and hold dependent work if acceptance is incomplete. If Project access is unavailable, mark it unverified and report the specific blocker; do not invent a successful reconciliation. This is one proportional Phase-end checkpoint, not approval for every step. See [docs/milestone-reconciliation.md](docs/milestone-reconciliation.md).
+
+## ADS installation and update lifecycle
+
+New consumer projects should use an **immutable ADS Git Submodule pin** (default `.ads`) with one short root AGENTS.md pointing to the checked-out rules. Project-local constraints, existing deployed integrations and agent-native Skill discovery remain authoritative. Do not add a submodule to ADS itself or rewrite existing adopters without an isolated migration. At a Phase end, owner request or an optionally configured periodic trigger, check trusted ADS releases against the recorded gitlink; assess compatibility and propose a reviewable pin-update PR with relevant tests. `git submodule update --init` materializes the existing pin and does not mean upgrade. No unattended updates from a mutable branch, no secret-bearing submodule URLs and no implicit production/security changes. See [docs/how-to-update.md](docs/how-to-update.md).
+
 ## Workflow and GitHub
 
 Use as much planning as uncertainty merits. Small task: implement and check. Larger task: short plan, implementation, relevant verification and review. GitHub Issues/Projects can track material work; avoid a second task database, per-step journals and archival rituals. Use short accurate PR descriptions. Low-risk PRs can merge autonomously if relevant required CI passes, justified blockers are resolved and the repo's auto-deploy effects are allowed. Do not split changes to evade risk classification; see SAFETY.md.
