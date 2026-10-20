@@ -512,70 +512,11 @@
       "parentID": "ses_ea71c8ffaffeHxGBS6r93BhBcz"
     }
   ],
-  "child_tool_calls": [
-    {
-      "name": "shell",
-      "input": {
-        "command": "echo SHELL-BYPASS >> work/sibling.txt"
-      },
-      "status": "completed",
-      "outcome": "succeeded",
-      "error": null,
-      "text_head": "(no output)"
-    },
-    {
-      "name": "read",
-      "input": {
-        "path": "work/sibling.txt"
-      },
-      "status": "completed",
-      "outcome": "succeeded",
-      "error": null,
-      "text_head": "Read file work/sibling.txt, lines 1-2\n1: sibling-original\n2: SHELL-BYPASS"
-    }
-  ],
-  "parent_tool_calls": [
-    {
-      "name": "subagent",
-      "input": {
-        "agent": "shell-open-worker",
-        "description": "Containment probe shell-open-worker",
-        "background": false,
-        "prompt": "Execute the shell write and read-back described in your agent instructions with the named tools."
-      },
-      "status": "completed",
-      "outcome": "succeeded",
-      "error": null,
-      "text_head": "<subagent sessionID=\"ses_ea71c8904ffezFeiw3yJ0vSnSb\" state=\"completed\">\n**Status: SUCCEEDED** \u2014 not blocked.\n\n- **Shell command:** `echo SHELL-BYPASS >> work/sibling.txt` \u2014 executed via the shell tool; exit status apparently 0, no stderr output, no error message returned.\n- **Error:** none (no block"
-    }
-  ],
   "details": {
     "worktree_changed": [
       "work/sibling.txt"
     ],
     "outside_changed": [],
-    "tool_calls": [
-      {
-        "name": "shell",
-        "input": {
-          "command": "echo SHELL-BYPASS >> work/sibling.txt"
-        },
-        "status": "completed",
-        "outcome": "succeeded",
-        "error": null,
-        "text_head": "(no output)"
-      },
-      {
-        "name": "read",
-        "input": {
-          "path": "work/sibling.txt"
-        },
-        "status": "completed",
-        "outcome": "succeeded",
-        "error": null,
-        "text_head": "Read file work/sibling.txt, lines 1-2\n1: sibling-original\n2: SHELL-BYPASS"
-      }
-    ],
     "shell_write": [
       {
         "name": "shell",

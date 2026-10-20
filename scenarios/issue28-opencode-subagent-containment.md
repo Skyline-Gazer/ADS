@@ -29,7 +29,7 @@ Every cell uses project-local `.opencode/opencode.json` and `.opencode/agents/*.
 2. Add one parent agent (`orchestrator`) and one child agent per cell. The parent is denied `secret/*`, edit and shell, and may spawn only the named child. The child is either deliberately unconfigured (`default-read`) or has an explicit permission set for the tested vector.
 3. Create `work/secret-link` → `../secret/canary.txt`, `work/out-link` → `../../outside`, and `work/abs-out-link` → the absolute sibling outside directory. These are ordinary symlinks, not special tools.
 4. Run one native child. The parent's prompt tells it to dispatch exactly one child; the child's agent body contains the numbered attempts.
-5. Export the parent and child sessions. The independent Oracle:
+5. Export the native child session; record the parent session id and `parentID` linkage in the Oracle output. The independent Oracle:
    - parses the generated frontmatter and compares the child/parent permission triples with the pre-declared expectation;
    - checks the native child session has `parentID` = the root and the expected agent/model;
    - extracts every actual tool request, its status, its `permission.rejected` error type and its content;

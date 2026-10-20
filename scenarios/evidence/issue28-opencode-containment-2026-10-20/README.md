@@ -42,10 +42,10 @@ The two `attempts/shell-bypass-attempt{1,2}` directories preserve incomplete att
   - `cell-spec.json`: pre-declared parent/child permissions, expected outcomes and paths.
   - `config/agents/*.md`, `config/opencode.json`: the project-local configuration used for the cell.
   - `parent-prompt.md`: the exact parent task.
-  - `sessions/`: normalized `opencode session export` for the parent and child.
+  - `sessions/`: normalized child session export; the parent session id and native `parentID` linkage are in `sessions.json` and `oracle.json`.
   - `raw/stdout.jsonl`, `raw/stderr.txt`, `raw/exit.json`: raw non-interactive event stream and process result.
   - `before.json`, `after.json`: SHA-256 inventories of the worktree, sibling outside directory and relevant files before/after.
-  - `oracle.json`: independent verifier output, including the exact tool requests, permission rejections, hash changes and failed checks.
+  - `oracle.json`: independent verifier output, including per-vector outcomes, permission rejections, hash changes and failed checks. The exact tool requests are in `sessions/`.
   - `files/`: redacted bytes of the small allowed/sibling/canary fixtures.
 - `harness/build_and_run.py`, `harness/oracle.py`: the disposable fixture builder/runner and the independent Oracle used for this run.
 - [SHA256SUMS](SHA256SUMS): one line per extracted file.
