@@ -1,0 +1,49 @@
+diff --git a/app/tags.py b/app/tags.py
+index 542e75d..ec0cd1d 100644
+--- a/app/tags.py
++++ b/app/tags.py
+@@ -1,2 +1,22 @@
+ def normalize_tags(values):
+-    raise NotImplementedError
++    """Normalize a list of tag strings.
++
++    Strips each string, casefolds it, drops empty strings, and
++    deduplicates while preserving input order. Raises ValueError if the
++    input is not a list or if any member is not a string.
++    """
++    if not isinstance(values, list):
++        raise ValueError("normalize_tags expects a list of strings")
++
++    result = []
++    seen = set()
++    for item in values:
++        if not isinstance(item, str):
++            raise ValueError("normalize_tags expects every member to be a string")
++        cleaned = item.strip().casefold()
++        if cleaned == "":
++            continue
++        if cleaned not in seen:
++            seen.add(cleaned)
++            result.append(cleaned)
++    return result
+diff --git a/app/temperature.py b/app/temperature.py
+index 0298b64..e5cb5f5 100644
+--- a/app/temperature.py
++++ b/app/temperature.py
+@@ -1,2 +1,15 @@
++import math
++
++
+ def convert_celsius(value):
+-    raise NotImplementedError
++    """Convert a Celsius temperature to Fahrenheit.
++
++    Accepts a finite int or float (excluding bool) and returns the
++    Fahrenheit equivalent as a number. Raises ValueError for anything
++    else, including bool, non-numeric types, and non-finite floats.
++    """
++    if isinstance(value, bool) or not isinstance(value, (int, float)):
++        raise ValueError("convert_celsius expects a finite int or float")
++    if not math.isfinite(value):
++        raise ValueError("convert_celsius expects a finite number")
++    return value * 9.0 / 5.0 + 32.0

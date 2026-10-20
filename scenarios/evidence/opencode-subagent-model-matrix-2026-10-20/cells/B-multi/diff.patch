@@ -1,0 +1,39 @@
+diff --git a/app/tags.py b/app/tags.py
+index 542e75d..1cdb2b1 100644
+--- a/app/tags.py
++++ b/app/tags.py
+@@ -1,2 +1,16 @@
+ def normalize_tags(values):
+-    raise NotImplementedError
++    if not isinstance(values, list):
++        raise ValueError("normalize_tags expects a list")
++
++    seen = set()
++    result = []
++    for member in values:
++        if not isinstance(member, str):
++            raise ValueError("normalize_tags expects every member to be a string")
++        normalized = member.strip().casefold()
++        if not normalized:
++            continue
++        if normalized not in seen:
++            seen.add(normalized)
++            result.append(normalized)
++    return result
+diff --git a/app/temperature.py b/app/temperature.py
+index 0298b64..03705c0 100644
+--- a/app/temperature.py
++++ b/app/temperature.py
+@@ -1,2 +1,11 @@
++import math
++
++
+ def convert_celsius(value):
+-    raise NotImplementedError
++    if isinstance(value, bool):
++        raise ValueError("value must be a finite int or float")
++    if not isinstance(value, (int, float)):
++        raise ValueError("value must be a finite int or float")
++    if not math.isfinite(value):
++        raise ValueError("value must be a finite int or float")
++    return value * 9 / 5 + 32

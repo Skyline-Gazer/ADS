@@ -1,0 +1,66 @@
+{
+  "info": {
+    "id": "ses_ea7f45dabffeZnEDYoPvbPU2Bg",
+    "parentID": "ses_ea7f46748ffeKG3RMVScG6sLP2",
+    "projectID": "global",
+    "agent": "beta-worker",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "reasoning": 0,
+      "cache": {
+        "read": 0,
+        "write": 0
+      }
+    },
+    "time": {
+      "created": 1792478519955,
+      "updated": 1792478522528
+    },
+    "title": "Append BETA to beta.txt",
+    "location": {
+      "directory": "<SCRATCH>/probe2"
+    }
+  },
+  "messages": [
+    {
+      "id": "msg_1580ba294002WyNIV5pa7IjcPF",
+      "time": {
+        "created": 1792478519978
+      },
+      "text": "You are a subagent spawned by another session.\nIn the working directory <SCRATCH>/probe2, append the single line \"BETA\" to the file beta.txt (create the file if it does not exist, preserving any existing content and ending with a newline before the appended line). Do not modify alpha.txt or any other file. Report the final content of beta.txt when done.",
+      "type": "user"
+    },
+    {
+      "id": "msg_1580ba2ac001cHAh369RzOjIWK",
+      "time": {
+        "created": 1792478519984,
+        "completed": 1792478522528
+      },
+      "type": "assistant",
+      "agent": "beta-worker",
+      "model": {
+        "id": "deepseek-flash",
+        "providerID": "deepseek",
+        "variant": "default"
+      },
+      "content": [],
+      "snapshot": {
+        "start": "9ebdfe844bc1606d60ecc1727536f1993bc52fc7",
+        "end": "9ebdfe844bc1606d60ecc1727536f1993bc52fc7",
+        "files": []
+      },
+      "finish": "error",
+      "error": {
+        "type": "aborted",
+        "message": "Step interrupted"
+      }
+    }
+  ]
+}
