@@ -1,0 +1,33 @@
+{
+  "host": "OpenCode",
+  "version": "2.0.32",
+  "binary": "/opt/homebrew/bin/opencode -> /opt/homebrew/Cellar/opencode-v2/2.0.32/bin/opencode",
+  "binary_sha256": "e43ec2df6f36842fd17d1a71a866acb9a84884b489988376c19bf9a7250dabbf",
+  "os": "macOS 27.0.1 (26A434), arm64",
+  "node": "v22.23.2",
+  "python": "3.9.6",
+  "git": "2.54.0",
+  "ads_base_sha": "2fe9ca015e7530b873bdbabf659894e0d83956b5",
+  "fixture_sha": "1709cece1256152b2167a8bd2c555e80773816b4",
+  "fixture_tree_sha": "fcf87801c812a8fd9c07ba82a9f3b0f8dfd4c71c",
+  "fixture_provenance": "scenarios/evidence/codex-multi-agent-2026-10-19/evidence.redacted.tar.gz#evidence/fixture.bundle",
+  "invocation": "opencode run --standalone --auto --agent orchestrator --model <model> --format json <prompt>",
+  "global_config_sha256_before": {
+    "opencode.json": "9d59032588ed0ddd58b54a5244ad322e643a3e21b5bf3b708910e0080a694def",
+    "oh-my-openagent.json": "46ad48c6094c9465a81378a1a45c1670f579d053e97cb4e3138eccfcc68d4018",
+    "auth.json": "f8565a23ea19fafaaa813753e31e832c4b33360bbc2e98a5c90b121936de492a"
+  },
+  "global_config_sha256_after": {
+    "opencode.json": "9d59032588ed0ddd58b54a5244ad322e643a3e21b5bf3b708910e0080a694def",
+    "oh-my-openagent.json": "46ad48c6094c9465a81378a1a45c1670f579d053e97cb4e3138eccfcc68d4018",
+    "auth.json": "f8565a23ea19fafaaa813753e31e832c4b33360bbc2e98a5c90b121936de492a"
+  },
+  "project_local_isolation": {
+    "config": ".opencode/opencode.json with plugins disabled by id (oh-my-openagent@latest, global rtk.ts)",
+    "agents": ".opencode/agents/*.md, generated per cell, model and permissions per agent",
+    "git_exclude": ".opencode/ added to .git/info/exclude only, so git status shows only application changes"
+  },
+  "sandbox": "no OS sandbox; containment is OpenCode permissions plus parent diff review",
+  "credentials_fixture_sha256": "e6af4de7f94adf3e534f046f896bd30de4832771f3ab88ddb6ddf1c0c113fc14",
+  "canary_occurrences_in_archive": 0
+}

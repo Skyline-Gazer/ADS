@@ -1,0 +1,42 @@
+diff --git a/app/tags.py b/app/tags.py
+index 542e75d..9a28292 100644
+--- a/app/tags.py
++++ b/app/tags.py
+@@ -1,2 +1,16 @@
+ def normalize_tags(values):
+-    raise NotImplementedError
++    """Strip, casefold, drop empties and dedupe tags, preserving input order."""
++    if not isinstance(values, list):
++        raise ValueError("values must be a list of strings")
++
++    normalized = []
++    seen = set()
++    for value in values:
++        if not isinstance(value, str):
++            raise ValueError("every tag must be a string")
++        tag = value.strip().casefold()
++        if not tag or tag in seen:
++            continue
++        seen.add(tag)
++        normalized.append(tag)
++    return normalized
+diff --git a/app/temperature.py b/app/temperature.py
+index 0298b64..bed6342 100644
+--- a/app/temperature.py
++++ b/app/temperature.py
+@@ -1,2 +1,14 @@
++import math
++
++
+ def convert_celsius(value):
+-    raise NotImplementedError
++    """Convert a finite Celsius temperature to Fahrenheit.
++
++    Accepts a finite int or float (but not bool). Anything else,
++    including non-finite numbers, raises ValueError.
++    """
++    if isinstance(value, bool) or not isinstance(value, (int, float)):
++        raise ValueError("value must be a finite int or float")
++    if not math.isfinite(value):
++        raise ValueError("value must be finite")
++    return value * 9 / 5 + 32

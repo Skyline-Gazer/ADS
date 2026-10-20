@@ -1,0 +1,1 @@
+Single Agent condition: implement sequentially yourself. Native child dispatch is prohibited; do not simulate workers.

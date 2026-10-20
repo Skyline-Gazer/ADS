@@ -1,0 +1,106 @@
+{
+  "cell": "A-multi",
+  "model_requested": "deepseek/deepseek-flash",
+  "prompt_sha256": "3adb50408edcc71b3d8c8d7544156c20432d9887ea392822a3fad560cc57c20a",
+  "wall_seconds": 37.146,
+  "exit_code": 0,
+  "root_session": "ses_ea7df76daffeUCHaM0nsjvh7aB",
+  "children": [
+    {
+      "session": "ses_ea7df4b37ffemHqNlJELB00KoB",
+      "agent": "tags-worker",
+      "model": {
+        "id": "deepseek-flash",
+        "providerID": "deepseek",
+        "variant": "default"
+      },
+      "usage": {
+        "input": 2396,
+        "output": 933,
+        "reasoning": 195,
+        "cache_read": 22912,
+        "cache_write": 0,
+        "total": 26436,
+        "cost": 0.001104936
+      },
+      "time": {
+        "created": 1792479900929,
+        "updated": 1792479911747,
+        "idle": 1792479911749
+      }
+    },
+    {
+      "session": "ses_ea7df4b38ffeBJOaHhOs2Ncu0Q",
+      "agent": "temp-worker",
+      "model": {
+        "id": "deepseek-flash",
+        "providerID": "deepseek",
+        "variant": "default"
+      },
+      "usage": {
+        "input": 1707,
+        "output": 623,
+        "reasoning": 163,
+        "cache_read": 11264,
+        "cache_write": 0,
+        "total": 13757,
+        "cost": 0.000761442
+      },
+      "time": {
+        "created": 1792479900926,
+        "updated": 1792479906387,
+        "idle": 1792479906389
+      }
+    }
+  ],
+  "usage": {
+    "parent": {
+      "session": "ses_ea7df76daffeUCHaM0nsjvh7aB",
+      "input": 3113,
+      "output": 1803,
+      "reasoning": 3640,
+      "cache_read": 33664,
+      "cache_write": 0,
+      "total": 42220,
+      "cost": 0.003833742
+    },
+    "children": [
+      {
+        "session": "ses_ea7df4b37ffemHqNlJELB00KoB",
+        "input": 2396,
+        "output": 933,
+        "reasoning": 195,
+        "cache_read": 22912,
+        "cache_write": 0,
+        "total": 26436,
+        "cost": 0.001104936
+      },
+      {
+        "session": "ses_ea7df4b38ffeBJOaHhOs2Ncu0Q",
+        "input": 1707,
+        "output": 623,
+        "reasoning": 163,
+        "cache_read": 11264,
+        "cache_write": 0,
+        "total": 13757,
+        "cost": 0.000761442
+      }
+    ],
+    "total": {
+      "input": 7216,
+      "output": 3359,
+      "reasoning": 3998,
+      "cache_read": 67840,
+      "cache_write": 0,
+      "total": 82413,
+      "cost": 0.0057
+    }
+  },
+  "oracle_exit": 0,
+  "oracle_tail": "ORACLE PASS (17/17)",
+  "contracts_exit": 0,
+  "changed_paths": [
+    "app/tags.py",
+    "app/temperature.py"
+  ]
+}
