@@ -265,31 +265,31 @@
   "excluded_runs": [
     {
       "run": "A-serial (modelslip)",
-      "reason": "no --model flag: session ran magpie/group/free-deepseek instead of the requested model",
-      "wall_seconds": 22.888,
-      "tokens": 56918
+      "reason": "no --model flag: session ran magpie/group/free-deepseek instead of the requested model; discarded as NOT COMPARABLE",
+      "wall_seconds": 14.712,
+      "tokens": 29677
     },
     {
       "run": "A-serial (v1 policy)",
-      "reason": "shell allowlist too narrow; repeated denied commands, retained only as failure boundary",
+      "reason": "shell allowlist too narrow; 5 denied compound/extra commands; retained only as a failure boundary",
       "wall_seconds": 22.888,
       "tokens": 56918
     },
     {
       "run": "A-multi (v1 policy)",
-      "reason": "same allowlist confound",
+      "reason": "same narrow allowlist; 3 denied commands",
       "wall_seconds": 40.543,
       "tokens": 137783
     },
     {
       "run": "B-serial (v1 policy)",
-      "reason": "same allowlist confound",
+      "reason": "same narrow allowlist; 1 denied compound command",
       "wall_seconds": 31.364,
       "tokens": 25433
     },
     {
       "run": "B-multi (v1 policy)",
-      "reason": "13 denied shell calls (git log / find / ls) caused retry loops; excluded from comparison",
+      "reason": "13 denied shell calls (git log / find / ls / compound test command) caused retry loops; excluded from comparison",
       "wall_seconds": 128.076,
       "tokens": 324389
     }

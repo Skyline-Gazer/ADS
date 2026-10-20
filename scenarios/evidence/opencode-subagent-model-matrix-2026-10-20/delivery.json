@@ -2,7 +2,6 @@
   "recorded_utc": "2026-10-20T07:58:00Z",
   "branch": "test/opencode-subagent-model-matrix-20261020",
   "base_sha": "2fe9ca015e7530b873bdbabf659894e0d83956b5",
-  "head_sha": "eb9e890",
   "pr": 26,
   "pr_url": "https://github.com/Skyline-Gazer/ADS/pull/26",
   "merge_performed": false,
@@ -62,5 +61,13 @@
       "stderr": "",
       "seconds": 0.02
     }
-  ]
+  ],
+  "reporting_commit": "eb9e890",
+  "ci": {
+    "workflow": "Validate ADS",
+    "run": 39385207104,
+    "conclusion": "SUCCESS",
+    "commit": "eb9e890",
+    "note": "delivery-metadata commit not separately triggered"
+  }
 }
