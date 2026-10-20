@@ -1,0 +1,9 @@
+{
+  "cell": "exact-grant",
+  "child": "exact-worker",
+  "model": "deepseek/deepseek-flash",
+  "root_session": "ses_ea71bde5effenZUDndaDpv09gV",
+  "exit_code": 0,
+  "wall_seconds": 24.535,
+  "state": "run-complete"
+}

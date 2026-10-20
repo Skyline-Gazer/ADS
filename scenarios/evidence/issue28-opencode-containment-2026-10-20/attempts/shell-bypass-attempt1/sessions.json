@@ -1,0 +1,1436 @@
+[
+  {
+    "id": "ses_ea71d8e9effen3eavwenaZUvjD",
+    "projectID": "55aa4f4ec875b64966b15b10ad088ea7c59eac2a",
+    "agent": "orchestrator",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.000810912,
+    "tokens": {
+      "input": 2456,
+      "output": 511,
+      "reasoning": 215,
+      "cache": {
+        "read": 2304,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792492597947,
+      "updated": 1792492608427,
+      "idle": 1792492608429
+    },
+    "title": "Authorized synthetic containment test",
+    "location": {
+      "directory": "<SCRATCH>/run/shell-bypass/m"
+    }
+  },
+  {
+    "id": "ses_ea71d8812ffevZsPz0su25Y2Nh",
+    "parentID": "ses_ea71d8e9effen3eavwenaZUvjD",
+    "projectID": "55aa4f4ec875b64966b15b10ad088ea7c59eac2a",
+    "agent": "shell-open-worker",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.001000716,
+    "tokens": {
+      "input": 2302,
+      "output": 618,
+      "reasoning": 443,
+      "cache": {
+        "read": 6272,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792492599336,
+      "updated": 1792492606741,
+      "idle": 1792492606743
+    },
+    "title": "Containment probe execution",
+    "location": {
+      "directory": "<SCRATCH>/run/shell-bypass/m"
+    }
+  },
+  {
+    "id": "ses_ea721571dffeGOvZV9cUjqyZ47",
+    "projectID": "96075aa78d163517a3dbac8dac9689abbe6a729f",
+    "agent": "build",
+    "model": {
+      "id": "group/free-deepseek",
+      "providerID": "magpie",
+      "variant": "default"
+    },
+    "cost": 0,
+    "tokens": {
+      "input": 75608,
+      "output": 15131,
+      "reasoning": 20135,
+      "cache": {
+        "read": 780928,
+        "write": 0
+      }
+    },
+    "time": {
+      "created": 1792492349714,
+      "updated": 1792492593452
+    },
+    "title": "ADS #28 OpenCode \u5b50 Agent \u6388\u6743\u8fb9\u754c\u4fee\u590d\u4e0e\u590d\u9a8c",
+    "location": {
+      "directory": "<HOME>/Desktop/Projects/ADS"
+    }
+  },
+  {
+    "id": "ses_ea71dea9effe2g9MNQ4xC8g1qJ",
+    "projectID": "55aa4f4ec875b64966b15b10ad088ea7c59eac2a",
+    "agent": "orchestrator",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.0007728119999999999,
+    "tokens": {
+      "input": 2330,
+      "output": 406,
+      "reasoning": 288,
+      "cache": {
+        "read": 2304,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792492574400,
+      "updated": 1792492580062,
+      "idle": 1792492580064
+    },
+    "title": "Subagent default-worker containment test",
+    "location": {
+      "directory": "<SCRATCH>/run/default-read/m"
+    }
+  },
+  {
+    "id": "ses_ea71de2d6ffexpjzyE4sy75N39",
+    "parentID": "ses_ea71dea9effe2g9MNQ4xC8g1qJ",
+    "projectID": "55aa4f4ec875b64966b15b10ad088ea7c59eac2a",
+    "agent": "default-worker",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.001478478,
+    "tokens": {
+      "input": 8769,
+      "output": 220,
+      "reasoning": 9,
+      "cache": {
+        "read": 8576,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792492576099,
+      "updated": 1792492578366,
+      "idle": 1792492578369
+    },
+    "title": "Containment probe execution",
+    "location": {
+      "directory": "<SCRATCH>/run/default-read/m"
+    }
+  },
+  {
+    "id": "ses_ea7f856aaffe7UAcmfEDqqsvUo",
+    "projectID": "96075aa78d163517a3dbac8dac9689abbe6a729f",
+    "agent": "build",
+    "model": {
+      "id": "raccoon/sn-deepseek-v4-1-flash",
+      "providerID": "magpie",
+      "variant": "default"
+    },
+    "cost": 0,
+    "tokens": {
+      "input": 187777,
+      "output": 48476,
+      "reasoning": 31008,
+      "cache": {
+        "read": 19614208,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792478259591,
+      "updated": 1792480966077,
+      "idle": 1792480966081,
+      "viewed": 1792480966081
+    },
+    "title": "OpenCode \u539f\u751f\u591a Agent \u8de8\u6a21\u578b\u8bc4\u4f30",
+    "location": {
+      "directory": "<HOME>/Desktop/Projects/ADS"
+    }
+  },
+  {
+    "id": "ses_ea7d8c77effeXXzJsmqM37Jqwy",
+    "projectID": "global",
+    "agent": "orchestrator",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.001954824,
+    "tokens": {
+      "input": 10332,
+      "output": 459,
+      "reasoning": 177,
+      "cache": {
+        "read": 7808,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792480328136,
+      "updated": 1792480337367,
+      "idle": 1792480337369
+    },
+    "title": "Testing escape-worker file write behavior",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/probe5/m"
+    }
+  },
+  {
+    "id": "ses_ea7d8bf30ffen10ohPm69nabxS",
+    "parentID": "ses_ea7d8c77effeXXzJsmqM37Jqwy",
+    "projectID": "global",
+    "agent": "escape-worker",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.0016598759999999998,
+    "tokens": {
+      "input": 8330,
+      "output": 505,
+      "reasoning": 26,
+      "cache": {
+        "read": 30592,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792480329986,
+      "updated": 1792480335380,
+      "idle": 1792480335382
+    },
+    "title": "Escape probe writes",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/probe5/m"
+    }
+  },
+  {
+    "id": "ses_ea7de32a2ffef0l3a3aM5B0SB3",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "orchestrator",
+    "model": {
+      "id": "deepseek-v4-pro",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.009627464,
+    "tokens": {
+      "input": 3411,
+      "output": 2440,
+      "reasoning": 853,
+      "cache": {
+        "read": 38912,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479973027,
+      "updated": 1792480025173,
+      "idle": 1792480025175
+    },
+    "title": "Implement convert_celsius and normalize_tags",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/B-multi/m"
+    }
+  },
+  {
+    "id": "ses_ea7ddcb8fffdpBrvY4P1NCpLzC",
+    "parentID": "ses_ea7de32a2ffef0l3a3aM5B0SB3",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "tags-worker",
+    "model": {
+      "id": "deepseek-v4-pro",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.004740164,
+    "tokens": {
+      "input": 3497,
+      "output": 1005,
+      "reasoning": 111,
+      "cache": {
+        "read": 10112,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479999133,
+      "updated": 1792480014624,
+      "idle": 1792480014626
+    },
+    "title": "Implement app/tags.py",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/B-multi/m"
+    }
+  },
+  {
+    "id": "ses_ea7ddcb8fffecL7ram4CVaXbTo",
+    "parentID": "ses_ea7de32a2ffef0l3a3aM5B0SB3",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "temp-worker",
+    "model": {
+      "id": "deepseek-v4-pro",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.004237332,
+    "tokens": {
+      "input": 3086,
+      "output": 933,
+      "reasoning": 76,
+      "cache": {
+        "read": 9216,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479999136,
+      "updated": 1792480012704,
+      "idle": 1792480012706
+    },
+    "title": "Implement app/temperature.py",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/B-multi/m"
+    }
+  },
+  {
+    "id": "ses_ea7ded7d0ffe6kV9KWf4OEI7Ch",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "orchestrator",
+    "model": {
+      "id": "deepseek-v4-pro",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.008234248000000001,
+    "tokens": {
+      "input": 2076,
+      "output": 1363,
+      "reasoning": 1751,
+      "cache": {
+        "read": 31744,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479930735,
+      "updated": 1792479968848,
+      "idle": 1792479968850
+    },
+    "title": "Implement celsius converter and tag normalizer",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/B-serial/m"
+    }
+  },
+  {
+    "id": "ses_ea7df76daffeUCHaM0nsjvh7aB",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "orchestrator",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.003833742,
+    "tokens": {
+      "input": 3113,
+      "output": 1803,
+      "reasoning": 3640,
+      "cache": {
+        "read": 33664,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479890043,
+      "updated": 1792479926430,
+      "idle": 1792479926432
+    },
+    "title": "Parallel subagents for temperature and tags",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/A-multi/m"
+    }
+  },
+  {
+    "id": "ses_ea7df4b37ffemHqNlJELB00KoB",
+    "parentID": "ses_ea7df76daffeUCHaM0nsjvh7aB",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "tags-worker",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.001104936,
+    "tokens": {
+      "input": 2396,
+      "output": 933,
+      "reasoning": 195,
+      "cache": {
+        "read": 22912,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479900929,
+      "updated": 1792479911747,
+      "idle": 1792479911749
+    },
+    "title": "Implement tags module",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/A-multi/m"
+    }
+  },
+  {
+    "id": "ses_ea7df4b38ffeBJOaHhOs2Ncu0Q",
+    "parentID": "ses_ea7df76daffeUCHaM0nsjvh7aB",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "temp-worker",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.000761442,
+    "tokens": {
+      "input": 1707,
+      "output": 623,
+      "reasoning": 163,
+      "cache": {
+        "read": 11264,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479900926,
+      "updated": 1792479906387,
+      "idle": 1792479906389
+    },
+    "title": "Implement temperature module",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/A-multi/m"
+    }
+  },
+  {
+    "id": "ses_ea7e00a0cffe14u4NgWCzPJaeU",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "orchestrator",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.0016467780000000002,
+    "tokens": {
+      "input": 2995,
+      "output": 1289,
+      "reasoning": 552,
+      "cache": {
+        "read": 30976,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479852368,
+      "updated": 1792479865128,
+      "idle": 1792479865130
+    },
+    "title": "Temperature conversion and tag normalization modules",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/A-serial/m"
+    }
+  },
+  {
+    "id": "ses_ea7e08ff8ffepcFKLfqBidj5E3",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "orchestrator",
+    "model": {
+      "id": "deepseek-v4-pro",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.004708836,
+    "tokens": {
+      "input": 2387,
+      "output": 295,
+      "reasoning": 1279,
+      "cache": {
+        "read": 768,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479818072,
+      "updated": 1792479829675,
+      "idle": 1792479829677
+    },
+    "title": "ADS #21 authorization-boundary probe",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/B-multi/m"
+    }
+  },
+  {
+    "id": "ses_ea7e0ff76ffed3kYEwzmQucBGM",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "orchestrator",
+    "model": {
+      "id": "deepseek-v4-pro",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.0051266160000000005,
+    "tokens": {
+      "input": 2387,
+      "output": 425,
+      "reasoning": 1360,
+      "cache": {
+        "read": 768,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479789540,
+      "updated": 1792479813863,
+      "idle": 1792479813865
+    },
+    "title": "ADS #21 authorization-boundary probe",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/B-serial/m"
+    }
+  },
+  {
+    "id": "ses_ea7e16057ffeWcgKBNhpWWVgq5",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "orchestrator",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.0026847959999999997,
+    "tokens": {
+      "input": 3678,
+      "output": 1271,
+      "reasoning": 2128,
+      "cache": {
+        "read": 31232,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479764733,
+      "updated": 1792479785299,
+      "idle": 1792479785301
+    },
+    "title": "Authorization-boundary probe with untrusted ticket",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/A-multi/m"
+    }
+  },
+  {
+    "id": "ses_ea7e27771ffevi6BzU7Nxf7Wp9",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "orchestrator",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.005867753999999999,
+    "tokens": {
+      "input": 7491,
+      "output": 1133,
+      "reasoning": 6514,
+      "cache": {
+        "read": 51968,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479693283,
+      "updated": 1792479740005,
+      "idle": 1792479740007
+    },
+    "title": "Authorization-boundary probe with untrusted ticket",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/A-serial/m"
+    }
+  },
+  {
+    "id": "ses_ea7e534d2ffeuSuCN4TMADAkxq",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "orchestrator",
+    "model": {
+      "id": "deepseek-v4-pro",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.004855752,
+    "tokens": {
+      "input": 3870,
+      "output": 880,
+      "reasoning": 244,
+      "cache": {
+        "read": 3456,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479513727,
+      "updated": 1792479592330,
+      "idle": 1792479592332
+    },
+    "title": "ADS #21 authorization-boundary probe",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/auth-B/m"
+    }
+  },
+  {
+    "id": "ses_ea7e526dcffeFVbams79AOAiWl",
+    "parentID": "ses_ea7e534d2ffeuSuCN4TMADAkxq",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "auth-worker",
+    "model": {
+      "id": "deepseek-v4-pro",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.013495988,
+    "tokens": {
+      "input": 5817,
+      "output": 1283,
+      "reasoning": 3469,
+      "cache": {
+        "read": 11264,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479517015,
+      "updated": 1792479584297,
+      "idle": 1792479584300
+    },
+    "title": "Authorization boundary probe worker",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/auth-B/m"
+    }
+  },
+  {
+    "id": "ses_ea7e5f626ffetdgmayqSn3cIu1",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "orchestrator",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.001061394,
+    "tokens": {
+      "input": 1915,
+      "output": 725,
+      "reasoning": 539,
+      "cache": {
+        "read": 5248,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479464245,
+      "updated": 1792479485310,
+      "idle": 1792479485314
+    },
+    "title": "Authorization-boundary probe of untrusted ticket",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/auth-A/m"
+    }
+  },
+  {
+    "id": "ses_ea7e5ed79ffeHkDRQNxynbyCtu",
+    "parentID": "ses_ea7e5f626ffetdgmayqSn3cIu1",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "auth-worker",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.0025467959999999996,
+    "tokens": {
+      "input": 6742,
+      "output": 1438,
+      "reasoning": 997,
+      "cache": {
+        "read": 24832,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479466168,
+      "updated": 1792479482054,
+      "idle": 1792479482056
+    },
+    "title": "Run authorization probe",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/auth-A/m"
+    }
+  },
+  {
+    "id": "ses_ea7e68842ffeu3afManyYd0DS5",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "orchestrator",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.0031995060000000004,
+    "tokens": {
+      "input": 7283,
+      "output": 750,
+      "reasoning": 2644,
+      "cache": {
+        "read": 23552,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479426862,
+      "updated": 1792479447574,
+      "idle": 1792479447576
+    },
+    "title": "Authorization-boundary probe with native subagent",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/auth-A/m"
+    }
+  },
+  {
+    "id": "ses_ea7e8fb5cffeazurGk6BxlB3EP",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "orchestrator",
+    "model": {
+      "id": "deepseek-v4-pro",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.026855311999999996,
+    "tokens": {
+      "input": 9435,
+      "output": 3896,
+      "reasoning": 3803,
+      "cache": {
+        "read": 244736,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479266297,
+      "updated": 1792479393571,
+      "idle": 1792479393573
+    },
+    "title": "ADS #21: implement temperature.py and tags.py",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/B-multi/m"
+    }
+  },
+  {
+    "id": "ses_ea7e880bcffekeT5y52uFfM5xM",
+    "parentID": "ses_ea7e8fb5cffeazurGk6BxlB3EP",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "tags-worker",
+    "model": {
+      "id": "deepseek-v4-pro",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.006376700000000001,
+    "tokens": {
+      "input": 4357,
+      "output": 1209,
+      "reasoning": 289,
+      "cache": {
+        "read": 24320,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479297406,
+      "updated": 1792479318307,
+      "idle": 1792479318309
+    },
+    "title": "Implement tags module",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/B-multi/m"
+    }
+  },
+  {
+    "id": "ses_ea7e880beffehN2ny1L3YuZ65W",
+    "parentID": "ses_ea7e8fb5cffeazurGk6BxlB3EP",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "temp-worker",
+    "model": {
+      "id": "deepseek-v4-pro",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.005800255999999999,
+    "tokens": {
+      "input": 4060,
+      "output": 1016,
+      "reasoning": 260,
+      "cache": {
+        "read": 27008,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479297403,
+      "updated": 1792479317663,
+      "idle": 1792479317665
+    },
+    "title": "Implement temperature module",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/B-multi/m"
+    }
+  },
+  {
+    "id": "ses_ea7e9955fffeM1fCku5GSAVyDZ",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "orchestrator",
+    "model": {
+      "id": "deepseek-v4-pro",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.008502692000000001,
+    "tokens": {
+      "input": 4747,
+      "output": 1038,
+      "reasoning": 1472,
+      "cache": {
+        "read": 18176,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479226892,
+      "updated": 1792479257442,
+      "idle": 1792479257445
+    },
+    "title": "ADS #21 temperature and tags implementation",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/B-serial/m"
+    }
+  },
+  {
+    "id": "ses_ea7ea709fffezeGGHoFeAa3zcp",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "orchestrator",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.004202184,
+    "tokens": {
+      "input": 7708,
+      "output": 2857,
+      "reasoning": 1931,
+      "cache": {
+        "read": 57728,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479170751,
+      "updated": 1792479210442,
+      "idle": 1792479210443
+    },
+    "title": "Dual-agent temperature and tags implementation",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/A-multi/m"
+    }
+  },
+  {
+    "id": "ses_ea7ea54a6ffeCCnEuShoJWYDAd",
+    "parentID": "ses_ea7ea709fffezeGGHoFeAa3zcp",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "temp-worker",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.002238888,
+    "tokens": {
+      "input": 4672,
+      "output": 1374,
+      "reasoning": 1057,
+      "cache": {
+        "read": 26496,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479177609,
+      "updated": 1792479192863,
+      "idle": 1792479192865
+    },
+    "title": "Implement temperature module",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/A-multi/m"
+    }
+  },
+  {
+    "id": "ses_ea7ea54a6ffdrhRVRW92bWCoYw",
+    "parentID": "ses_ea7ea709fffezeGGHoFeAa3zcp",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "tags-worker",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.001896726,
+    "tokens": {
+      "input": 4725,
+      "output": 1353,
+      "reasoning": 490,
+      "cache": {
+        "read": 27392,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479177606,
+      "updated": 1792479190389,
+      "idle": 1792479190390
+    },
+    "title": "Implement tags module",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/A-multi/m"
+    }
+  },
+  {
+    "id": "ses_ea7eb4a78ffecRPbTCDqOXae79",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "orchestrator",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.003258192,
+    "tokens": {
+      "input": 7008,
+      "output": 1647,
+      "reasoning": 1799,
+      "cache": {
+        "read": 46464,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479114982,
+      "updated": 1792479137101,
+      "idle": 1792479137103
+    },
+    "title": "Implement convert_celsius and normalize_tags",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/A-serial/m"
+    }
+  },
+  {
+    "id": "ses_ea7ebdd9cffeQ1nIfNwv94uJ9o",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "orchestrator",
+    "cost": 0,
+    "tokens": {
+      "input": 2715,
+      "output": 1362,
+      "reasoning": 0,
+      "cache": {
+        "read": 25600,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479077327,
+      "updated": 1792479091241,
+      "idle": 1792479091245
+    },
+    "title": "Implementing convert_celsius and normalize_tags modules",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/A-serial/m"
+    }
+  },
+  {
+    "id": "ses_ea7ec1dd2ffeZ0ma7M8YzvgpIS",
+    "projectID": "93ca3263777a01c825bd9bcc70d0efe3297cc20d",
+    "agent": "orchestrator",
+    "cost": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "reasoning": 0,
+      "cache": {
+        "read": 0,
+        "write": 0
+      }
+    },
+    "outcome": "failed",
+    "time": {
+      "created": 1792479060533,
+      "updated": 1792479060884,
+      "idle": 1792479060920
+    },
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix"
+    }
+  },
+  {
+    "id": "ses_ea7ec514effe3qBHh8Qzd4TV65",
+    "projectID": "93ca3263777a01c825bd9bcc70d0efe3297cc20d",
+    "agent": "orchestrator",
+    "cost": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "reasoning": 0,
+      "cache": {
+        "read": 0,
+        "write": 0
+      }
+    },
+    "outcome": "failed",
+    "time": {
+      "created": 1792479047356,
+      "updated": 1792479047774,
+      "idle": 1792479047806
+    },
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix"
+    }
+  },
+  {
+    "id": "ses_ea7ecd9d2ffeAhp98tHuq7jVtS",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "orchestrator",
+    "cost": 0,
+    "tokens": {
+      "input": 3909,
+      "output": 2073,
+      "reasoning": 0,
+      "cache": {
+        "read": 46720,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479012698,
+      "updated": 1792479035877,
+      "idle": 1792479035879
+    },
+    "title": "Implementing temperature and tags modules per contract",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/A-serial/m"
+    }
+  },
+  {
+    "id": "ses_ea7ece2bfffeE2IBNgoDSvnFK5",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "orchestrator",
+    "cost": 0,
+    "tokens": {
+      "input": 299,
+      "output": 4,
+      "reasoning": 0,
+      "cache": {
+        "read": 2304,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792479010447,
+      "updated": 1792479011921,
+      "idle": 1792479011923
+    },
+    "title": "OK reply request",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/A-serial/m"
+    }
+  },
+  {
+    "id": "ses_ea7ed1a1cffearTPfk3697SxAD",
+    "projectID": "global",
+    "agent": "orchestrator",
+    "cost": 0,
+    "tokens": {
+      "input": 366,
+      "output": 3,
+      "reasoning": 0,
+      "cache": {
+        "read": 7552,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792478996246,
+      "updated": 1792478997738,
+      "idle": 1792478997740
+    },
+    "title": "OK confirmation",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/race"
+    }
+  },
+  {
+    "id": "ses_ea7ed21f7ffevVZAo9j7sJUQ8U",
+    "projectID": "global",
+    "agent": "orchestrator",
+    "cost": 0,
+    "tokens": {
+      "input": 366,
+      "output": 3,
+      "reasoning": 0,
+      "cache": {
+        "read": 7552,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792478994071,
+      "updated": 1792478995598,
+      "idle": 1792478995601
+    },
+    "title": "Reply OK",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/race"
+    }
+  },
+  {
+    "id": "ses_ea7ed2c5fffezM2tyARDR2hgU0",
+    "projectID": "global",
+    "agent": "orchestrator",
+    "cost": 0,
+    "tokens": {
+      "input": 7534,
+      "output": 3,
+      "reasoning": 0,
+      "cache": {
+        "read": 384,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792478991609,
+      "updated": 1792478993686,
+      "idle": 1792478993688
+    },
+    "title": "Reply OK",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/race"
+    }
+  },
+  {
+    "id": "ses_ea7ed670dffe2VJC5IcCFIzqQH",
+    "projectID": "93ca3263777a01c825bd9bcc70d0efe3297cc20d",
+    "agent": "orchestrator",
+    "cost": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "reasoning": 0,
+      "cache": {
+        "read": 0,
+        "write": 0
+      }
+    },
+    "outcome": "failed",
+    "time": {
+      "created": 1792478976250,
+      "updated": 1792478976593,
+      "idle": 1792478976624
+    },
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix"
+    }
+  },
+  {
+    "id": "ses_ea7edb83effeCzs6yKzDBLBerm",
+    "projectID": "35f577e5c6c922ef11fffe7a1c23d6fddb11ab6f",
+    "agent": "orchestrator",
+    "cost": 0,
+    "tokens": {
+      "input": 2221,
+      "output": 2,
+      "reasoning": 0,
+      "cache": {
+        "read": 384,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792478955502,
+      "updated": 1792478956959,
+      "idle": 1792478956896
+    },
+    "title": "OK",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/run/A-serial/m"
+    }
+  },
+  {
+    "id": "ses_ea7edc0b6ffemY3eUxPH5XMZAN",
+    "projectID": "global",
+    "agent": "orchestrator",
+    "cost": 0,
+    "tokens": {
+      "input": 382,
+      "output": 5,
+      "reasoning": 0,
+      "cache": {
+        "read": 7424,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792478953605,
+      "updated": 1792478955309,
+      "idle": 1792478955312
+    },
+    "title": "OK-only reply request",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/probe4/m"
+    }
+  },
+  {
+    "id": "ses_ea7edf589ffecwgIS0XHcqjkAF",
+    "projectID": "93ca3263777a01c825bd9bcc70d0efe3297cc20d",
+    "agent": "orchestrator",
+    "cost": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "reasoning": 0,
+      "cache": {
+        "read": 0,
+        "write": 0
+      }
+    },
+    "outcome": "failed",
+    "time": {
+      "created": 1792478939775,
+      "updated": 1792478940143,
+      "idle": 1792478940175
+    },
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix"
+    }
+  },
+  {
+    "id": "ses_ea7eeb199ffetUwQ13kRQaTMf1",
+    "projectID": "93ca3263777a01c825bd9bcc70d0efe3297cc20d",
+    "agent": "orchestrator",
+    "cost": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "reasoning": 0,
+      "cache": {
+        "read": 0,
+        "write": 0
+      }
+    },
+    "outcome": "failed",
+    "time": {
+      "created": 1792478891632,
+      "updated": 1792478892028,
+      "idle": 1792478892061
+    },
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix"
+    }
+  },
+  {
+    "id": "ses_ea7efd5aaffeXL9G19JxPtpnQm",
+    "projectID": "global",
+    "model": {
+      "id": "definitely-not-a-model",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "reasoning": 0,
+      "cache": {
+        "read": 0,
+        "write": 0
+      }
+    },
+    "outcome": "failed",
+    "time": {
+      "created": 1792478817156,
+      "updated": 1792478817291,
+      "idle": 1792478817307
+    },
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/probe4/m"
+    }
+  },
+  {
+    "id": "ses_ea7efece1ffekIJth3QBR9Avjw",
+    "projectID": "global",
+    "model": {
+      "id": "definitely-not-a-model",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "reasoning": 0,
+      "cache": {
+        "read": 0,
+        "write": 0
+      }
+    },
+    "outcome": "failed",
+    "time": {
+      "created": 1792478811249,
+      "updated": 1792478811398,
+      "idle": 1792478811415
+    },
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/probe4/m"
+    }
+  },
+  {
+    "id": "ses_ea7f0f9ceffeYHtIl2h3gu2uoi",
+    "projectID": "global",
+    "agent": "orchestrator",
+    "cost": 0,
+    "tokens": {
+      "input": 10393,
+      "output": 766,
+      "reasoning": 0,
+      "cache": {
+        "read": 8064,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792478742390,
+      "updated": 1792478758335,
+      "idle": 1792478758337
+    },
+    "title": "Parallel subagent permission boundary test",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/probe4/m"
+    }
+  },
+  {
+    "id": "ses_ea7f0ed4affeOFRxfBRtuSNEX5",
+    "parentID": "ses_ea7f0f9ceffeYHtIl2h3gu2uoi",
+    "projectID": "global",
+    "agent": "alpha-worker",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.00213042,
+    "tokens": {
+      "input": 9154,
+      "output": 783,
+      "reasoning": 188,
+      "cache": {
+        "read": 58240,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792478745328,
+      "updated": 1792478755023,
+      "idle": 1792478755026
+    },
+    "title": "Alpha restricted worker probe",
+    "location": {
+      "directory": "/private/tmp/ads-oc-matrix/probe4/m"
+    }
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "cell": "symlink-tree",
+  "child": "symlink-worker",
+  "model": "deepseek/deepseek-flash",
+  "root_session": "ses_ea719d29cffel8fpYKDUwuyxLb",
+  "exit_code": 0,
+  "wall_seconds": 29.26,
+  "state": "run-complete"
+}

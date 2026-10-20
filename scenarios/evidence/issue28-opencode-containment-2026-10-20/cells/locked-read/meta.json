@@ -1,0 +1,9 @@
+{
+  "cell": "locked-read",
+  "child": "locked-read-worker",
+  "model": "deepseek/deepseek-flash",
+  "root_session": "ses_ea71b20deffeixEO0Y22s7GLqs",
+  "exit_code": 0,
+  "wall_seconds": 10.941,
+  "state": "run-complete"
+}

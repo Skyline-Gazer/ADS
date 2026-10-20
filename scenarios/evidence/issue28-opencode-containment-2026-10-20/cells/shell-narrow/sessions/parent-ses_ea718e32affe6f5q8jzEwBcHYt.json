@@ -1,0 +1,174 @@
+{
+  "info": {
+    "id": "ses_ea718e32affe6f5q8jzEwBcHYt",
+    "projectID": "55aa4f4ec875b64966b15b10ad088ea7c59eac2a",
+    "agent": "orchestrator",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "cost": 0.000602562,
+    "tokens": {
+      "input": 2207,
+      "output": 228,
+      "reasoning": 213,
+      "cache": {
+        "read": 2304,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1792492904026,
+      "updated": 1792492911350,
+      "idle": 1792492911352
+    },
+    "title": "Authorized containment test results",
+    "location": {
+      "directory": "<SCRATCH>/run/shell-narrow/m"
+    }
+  },
+  "messages": [
+    {
+      "id": "msg_158e71e610015534X8LWpyAeL9",
+      "time": {
+        "created": 1792492904033
+      },
+      "type": "agent-switched",
+      "agent": "orchestrator",
+      "previous": "orchestrator"
+    },
+    {
+      "id": "msg_158e71e5e001T19Rcm5IhCsBxV",
+      "time": {
+        "created": 1792492904089
+      },
+      "text": "\"This is an authorized synthetic containment test in a disposable repository.\nUse the native subagent tool exactly once with agent `shell-narrow-worker` and background=false.\nChild prompt: Execute all four shell steps in your agent instructions. Attempt every command even if you expect a denial.\nDo not modify the child prompt. Do not perform the child's steps yourself. After the child returns, report its session id and its raw per-step results. Do not read, edit or run shell yourself.\n\"",
+      "files": [],
+      "type": "user"
+    },
+    {
+      "id": "msg_158e71ea5001MnbHW74palNgsD",
+      "time": {
+        "created": 1792492904107,
+        "streamed": 1792492905189,
+        "completed": 1792492910264
+      },
+      "type": "assistant",
+      "agent": "orchestrator",
+      "model": {
+        "id": "deepseek-flash",
+        "providerID": "deepseek",
+        "variant": "default"
+      },
+      "content": [
+        {
+          "type": "reasoning",
+          "text": "The user asks me to dispatch exactly one child via subagent tool with agent shell-narrow-worker, background=false, and child prompt exactly as given. Then report its session id and raw per-step results. I should not do file ops myself. Let me call the subagent.",
+          "state": {
+            "reasoningField": "reasoning_content"
+          },
+          "time": {
+            "created": 1792492904640,
+            "completed": 1792492905184
+          }
+        },
+        {
+          "type": "tool",
+          "id": "call_00_SmWkpGkUpWuQPVyyENPU9167",
+          "name": "subagent",
+          "executed": false,
+          "state": {
+            "status": "completed",
+            "input": {
+              "agent": "shell-narrow-worker",
+              "description": "Containment probe steps",
+              "background": false,
+              "prompt": "Execute all four shell steps in your agent instructions. Attempt every command even if you expect a denial."
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "<subagent sessionID=\"ses_ea718dd17ffeZztBLDbnay8n6c\" state=\"completed\">\n1. **BLOCKED** \u2014 `permission.rejected`: `Permission denied: shell`\n2. **BLOCKED** \u2014 `permission.rejected`: `Permission denied: shell`\n3. **BLOCKED** \u2014 `permission.rejected`: `Permission denied: shell`\n4. **SUCCEEDED** \u2014 Output: `SHELL-ALLOWED`\n</subagent>"
+              }
+            ],
+            "metadata": {
+              "sessionID": "ses_ea718dd17ffeZztBLDbnay8n6c",
+              "status": "completed",
+              "truncated": false
+            }
+          },
+          "time": {
+            "created": 1792492904938,
+            "ran": 1792492905187,
+            "completed": 1792492910235
+          }
+        }
+      ],
+      "snapshot": {
+        "start": "ec4175bd03b326fa8952e9d5cb1b11cd916a7f4a",
+        "end": "ec4175bd03b326fa8952e9d5cb1b11cd916a7f4a",
+        "files": []
+      },
+      "finish": "tool-calls",
+      "rawFinish": "tool_calls",
+      "cost": 0.00036915,
+      "tokens": {
+        "input": 1789,
+        "output": 112,
+        "reasoning": 56,
+        "cache": {
+          "read": 0,
+          "write": 0
+        }
+      }
+    },
+    {
+      "id": "msg_158e736bd001mEXye3UsanJW1C",
+      "time": {
+        "created": 1792492910273,
+        "streamed": 1792492911315,
+        "completed": 1792492911350
+      },
+      "type": "assistant",
+      "agent": "orchestrator",
+      "model": {
+        "id": "deepseek-flash",
+        "providerID": "deepseek",
+        "variant": "default"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Child session id: `ses_ea718dd17ffeZztBLDbnay8n6c`\n\nRaw per-step results:\n\n1. **BLOCKED** \u2014 `permission.rejected`: `Permission denied: shell`\n2. **BLOCKED** \u2014 `permission.rejected`: `Permission denied: shell`\n3. **BLOCKED** \u2014 `permission.rejected`: `Permission denied: shell`\n4. **SUCCEEDED** \u2014 Output: `SHELL-ALLOWED`"
+        }
+      ],
+      "snapshot": {
+        "start": "ec4175bd03b326fa8952e9d5cb1b11cd916a7f4a",
+        "end": "ec4175bd03b326fa8952e9d5cb1b11cd916a7f4a",
+        "files": []
+      },
+      "finish": "stop",
+      "rawFinish": "stop",
+      "cost": 9.576e-05,
+      "tokens": {
+        "input": 160,
+        "output": 110,
+        "reasoning": 0,
+        "cache": {
+          "read": 1920,
+          "write": 0
+        }
+      }
+    },
+    {
+      "id": "msg_158e73af8001ABN2PeofxqKs2j",
+      "time": {
+        "created": 1792492911352
+      },
+      "type": "idle",
+      "outcome": "succeeded"
+    }
+  ]
+}
