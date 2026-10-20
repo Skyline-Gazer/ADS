@@ -1,0 +1,66 @@
+{
+  "recorded_utc": "2026-10-20T07:58:00Z",
+  "branch": "test/opencode-subagent-model-matrix-20261020",
+  "base_sha": "2fe9ca015e7530b873bdbabf659894e0d83956b5",
+  "head_sha": "eb9e890",
+  "pr": 26,
+  "pr_url": "https://github.com/Skyline-Gazer/ADS/pull/26",
+  "merge_performed": false,
+  "release_created": false,
+  "production_changed": false,
+  "scope": "One acceptance report, one scenario-index row, one protocol status/table update and a redacted evidence capsule; no application fixture, global configuration or ADS Skill changed",
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "scripts/check-ads.py"
+      ],
+      "cwd": "<REPO>",
+      "exit_code": 0,
+      "stdout": "ADS validation passed: 4 skills, Markdown links and probe examples checked\n",
+      "stderr": "",
+      "seconds": 0.125
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests"
+      ],
+      "cwd": "<REPO>",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "..............................\n----------------------------------------------------------------------\nRan 30 tests in 1.331s\n\nOK\n",
+      "seconds": 1.41
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "<REPO>",
+      "exit_code": 0,
+      "stdout": "eb9e89035c93f1820aa4ae6408109209291823b6\n",
+      "stderr": "",
+      "seconds": 0.015
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain"
+      ],
+      "cwd": "<REPO>",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.02
+    }
+  ]
+}
