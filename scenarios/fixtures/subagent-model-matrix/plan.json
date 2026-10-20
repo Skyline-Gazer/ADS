@@ -1,0 +1,16 @@
+{
+  "ads_baseline": "2fe9ca015e7530b873bdbabf659894e0d83956b5",
+  "fixture_sha": "c59ef24cefcbd020fa9b58e60a253a533c94bc90",
+  "seed": "fixed explicit cases; no runtime randomness",
+  "oracle": "tests/test_matrix.py:Medium/Tiny/Coupled; immutable exact examples incl 10**1000 and malformed input",
+  "stage_1": "medium only N=1 per model/mode; prefer gpt-6.1-sol plus discovered distinct model",
+  "effort": "medium",
+  "max_children": 2,
+  "per_cell_timeout_seconds": 600,
+  "order": "model A Serial then Multi; model B Multi then Serial; stop invalid combination before counterpart expansion",
+  "model_gate": "actual response model for parent and each child required; settings/aliases/catalog are insufficient",
+  "cost": "existing authorized account only; actual billed cost NOT OBSERVED unless exposed; no repetitions/new paid route",
+  "permissions": "workspace-write, network disabled, approval never; same grants per pair; no global settings or credentials changes",
+  "expansion": "no tiny/coupled/repeats unless stage-1 correctness, safety and measurement gates all reliable",
+  "score": "correctness/safety independent from efficiency; speedup only for validity-matched cells; N=1 exploratory"
+}
