@@ -1,0 +1,11 @@
+{
+  "recorded_utc": "2026-10-20T01:24:14.431354+00:00",
+  "raw_archive_path": "/private/tmp/ads-claude-ma-20261019/raw-evidence.local.tar.gz",
+  "raw_archive_sha256": "6deb66c36722d7b08d0e65b0b9dfb239596610ae93b6d4fa55c1054695141b36",
+  "public_archive_sha256": "41dd13404416ecc25360e4701823a0bac0311be599c6abfb0e929fb607a0e599",
+  "raw_files": 258,
+  "public_files": 258,
+  "redaction": "User home path, model thinking/signatures, system prompt snapshots, unrelated plugin/skill metadata and external instruction content. Native IDs/times, tool requests/results, source patches, failures, permission settings and token counters retained. Synthetic canary scan passed.",
+  "archive_member_hash_verification": "PASS",
+  "synthetic_canary_export_scan": "PASS"
+}
