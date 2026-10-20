@@ -1,0 +1,21 @@
+{
+  "query_time": "2026-10-20T03:44:32.286517+00:00",
+  "pr": {
+    "baseRefName": "main",
+    "headRefOid": "60dea47dc1ab69e60c09ad3b5227c8e72a68fadc",
+    "mergedAt": null,
+    "number": 23,
+    "state": "OPEN",
+    "statusCheckRollup": [],
+    "url": "https://github.com/Skyline-Gazer/ADS/pull/23"
+  },
+  "runs": {
+    "total_count": 0,
+    "workflow_runs": []
+  },
+  "check_runs": {
+    "total_count": 0,
+    "check_runs": []
+  },
+  "classification": "NOT OBSERVED: report hosted CI, not a PASS; no manual dispatch or workflow change"
+}
