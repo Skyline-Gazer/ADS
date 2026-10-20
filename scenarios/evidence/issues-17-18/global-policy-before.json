@@ -1,0 +1,26 @@
+{
+  "$USER_HOME/.codex/config.toml": {
+    "sha256": "756c6de2a4f1453f901577caafd394e632882b4edf23c51331fcf5bb19c45295",
+    "size": 5643,
+    "mtime_ns": 1792462311577221340,
+    "mode": 384
+  },
+  "$USER_HOME/.codex/AGENTS.md": {
+    "sha256": "b9c3ed201aafb846767d8c4f5dac4ce6b4b3b17eba0a6153918ccdfbb8e7a0df",
+    "size": 26,
+    "mtime_ns": 1791949942923910253,
+    "mode": 384
+  },
+  "$USER_HOME/.gitconfig": {
+    "sha256": "63d518926fdc955f40af1310e2caaa4e1e75f0933679d1eb798c552b72fe5d92",
+    "size": 380,
+    "mtime_ns": 1792332088438625808,
+    "mode": 420
+  },
+  "$USER_HOME/.codex/rules/default.rules": {
+    "sha256": "1aec56d155e4947400c90ad5c76e8cc9916122ad1b9b5c38baf4879ade4fd13b",
+    "size": 32356,
+    "mtime_ns": 1792462729922863569,
+    "mode": 420
+  }
+}

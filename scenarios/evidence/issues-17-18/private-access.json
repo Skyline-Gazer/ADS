@@ -1,0 +1,10 @@
+{
+  "classification": "INACCESSIBLE",
+  "actual_private_source": "https://github.com/Skyline-Gazer/ADS.git",
+  "privacy_verified_by": "ads-repository.json isPrivate=true",
+  "method": "real unauthenticated Git HTTPS; process-local empty helper and isolated HOME",
+  "exit_code": 128,
+  "stdout": "",
+  "stderr": "fatal: unable to get password from user\n",
+  "credentials_read_or_modified": false
+}

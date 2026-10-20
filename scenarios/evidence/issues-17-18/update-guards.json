@@ -1,0 +1,6 @@
+{
+  "dirty": "DIRTY; refused before any checkout; tracked and untracked bytes preserved",
+  "unavailable_target": "UNKNOWN; cat-file failed; current gitlink preserved",
+  "incompatible_update": "HOLD; actual failing assertion simulates published-release-only consumer; approved target is an unreleased candidate; no merge",
+  "remote_consumer": "local bare repository only; GitHub upgrade PR/hosted consumer CI NOT TESTED"
+}

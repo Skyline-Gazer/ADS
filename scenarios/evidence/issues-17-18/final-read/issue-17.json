@@ -1,0 +1,42 @@
+{
+  "time_utc": "2026-10-20T02:22:15.610111+00:00",
+  "command": [
+    "gh",
+    "issue",
+    "view",
+    "17",
+    "--repo",
+    "Skyline-Gazer/ADS",
+    "--json",
+    "number,title,body,state,url,milestone,projectItems,comments,closedAt"
+  ],
+  "exit_code": 0,
+  "response": {
+    "body": "At goal/Phase completion, perform one AI-native read-only reconciliation against real GitHub Project items, Issues, PRs, CI and repository state. Match by stable issue IDs and project item IDs where accessible; no second tracker. Classify DONE_VERIFIED, OPEN_VALID, STATUS_DRIFT, SCOPE_DRIFT, EVIDENCE_GAP, BLOCKED. Repair factual statuses and close only items whose acceptance criteria and actual work are proven; never silently close unresolved security failures or hide unavailable Projects API. Repair drift and rerun checks before advancing dependent work. Document permission boundaries, audit records in issue/PR discussion, and a testable no-false-close scenario. Keep project-specific Project field names discoverable rather than hardcoded.",
+    "closedAt": "2026-10-20T02:10:09Z",
+    "comments": [
+      {
+        "id": "IC_kwDOVKj6Bc8AAAABdmsepQ",
+        "author": {
+          "login": "markd3ng"
+        },
+        "authorAssociation": "MEMBER",
+        "body": "Phase/Milestone normative implementation shipped via merged PR #19 (main merge SHA `b33b41f5c15c0ebac40e25882de81f0b383bc81b`; PR-head Validate ADS CI SUCCESS run 39357382242). Canonical guide `docs/milestone-reconciliation.md`, Skills, and acceptance protocol landed. **Live Project-v2 reconciliation / real status write remains NOT TESTED**, so this Issue stays OPEN until an authorized real or isolated GitHub Project item trial validates drift repair, closure and re-read.",
+        "createdAt": "2026-10-20T02:10:26Z",
+        "includesCreatedEdit": false,
+        "isMinimized": false,
+        "minimizedReason": "",
+        "reactionGroups": [],
+        "url": "https://github.com/Skyline-Gazer/ADS/issues/17#issuecomment-6281698981",
+        "viewerDidAuthor": true
+      }
+    ],
+    "milestone": null,
+    "number": 17,
+    "projectItems": [],
+    "state": "CLOSED",
+    "title": "v0.3 P0: phase milestone reconciliation against GitHub Project and delivery evidence",
+    "url": "https://github.com/Skyline-Gazer/ADS/issues/17"
+  },
+  "stderr": ""
+}

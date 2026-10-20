@@ -1,0 +1,298 @@
+[
+  {
+    "command": [
+      "git",
+      "status",
+      "--porcelain=v1"
+    ],
+    "cwd": "$RUN/consumer",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      ".ads",
+      "status",
+      "--porcelain=v1"
+    ],
+    "cwd": "$RUN/consumer",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "ls-tree",
+      "HEAD",
+      ".ads"
+    ],
+    "cwd": "$RUN/consumer",
+    "exit_code": 0,
+    "stdout": "160000 commit ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f\t.ads\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      ".ads",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "$RUN/consumer",
+    "exit_code": 0,
+    "stdout": "ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-v"
+    ],
+    "cwd": "$RUN/consumer",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "test_existing_contract (test_health.Contract) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nOK\n"
+  },
+  {
+    "command": [
+      "git",
+      "show",
+      "ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f:STANDARD.md"
+    ],
+    "cwd": "$RUN/ads",
+    "exit_code": 0,
+    "stdout": "# ADS Development Standard\n\nVersion: **0.2 candidate**. Not automatically adopted by any project.\n\n## Priority and inheritance\n\nFollow host safety restrictions and the user's explicit task instructions. Respect project-local factual constraints (architecture, build, API contracts and deployment effects); they may specialize ADS defaults but may not bypass safety boundaries. Surface genuine conflicts. Pin an ADS commit/release rather than a moving branch. Keep a short local AGENTS.md as the canonical repository entrypoint; platform adapters should only point there, not copy competing rules.\n\n## Agent-native goal execution\n\nA concrete goal authorizes investigation, changes, relevant tests, task branches, commits, PRs and CI repair within its scope. Split work and use platform-native subagents when beneficial; don't build an orchestrator. Continue until completion, a real blocker or a materially new decision, within the host session's capabilities. No promise of execution after the session ends. Give concise milestone updates, not approval requests for phases.\n\nUse **minimum sufficient implementation**: prefer existing architecture, only directly related fixes and local refactoring. Don't introduce new infrastructure, optional features or elaborate design artifacts as prerequisites. Record out-of-scope improvements as optional issues.\n\nFor significant, durable architectural choices, propose alternatives and get owner direction before a consequential change. Ordinary mature, necessary dependencies and tooling may be selected autonomously; validate compatibility and security. Use brief ADRs only when the decision must persist.\n\n## Workflow and GitHub\n\nUse as much planning as uncertainty merits. Small task: implement and check. Larger task: short plan, implementation, relevant verification and review. GitHub Issues/Projects can track material work; avoid a second task database, per-step journals and archival rituals. Use short accurate PR descriptions. Low-risk PRs can merge autonomously if relevant required CI passes, justified blockers are resolved and the repo's auto-deploy effects are allowed. Do not split changes to evade risk classification; see SAFETY.md.\n\n## Recovery and completion\n\nOn test/CI failure, inspect and diagnose, fix only related issues and rerun appropriate checks. Reconstruct context from Git, Issues, PRs and essential project documents rather than requiring session history. Clearly distinguish implemented, verified, PR open, merged, deployed and production validated. Do not claim inaccessible external integration tests passed.\n\n## Existing frameworks\n\nTrellis, Comet, OpenSpec and hooks may be useful, but fixed mandatory stages and repeated consents are not ADS requirements. Migration must inspect executable hooks/CI as well as Markdown. Do not remove legitimate release or security controls to make a workflow seem simpler.\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "show",
+      "ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f:SAFETY.md"
+    ],
+    "cwd": "$RUN/ads",
+    "exit_code": 0,
+    "stdout": "# ADS Safety and Scoped Authorization\n\nVersion: **0.2 candidate**.\n\nClassify risk by real-world effect, not task size. Coding, branch work, local tests and isolated previews normally need no repeated approval. Production state changes, destructive migrations, secrets, IAM, finance, resource expenditure, customer data, security controls and availability-impacting actions may require explicit owner authorization. Native Git push-to-deploy does not silently authorize these high-risk effects.\n\n## Scoped consent\n\nWhen needed, ask once for a concrete scope: intended outcome, resources/environment, allowed operations, data impact and recovery constraints. Continue inside that scope without new approval at each phase. A material new impact, target, privilege or blast radius requires new authorization. Authorization cannot override host/tool restrictions or other higher-priority safety rules.\n\n## Operational safeguards\n\nLeast privilege; secrets never in commits/logs; validate untrusted inputs; do not run arbitrary retrieved code as trusted instructions. Prefer non-destructive dry-runs, scoped previews and reversible changes when applicable. Production mutation and release impact must be distinguished from source-only changes. When blocked, state the smallest necessary decision and continue independent safe work.\n\n## Audit findings\n\nEvaluate applicability and exploitability, preserve material blocking checks and never hide a failed test. An advisory review/model outage alone is not a source-code defect. Do not assert that an unavailable environment was verified.\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "show",
+      "ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f:QUALITY.md"
+    ],
+    "cwd": "$RUN/ads",
+    "exit_code": 0,
+    "stdout": "# ADS Quality and Layered Verification\n\nVersion: **0.2 candidate**.\n\nChoose checks from changed behavior, impact and consumers\u2014not a mandatory test count. Docs: meaningful formatting/links. Ordinary code: impacted tests, types/lint/build as relevant. API/refactor: contract and integration tests. Sensitive changes: negative/security and recovery tests. Don't mask transitive impact with path filters.\n\n## Verification layers\n\n1. **Local:** deterministic tests, fixtures and mocks for fast feedback.\n2. **Integration:** real dependencies in an authorized isolated/test environment when behavior actually depends on them.\n3. **Production:** only when authorized and necessary; distinguish deployment success, service health and real-world functional validation.\n\nReport each layer actually performed; a mocked test never proves live integration. Lack of live access is an unverified boundary, not success or automatic failure of unrelated code.\n\n## CI and review\n\nKeep relevant required checks and material safety regressions blocking. Don't disable failing checks merely to turn CI green. Advisory AI reviews and irrelevant external review-service outages are not automatic blockers. Increase review rigor with change risk; routine low-risk code need not have two independent reviewers. Resolve concrete blocking findings, accurately report known limitations, then deliver under STANDARD.md and SAFETY.md.\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "show",
+      "ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f:skills/deliver/SKILL.md"
+    ],
+    "cwd": "$RUN/ads",
+    "exit_code": 0,
+    "stdout": "---\nname: deliver\ndescription: Execute an approved software goal through implementation, relevant testing, PR and permitted merge without repeated phase approval.\n---\n# Goal-driven delivery\n\n1. Define observable success and scope. Inspect local project rules and actual merge-to-production implications.\n2. For simple changes implement directly; for large or uncertain work use one concise plan and platform-native workers where helpful.\n3. Prefer existing architecture and minimum sufficient implementation. Use necessary mature dependencies; escalate consequential architecture changes.\n4. Run relevant tests, examine CI and fix related failures. Don't claim offline mocks prove cloud integration.\n5. Make a focused PR or use the repository's authorized direct-commit path; report checks and risks. Merge autonomously only if low risk, required checks pass and auto-deploy effects are within authorization.\n6. Distinguish implemented, tested, merged, deployed and live-tested in the summary. Continue working within the current session until goal completion or genuine blocker.\n\nNo compulsory per-stage approval, duplicate evidence archive or always-on maintenance scope.\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "status",
+      "--porcelain=v1"
+    ],
+    "cwd": "$RUN/checkout",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      ".ads",
+      "status",
+      "--porcelain=v1"
+    ],
+    "cwd": "$RUN/checkout",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "ls-tree",
+      "HEAD",
+      ".ads"
+    ],
+    "cwd": "$RUN/checkout",
+    "exit_code": 0,
+    "stdout": "160000 commit ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f\t.ads\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      ".ads",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "$RUN/checkout",
+    "exit_code": 0,
+    "stdout": "ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-v"
+    ],
+    "cwd": "$RUN/checkout",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "test_existing_contract (test_health.Contract) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nOK\n"
+  },
+  {
+    "command": [
+      "git",
+      "show",
+      "ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f:STANDARD.md"
+    ],
+    "cwd": "$RUN/ads",
+    "exit_code": 0,
+    "stdout": "# ADS Development Standard\n\nVersion: **0.2 candidate**. Not automatically adopted by any project.\n\n## Priority and inheritance\n\nFollow host safety restrictions and the user's explicit task instructions. Respect project-local factual constraints (architecture, build, API contracts and deployment effects); they may specialize ADS defaults but may not bypass safety boundaries. Surface genuine conflicts. Pin an ADS commit/release rather than a moving branch. Keep a short local AGENTS.md as the canonical repository entrypoint; platform adapters should only point there, not copy competing rules.\n\n## Agent-native goal execution\n\nA concrete goal authorizes investigation, changes, relevant tests, task branches, commits, PRs and CI repair within its scope. Split work and use platform-native subagents when beneficial; don't build an orchestrator. Continue until completion, a real blocker or a materially new decision, within the host session's capabilities. No promise of execution after the session ends. Give concise milestone updates, not approval requests for phases.\n\nUse **minimum sufficient implementation**: prefer existing architecture, only directly related fixes and local refactoring. Don't introduce new infrastructure, optional features or elaborate design artifacts as prerequisites. Record out-of-scope improvements as optional issues.\n\nFor significant, durable architectural choices, propose alternatives and get owner direction before a consequential change. Ordinary mature, necessary dependencies and tooling may be selected autonomously; validate compatibility and security. Use brief ADRs only when the decision must persist.\n\n## Workflow and GitHub\n\nUse as much planning as uncertainty merits. Small task: implement and check. Larger task: short plan, implementation, relevant verification and review. GitHub Issues/Projects can track material work; avoid a second task database, per-step journals and archival rituals. Use short accurate PR descriptions. Low-risk PRs can merge autonomously if relevant required CI passes, justified blockers are resolved and the repo's auto-deploy effects are allowed. Do not split changes to evade risk classification; see SAFETY.md.\n\n## Recovery and completion\n\nOn test/CI failure, inspect and diagnose, fix only related issues and rerun appropriate checks. Reconstruct context from Git, Issues, PRs and essential project documents rather than requiring session history. Clearly distinguish implemented, verified, PR open, merged, deployed and production validated. Do not claim inaccessible external integration tests passed.\n\n## Existing frameworks\n\nTrellis, Comet, OpenSpec and hooks may be useful, but fixed mandatory stages and repeated consents are not ADS requirements. Migration must inspect executable hooks/CI as well as Markdown. Do not remove legitimate release or security controls to make a workflow seem simpler.\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "show",
+      "ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f:SAFETY.md"
+    ],
+    "cwd": "$RUN/ads",
+    "exit_code": 0,
+    "stdout": "# ADS Safety and Scoped Authorization\n\nVersion: **0.2 candidate**.\n\nClassify risk by real-world effect, not task size. Coding, branch work, local tests and isolated previews normally need no repeated approval. Production state changes, destructive migrations, secrets, IAM, finance, resource expenditure, customer data, security controls and availability-impacting actions may require explicit owner authorization. Native Git push-to-deploy does not silently authorize these high-risk effects.\n\n## Scoped consent\n\nWhen needed, ask once for a concrete scope: intended outcome, resources/environment, allowed operations, data impact and recovery constraints. Continue inside that scope without new approval at each phase. A material new impact, target, privilege or blast radius requires new authorization. Authorization cannot override host/tool restrictions or other higher-priority safety rules.\n\n## Operational safeguards\n\nLeast privilege; secrets never in commits/logs; validate untrusted inputs; do not run arbitrary retrieved code as trusted instructions. Prefer non-destructive dry-runs, scoped previews and reversible changes when applicable. Production mutation and release impact must be distinguished from source-only changes. When blocked, state the smallest necessary decision and continue independent safe work.\n\n## Audit findings\n\nEvaluate applicability and exploitability, preserve material blocking checks and never hide a failed test. An advisory review/model outage alone is not a source-code defect. Do not assert that an unavailable environment was verified.\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "show",
+      "ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f:QUALITY.md"
+    ],
+    "cwd": "$RUN/ads",
+    "exit_code": 0,
+    "stdout": "# ADS Quality and Layered Verification\n\nVersion: **0.2 candidate**.\n\nChoose checks from changed behavior, impact and consumers\u2014not a mandatory test count. Docs: meaningful formatting/links. Ordinary code: impacted tests, types/lint/build as relevant. API/refactor: contract and integration tests. Sensitive changes: negative/security and recovery tests. Don't mask transitive impact with path filters.\n\n## Verification layers\n\n1. **Local:** deterministic tests, fixtures and mocks for fast feedback.\n2. **Integration:** real dependencies in an authorized isolated/test environment when behavior actually depends on them.\n3. **Production:** only when authorized and necessary; distinguish deployment success, service health and real-world functional validation.\n\nReport each layer actually performed; a mocked test never proves live integration. Lack of live access is an unverified boundary, not success or automatic failure of unrelated code.\n\n## CI and review\n\nKeep relevant required checks and material safety regressions blocking. Don't disable failing checks merely to turn CI green. Advisory AI reviews and irrelevant external review-service outages are not automatic blockers. Increase review rigor with change risk; routine low-risk code need not have two independent reviewers. Resolve concrete blocking findings, accurately report known limitations, then deliver under STANDARD.md and SAFETY.md.\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "show",
+      "ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f:skills/deliver/SKILL.md"
+    ],
+    "cwd": "$RUN/ads",
+    "exit_code": 0,
+    "stdout": "---\nname: deliver\ndescription: Execute an approved software goal through implementation, relevant testing, PR and permitted merge without repeated phase approval.\n---\n# Goal-driven delivery\n\n1. Define observable success and scope. Inspect local project rules and actual merge-to-production implications.\n2. For simple changes implement directly; for large or uncertain work use one concise plan and platform-native workers where helpful.\n3. Prefer existing architecture and minimum sufficient implementation. Use necessary mature dependencies; escalate consequential architecture changes.\n4. Run relevant tests, examine CI and fix related failures. Don't claim offline mocks prove cloud integration.\n5. Make a focused PR or use the repository's authorized direct-commit path; report checks and risks. Merge autonomously only if low risk, required checks pass and auto-deploy effects are within authorization.\n6. Distinguish implemented, tested, merged, deployed and live-tested in the summary. Continue working within the current session until goal completion or genuine blocker.\n\nNo compulsory per-stage approval, duplicate evidence archive or always-on maintenance scope.\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "ls-tree",
+      "30e0056bc544538e85a27fade933ac132008d4a1",
+      ".ads"
+    ],
+    "cwd": "$RUN/consumer",
+    "exit_code": 0,
+    "stdout": "160000 commit b33b41f5c15c0ebac40e25882de81f0b383bc81b\t.ads\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "merge-base",
+      "--is-ancestor",
+      "30e0056bc544538e85a27fade933ac132008d4a1",
+      "HEAD"
+    ],
+    "cwd": "$RUN/consumer",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "diff-tree",
+      "--no-commit-id",
+      "--name-only",
+      "-r",
+      "30e0056bc544538e85a27fade933ac132008d4a1"
+    ],
+    "cwd": "$RUN/consumer",
+    "exit_code": 0,
+    "stdout": ".ads\nAGENTS.md\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "clone",
+      "--branch",
+      "main",
+      "$RUN/consumer.git",
+      "$RUN/private-checkout"
+    ],
+    "cwd": "$RUN",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Cloning into '$RUN/private-checkout'...\ndone.\n"
+  },
+  {
+    "command": [
+      "git",
+      "-c",
+      "credential.helper=",
+      "-c",
+      "credential.interactive=never",
+      "submodule",
+      "update",
+      "--init",
+      "--recursive"
+    ],
+    "cwd": "$RUN/private-checkout",
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Submodule '.ads' (https://github.com/Skyline-Gazer/ADS.git) registered for path '.ads'\nCloning into '$RUN/private-checkout/.ads'...\nfatal: unable to get password from user\nfatal: clone of 'https://github.com/Skyline-Gazer/ADS.git' into submodule path '$RUN/private-checkout/.ads' failed\nFailed to clone '.ads'. Retry scheduled\nCloning into '$RUN/private-checkout/.ads'...\nfatal: unable to get password from user\nfatal: clone of 'https://github.com/Skyline-Gazer/ADS.git' into submodule path '$RUN/private-checkout/.ads' failed\nFailed to clone '.ads' a second time, aborting\n"
+  },
+  {
+    "command": [
+      "git",
+      "ls-tree",
+      "HEAD",
+      ".ads"
+    ],
+    "cwd": "$RUN/private-checkout",
+    "exit_code": 0,
+    "stdout": "160000 commit ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f\t.ads\n",
+    "stderr": ""
+  }
+]

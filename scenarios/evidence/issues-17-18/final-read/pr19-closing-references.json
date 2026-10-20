@@ -1,0 +1,35 @@
+{
+  "time_utc": "2026-10-20T02:22:23.297188+00:00",
+  "command": [
+    "gh",
+    "api",
+    "graphql",
+    "-f",
+    "query=query { repository(owner:\"Skyline-Gazer\",name:\"ADS\") { pullRequest(number:19) { number closingIssuesReferences(first:100) { pageInfo { hasNextPage endCursor } nodes { id number state url } } } } }"
+  ],
+  "exit_code": 0,
+  "response": {
+    "data": {
+      "repository": {
+        "pullRequest": {
+          "number": 19,
+          "closingIssuesReferences": {
+            "pageInfo": {
+              "hasNextPage": false,
+              "endCursor": "MQ"
+            },
+            "nodes": [
+              {
+                "id": "I_kwDOVKj6Bc8AAAABYbtilQ",
+                "number": 17,
+                "state": "CLOSED",
+                "url": "https://github.com/Skyline-Gazer/ADS/issues/17"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "stderr": ""
+}

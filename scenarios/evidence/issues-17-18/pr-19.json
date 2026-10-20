@@ -1,0 +1,138 @@
+{
+  "time_utc": "2026-10-20T02:16:55.198125+00:00",
+  "command": [
+    "gh",
+    "pr",
+    "view",
+    "19",
+    "--repo",
+    "Skyline-Gazer/ADS",
+    "--json",
+    "number,title,body,state,url,mergedAt,mergeCommit,headRefOid,baseRefOid,baseRefName,headRefName,statusCheckRollup,files"
+  ],
+  "exit_code": 0,
+  "response": {
+    "baseRefName": "main",
+    "baseRefOid": "1a7fbe1dfa85e78db8bf735c39b7458fe2f1951d",
+    "body": "## Scope\n- **#17**: AI-native end-of-Phase reconciliation against **live GitHub Project items**, linked Issues, PR/CI, main SHA and verified acceptance. Correct status/scope drift, close only evidence-backed completions, keep FAIL/PARTIAL blocks, discover Project fields/permissions instead of guessing.\n- **#18**: default ADS consumption as a **pinned `.ads` Git Submodule**; short root AGENTS.md; safe private repo access; agent-native update triggers (owner request, Phase checkpoint, optional configured schedule). Diff approved immutable releases, update consumer gitlink via tested PR. Normal `git submodule update --init` **does not advance** the parent pin.\n- Add canonical `docs/milestone-reconciliation.md`, `docs/how-to-update.md`; amend bootstrap/adopt/deliver/recover Skills, standard, quality, adoption docs, AGENTS template and acceptance scenario index.\n- Include failure cases: private access, dirty submodule, unavailable GitHub Project API, false Done, security FAIL/PARTIAL, upgrade rollback.\n\n## Evidence and boundaries\nNormative documentation and workflows only. **No live GitHub Project item reconciliation or cross-repository consumer submodule test has run** in this PR. Neither Issue should close automatically when the docs PR merges; both retain acceptance scenarios. No mandatory daemon, scheduled workflow, third-party updater or new CLI. No existing repository is auto-migrated; no ADS release/tag is created, no production deployment or global settings mutation.\n\n## Verification\nLet Validate ADS run doc/Skill and unit checks on the exact PR HEAD. Review links, example safety, default pin behavior and migration assumptions. Then complete live isolated acceptance and close #17/#18 only when actual tests support it.\n",
+    "files": [
+      {
+        "path": "QUALITY.md",
+        "additions": 6,
+        "deletions": 0,
+        "changeType": "MODIFIED"
+      },
+      {
+        "path": "README.md",
+        "additions": 6,
+        "deletions": 2,
+        "changeType": "MODIFIED"
+      },
+      {
+        "path": "STANDARD.md",
+        "additions": 8,
+        "deletions": 0,
+        "changeType": "MODIFIED"
+      },
+      {
+        "path": "docs/agent-adoption.md",
+        "additions": 5,
+        "deletions": 3,
+        "changeType": "MODIFIED"
+      },
+      {
+        "path": "docs/how-to-update.md",
+        "additions": 70,
+        "deletions": 0,
+        "changeType": "ADDED"
+      },
+      {
+        "path": "docs/milestone-reconciliation.md",
+        "additions": 56,
+        "deletions": 0,
+        "changeType": "ADDED"
+      },
+      {
+        "path": "scenarios/README.md",
+        "additions": 2,
+        "deletions": 0,
+        "changeType": "MODIFIED"
+      },
+      {
+        "path": "scenarios/phase-milestone-reconciliation.md",
+        "additions": 14,
+        "deletions": 0,
+        "changeType": "ADDED"
+      },
+      {
+        "path": "scenarios/submodule-update.md",
+        "additions": 12,
+        "deletions": 0,
+        "changeType": "ADDED"
+      },
+      {
+        "path": "skills/adopt/SKILL.md",
+        "additions": 4,
+        "deletions": 3,
+        "changeType": "MODIFIED"
+      },
+      {
+        "path": "skills/bootstrap/SKILL.md",
+        "additions": 4,
+        "deletions": 3,
+        "changeType": "MODIFIED"
+      },
+      {
+        "path": "skills/deliver/SKILL.md",
+        "additions": 2,
+        "deletions": 1,
+        "changeType": "MODIFIED"
+      },
+      {
+        "path": "skills/recover/SKILL.md",
+        "additions": 3,
+        "deletions": 2,
+        "changeType": "MODIFIED"
+      },
+      {
+        "path": "templates/AGENTS.md",
+        "additions": 5,
+        "deletions": 3,
+        "changeType": "MODIFIED"
+      }
+    ],
+    "headRefName": "feat/v03-milestone-submodule-update",
+    "headRefOid": "3c08d04e5684151e79c192fe29e23d9a0bcfc47f",
+    "mergeCommit": {
+      "oid": "b33b41f5c15c0ebac40e25882de81f0b383bc81b"
+    },
+    "mergedAt": "2026-10-20T02:10:08Z",
+    "number": 19,
+    "state": "MERGED",
+    "statusCheckRollup": [
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-20T02:09:41Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/Skyline-Gazer/ADS/actions/runs/39357382242/job/118415204871",
+        "name": "validate",
+        "startedAt": "2026-10-20T02:09:32Z",
+        "status": "COMPLETED",
+        "workflowName": "Validate ADS"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-20T02:09:13Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/Skyline-Gazer/ADS/actions/runs/39357342287/job/118415072543",
+        "name": "validate",
+        "startedAt": "2026-10-20T02:09:06Z",
+        "status": "COMPLETED",
+        "workflowName": "Validate ADS"
+      }
+    ],
+    "title": "feat: phase milestone convergence and submodule-first ADS updates (#17 #18)",
+    "url": "https://github.com/Skyline-Gazer/ADS/pull/19"
+  },
+  "stderr": ""
+}

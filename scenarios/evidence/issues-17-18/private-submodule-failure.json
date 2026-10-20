@@ -1,0 +1,8 @@
+{
+  "classification": "INACCESSIBLE",
+  "exit_code": 1,
+  "stderr": "Submodule '.ads' (https://github.com/Skyline-Gazer/ADS.git) registered for path '.ads'\nCloning into '$RUN/private-checkout/.ads'...\nfatal: unable to get password from user\nfatal: clone of 'https://github.com/Skyline-Gazer/ADS.git' into submodule path '$RUN/private-checkout/.ads' failed\nFailed to clone '.ads'. Retry scheduled\nCloning into '$RUN/private-checkout/.ads'...\nfatal: unable to get password from user\nfatal: clone of 'https://github.com/Skyline-Gazer/ADS.git' into submodule path '$RUN/private-checkout/.ads' failed\nFailed to clone '.ads' a second time, aborting\n",
+  "gitlink_preserved": "ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f",
+  "guidance_materialized": false,
+  "global_credentials_changed": false
+}

@@ -1,0 +1,10 @@
+{
+  "parent_head": "416b72770715a166463e6f395730d8f37011f8e7",
+  "gitlink": "160000 commit ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f\t.ads",
+  "submodule_head": "ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f",
+  "submodule_status": " ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f .ads (v0.2)\n",
+  "status": "",
+  "nested_status": "",
+  "agents_sha256": "6d7e7b7e2310ed00454b02122067aac9bc65d3c84cfd8bf7a00f4b933a375568",
+  "contract_sha256": "4b4bfbf95c6e19fb816f2a5bc2309421b8ad36817b23038d4626e0cfc46418d4"
+}
