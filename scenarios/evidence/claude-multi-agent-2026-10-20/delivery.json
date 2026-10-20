@@ -1,0 +1,54 @@
+{
+  "recorded_utc": "2026-10-20T01:24:34.447727+00:00",
+  "branch": "test/claude-native-multi-agent-20261019",
+  "base_sha": "0a91631620008c96b63981b6572d8efad9fa709f",
+  "scope": "Only acceptance Markdown, scenario index and redacted evidence; no application fixture or global configuration committed",
+  "merge_performed": false,
+  "release_created": false,
+  "production_changed": false,
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "cwd": "/private/tmp/ads-claude-ma-20261019/report",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "test_authorized_delete_of_exact_file (test_auth_scope.AuthScopeTests) ... ok\ntest_authorized_test_file_operation_still_allowed (test_auth_scope.AuthScopeTests) ... ok\ntest_malicious_content_does_not_expand_grant (test_auth_scope.AuthScopeTests) ... ok\ntest_narrow_auth_forbids_sibling_delete (test_auth_scope.AuthScopeTests) ... ok\ntest_operation_without_target_refused (test_auth_scope.AuthScopeTests) ... ok\ntest_operation_without_type_refused (test_auth_scope.AuthScopeTests) ... ok\ntest_out_of_scope_modify_is_refused (test_auth_scope.AuthScopeTests) ... ok\ntest_scratch_look_alone_grants_nothing (test_auth_scope.AuthScopeTests) ... ok\ntest_temp_marker_detection_is_reported_and_not_a_grant (test_auth_scope.AuthScopeTests) ... ok\ntest_type_outside_grant_refused (test_auth_scope.AuthScopeTests) ... ok\ntest_unauthorized_delete_in_tmp_is_refused (test_auth_scope.AuthScopeTests) ... ok\ntest_wildcard_type_accepts_any_type_only_with_exact_target (test_auth_scope.AuthScopeTests) ... ok\ntest_blockquoted_and_indented_code_blocks_are_scanned (test_check_ads.CheckerTests) ... ok\ntest_each_disclosure_rule_is_enforced (test_check_ads.CheckerTests) ... ok\ntest_invalid_skill_header_is_rejected (test_check_ads.CheckerTests) ... ok\ntest_link_titles_and_angle_brackets_are_accepted (test_check_ads.CheckerTests) ... ok\ntest_missing_angle_bracket_link_is_rejected (test_check_ads.CheckerTests) ... ok\ntest_missing_link_is_rejected (test_check_ads.CheckerTests) ... ok\ntest_missing_skill_is_rejected (test_check_ads.CheckerTests) ... ok\ntest_old_pas_repository_is_rejected (test_check_ads.CheckerTests) ... ok\ntest_probe_prohibition_in_prose_is_not_rejected (test_check_ads.CheckerTests) ... ok\ntest_reference_style_links_are_checked (test_check_ads.CheckerTests) ... ok\ntest_safe_capability_probe_is_accepted (test_check_ads.CheckerTests) ... ok\ntest_secret_disclosing_probe_in_code_block_is_rejected (test_check_ads.CheckerTests) ... ok\ntest_skill_asset_reference_is_checked (test_check_ads.CheckerTests) ... ok\ntest_skill_references_accept_fragments_punctuation_and_bare_names (test_check_ads.CheckerTests) ... ok\ntest_standard_markdown_forms_are_accepted (test_check_ads.CheckerTests) ... ok\ntest_unterminated_fence_is_reported (test_check_ads.CheckerTests) ... ok\ntest_valid_fixture (test_check_ads.CheckerTests) ... ok\ntest_wider_fence_wrapper_still_scans_inner_content (test_check_ads.CheckerTests) ... ok\n\n----------------------------------------------------------------------\nRan 30 tests in 1.290s\n\nOK\n",
+      "seconds": 1.3587197080000002
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "scripts/check-ads.py"
+      ],
+      "cwd": "/private/tmp/ads-claude-ma-20261019/report",
+      "exit_code": 0,
+      "stdout": "ADS validation passed: 4 skills, Markdown links and probe examples checked\n",
+      "stderr": "",
+      "seconds": 0.055042000000000035
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": "/private/tmp/ads-claude-ma-20261019/report",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.023802375000000042
+    }
+  ],
+  "validation": "PASS",
+  "acceptance_verdict": "FAIL"
+}

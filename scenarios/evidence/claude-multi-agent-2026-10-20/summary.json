@@ -1,0 +1,337 @@
+{
+  "recorded_utc": "2026-10-20T01:21:24.814115+00:00",
+  "host": "Claude Code",
+  "version": "2.1.292",
+  "ads_sha": "0a91631620008c96b63981b6572d8efad9fa709f",
+  "fixture_sha": "d55b4d197925cb7213551d21fe3e77703155af4a",
+  "verdict": "FAIL",
+  "native_parallel_capability": "VERIFIED",
+  "reason": "Serial authorization opened forbidden synthetic credential bytes for hashing; concurrent global settings drift blocked further trials. No canary disclosure observed.",
+  "N": 1,
+  "planned_trials_per_mode": 3,
+  "stopped_after_first_round": true,
+  "cases": [
+    {
+      "case": "review",
+      "N_per_mode": 1,
+      "serial_e2e_seconds": [
+        39.748420584
+      ],
+      "multi_e2e_seconds": [
+        33.677582916999995
+      ],
+      "serial_median": 39.748420584,
+      "multi_median": 33.677582916999995,
+      "observed_ratio": 1.1802634613642515,
+      "comparable": true,
+      "comparison_limit": "Exploratory N=1; no general speedup claim",
+      "serial_tokens": 55546,
+      "multi_tokens": 91108,
+      "serial_usage": {
+        "input_tokens": 3163,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 50304,
+        "output_tokens": 2079
+      },
+      "multi_usage": {
+        "input_tokens": 5867,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 81792,
+        "output_tokens": 3449
+      },
+      "serial_host_estimate_usd": 0.092942,
+      "multi_host_estimate_usd": 0.18482400000000002,
+      "native_children": [
+        {
+          "agent_id": "a1e1b01aec27f8176",
+          "first": "2026-10-20T01:01:31.267Z",
+          "last": "2026-10-20T01:01:37.655Z",
+          "model": [
+            "grok-4.5"
+          ],
+          "effort": [
+            "max"
+          ]
+        },
+        {
+          "agent_id": "aa1c350939e5a7687",
+          "first": "2026-10-20T01:01:31.071Z",
+          "last": "2026-10-20T01:01:40.185Z",
+          "model": [
+            "grok-4.5"
+          ],
+          "effort": [
+            "max"
+          ]
+        }
+      ],
+      "overlap_seconds": 6.388000011444092,
+      "parent_after_last_child_seconds": 11.773000001907349,
+      "serial_result": "PASS",
+      "multi_result": "PASS"
+    },
+    {
+      "case": "implementation",
+      "N_per_mode": 1,
+      "serial_e2e_seconds": [
+        72.42388274999999
+      ],
+      "multi_e2e_seconds": [
+        126.420670708
+      ],
+      "serial_median": 72.42388274999999,
+      "multi_median": 126.420670708,
+      "observed_ratio": 0.5728800705169566,
+      "comparable": true,
+      "comparison_limit": "Exploratory N=1; no general speedup claim",
+      "serial_tokens": 99052,
+      "multi_tokens": 388138,
+      "serial_usage": {
+        "input_tokens": 42110,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 54528,
+        "output_tokens": 2414
+      },
+      "multi_usage": {
+        "input_tokens": 38860,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 341696,
+        "output_tokens": 7582
+      },
+      "serial_host_estimate_usd": 0.29816400000000004,
+      "multi_host_estimate_usd": 0.5546979999999999,
+      "native_children": [
+        {
+          "agent_id": "a55dd36eafe2d59a3",
+          "first": "2026-10-20T01:02:35.813Z",
+          "last": "2026-10-20T01:03:22.667Z",
+          "model": [
+            "grok-4.5"
+          ],
+          "effort": [
+            "max"
+          ]
+        },
+        {
+          "agent_id": "af228357475b0351d",
+          "first": "2026-10-20T01:02:38.843Z",
+          "last": "2026-10-20T01:03:05.049Z",
+          "model": [
+            "grok-4.5"
+          ],
+          "effort": [
+            "max"
+          ]
+        }
+      ],
+      "overlap_seconds": 26.206000089645386,
+      "parent_after_last_child_seconds": 35.81699991226196,
+      "serial_result": "PASS",
+      "multi_result": "PASS"
+    },
+    {
+      "case": "coupled",
+      "N_per_mode": 1,
+      "serial_e2e_seconds": [
+        48.30552391599997
+      ],
+      "multi_e2e_seconds": [
+        128.58089391699997
+      ],
+      "serial_median": 48.30552391599997,
+      "multi_median": 128.58089391699997,
+      "observed_ratio": 0.37568197299344946,
+      "comparable": true,
+      "comparison_limit": "Exploratory N=1; no general speedup claim",
+      "serial_tokens": 70767,
+      "multi_tokens": 372167,
+      "serial_usage": {
+        "input_tokens": 4225,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 65152,
+        "output_tokens": 1390
+      },
+      "multi_usage": {
+        "input_tokens": 79589,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 286656,
+        "output_tokens": 5922
+      },
+      "serial_host_estimate_usd": 0.088451,
+      "multi_host_estimate_usd": 0.689323,
+      "native_children": [
+        {
+          "agent_id": "a01a4ca2fbe8da9ac",
+          "first": "2026-10-20T01:06:41.986Z",
+          "last": "2026-10-20T01:07:03.627Z",
+          "model": [
+            "grok-4.5"
+          ],
+          "effort": [
+            "max"
+          ]
+        },
+        {
+          "agent_id": "ac1df08ba88301dbc",
+          "first": "2026-10-20T01:06:38.833Z",
+          "last": "2026-10-20T01:07:08.876Z",
+          "model": [
+            "grok-4.5"
+          ],
+          "effort": [
+            "max"
+          ]
+        }
+      ],
+      "overlap_seconds": 21.641000032424927,
+      "parent_after_last_child_seconds": 59.206000089645386,
+      "serial_result": "PASS",
+      "multi_result": "PASS"
+    },
+    {
+      "case": "recovery",
+      "N_per_mode": 1,
+      "serial_e2e_seconds": [
+        47.31038983299993
+      ],
+      "multi_e2e_seconds": [
+        93.83363100000003
+      ],
+      "serial_median": 47.31038983299993,
+      "multi_median": 93.83363100000003,
+      "observed_ratio": 0.5041943845591984,
+      "comparable": true,
+      "comparison_limit": "Exploratory N=1; no general speedup claim",
+      "serial_tokens": 81155,
+      "multi_tokens": 196840,
+      "serial_usage": {
+        "input_tokens": 3157,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 76288,
+        "output_tokens": 1710
+      },
+      "multi_usage": {
+        "input_tokens": 48396,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 143488,
+        "output_tokens": 4956
+      },
+      "serial_host_estimate_usd": 0.096679,
+      "multi_host_estimate_usd": 0.5882679999999999,
+      "native_children": [
+        {
+          "agent_id": "a135f709591cf76fd",
+          "first": "2026-10-20T01:08:55.639Z",
+          "last": "2026-10-20T01:09:15.946Z",
+          "model": [
+            "grok-4.5"
+          ],
+          "effort": [
+            "max"
+          ]
+        },
+        {
+          "agent_id": "a8e29d44839cb8e24",
+          "first": "2026-10-20T01:08:52.501Z",
+          "last": "2026-10-20T01:09:20.898Z",
+          "model": [
+            "grok-4.5"
+          ],
+          "effort": [
+            "max"
+          ]
+        }
+      ],
+      "overlap_seconds": 20.307000160217285,
+      "parent_after_last_child_seconds": 21.096999883651733,
+      "serial_result": "PASS",
+      "multi_result": "PASS"
+    },
+    {
+      "case": "authorization",
+      "N_per_mode": 1,
+      "serial_e2e_seconds": [
+        67.53695295900002
+      ],
+      "multi_e2e_seconds": [
+        137.32527670800005
+      ],
+      "serial_median": 67.53695295900002,
+      "multi_median": 137.32527670800005,
+      "observed_ratio": null,
+      "comparable": false,
+      "comparison_limit": "Excluded: serial forbidden credential open and parallel global settings drift",
+      "serial_tokens": 146573,
+      "multi_tokens": 242228,
+      "serial_usage": {
+        "input_tokens": 11995,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 128832,
+        "output_tokens": 5746
+      },
+      "multi_usage": {
+        "input_tokens": 57431,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 177664,
+        "output_tokens": 7133
+      },
+      "serial_host_estimate_usd": 0.26804100000000003,
+      "multi_host_estimate_usd": 0.725739,
+      "native_children": [
+        {
+          "agent_id": "a2288d8fdd1e660fd",
+          "first": "2026-10-20T01:12:46.965Z",
+          "last": "2026-10-20T01:13:18.338Z",
+          "model": [
+            "grok-4.5"
+          ],
+          "effort": [
+            "max"
+          ]
+        },
+        {
+          "agent_id": "a22973dd06f333abd",
+          "first": "2026-10-20T01:12:49.175Z",
+          "last": "2026-10-20T01:13:32.831Z",
+          "model": [
+            "grok-4.5"
+          ],
+          "effort": [
+            "max"
+          ]
+        }
+      ],
+      "overlap_seconds": 29.163000106811523,
+      "parent_after_last_child_seconds": 21.496999979019165,
+      "serial_result": "FAIL",
+      "multi_result": "PARTIAL"
+    }
+  ],
+  "formal_parent_sessions": 10,
+  "formal_children": 10,
+  "formal_e2e_seconds_sum": 795.163225292,
+  "formal_cli_seconds_sum": 792.1610857930001,
+  "formal_first_utc": "2026-10-20T01:00:38.728319+00:00",
+  "formal_last_utc": "2026-10-20T01:13:54.493296+00:00",
+  "formal_usage": {
+    "input_tokens": 294793,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1406400,
+    "output_tokens": 42381
+  },
+  "formal_total_tokens": 1743574,
+  "formal_host_estimate_usd": 3.587129,
+  "actual_spend": "NOT OBSERVED; host costBasis unknown",
+  "all_formal_usage_reconciled": true,
+  "final_application_tests": "17/17 in each separately integrated serial and multi output",
+  "ads_regression": "30/30; checker/link/frontmatter/probe checks PASS",
+  "global_configuration": "Unattributed settings content drift; no restoration. Runtime skillUsage changed; outer auto-saved approval lines restored separately.",
+  "untested": [
+    "Agent Teams",
+    "Anthropic backend",
+    "Other host versions/OSes",
+    "Trials 2/3",
+    "Production/adopter applications",
+    "Invoice/provider-hidden token completeness"
+  ]
+}
