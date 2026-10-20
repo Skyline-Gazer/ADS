@@ -9,7 +9,7 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 1. For a new repository, read [skills/bootstrap/SKILL.md](skills/bootstrap/SKILL.md).
 2. For an existing repository, read [skills/adopt/SKILL.md](skills/adopt/SKILL.md).
 3. Use [templates/AGENTS.md](templates/AGENTS.md) as a short project-local entrypoint.
-4. Pin an immutable ADS commit or release; make the chosen guidance locally accessible to the agent. A private URL without connector access is **not** an effective policy.
+4. Prefer a pinned ADS Git submodule at `.ads` in each consumer repository. The root AGENTS.md points to its actual checked-out content. See [docs/how-to-update.md](docs/how-to-update.md). A private URL without authorized clone access is **not** effective policy.
 5. Keep the project's own architecture, tests and production boundaries. ADS is opt-in and never automatically rewrites other repositories.
 
 ## Reference
@@ -21,10 +21,14 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 - [skills/](skills/): opt-in agent-native capabilities.
 - [profiles/](profiles/): optional stack hints, not mandatory architectures.
 - [scenarios/](scenarios/): acceptance scenarios.
+- [docs/how-to-update.md](docs/how-to-update.md): AI-native submodule-first adoption, update triggers, review and rollback.
+- [docs/milestone-reconciliation.md](docs/milestone-reconciliation.md): Phase-end GitHub Project/Issue/PR/CI drift convergence.
 - [docs/agent-adoption.md](docs/agent-adoption.md): practical, pinned adoption and skill discovery.
 - [docs/code-review-options.md](docs/code-review-options.md): v0.3 review-option decision and the native review trial evidence.
 - [scenarios/migration-recon.md](scenarios/migration-recon.md): read-only findings for KIRARI and AiringCal (not a passed migration).
 - [scenarios/v0.3-multi-agent-acceptance.md](scenarios/v0.3-multi-agent-acceptance.md): v0.3 native Multi-Agent coordination and single-agent comparison protocol (host execution pending).
+- [scenarios/phase-milestone-reconciliation.md](scenarios/phase-milestone-reconciliation.md): Phase closure and drift acceptance protocol (live Project not tested).
+- [scenarios/submodule-update.md](scenarios/submodule-update.md): consumer adoption/update/rollback acceptance protocol (live consumer not tested).
 - [scenarios/environment-first.md](scenarios/environment-first.md): environment-first probe, local reuse and fallback evidence.
 - [scenarios/v0.3-omp-acceptance.md](scenarios/v0.3-omp-acceptance.md): OMP 18.11.3 v0.3 acceptance archive.
 - [scenarios/v0.3-opencode-acceptance.md](scenarios/v0.3-opencode-acceptance.md): OpenCode v2.0.32 v0.3 acceptance archive.
@@ -36,7 +40,7 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 
 ## Design principles
 
-Goal-driven execution; environment-first reuse of existing host and project capability; minimum sufficient implementation; a single canonical rule source; project-local operational constraints; adaptive multi-agent collaboration; truthful, layered verification; low-risk autonomous delivery; explicit approval for sensitive effects. Provide concise milestone reporting; do not gate on paperwork or per-stage owner confirmation.
+Goal-driven execution; phase-end GitHub Project milestone convergence; review-gated ADS submodule updates; environment-first reuse of existing host and project capability; minimum sufficient implementation; a single canonical rule source; project-local operational constraints; adaptive multi-agent collaboration; truthful, layered verification; low-risk autonomous delivery; explicit approval for sensitive effects. Provide concise milestone reporting; do not gate on paperwork or per-stage owner confirmation.
 
 ## Migration and publication
 
