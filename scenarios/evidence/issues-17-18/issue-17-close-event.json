@@ -1,0 +1,45 @@
+{
+  "time_utc": "2026-10-20T02:17:00.055807+00:00",
+  "command": [
+    "gh",
+    "api",
+    "graphql",
+    "-f",
+    "query=query { repository(owner:\"Skyline-Gazer\",name:\"ADS\") { defaultBranchRef { name target { oid } } issue(number:17) { id state closedAt timelineItems(last:20,itemTypes:[CLOSED_EVENT,REOPENED_EVENT]) { nodes { __typename ... on ClosedEvent { createdAt actor { login } closer { __typename ... on PullRequest { number url } ... on Commit { oid url } } } ... on ReopenedEvent { createdAt actor { login } } } } } } }"
+  ],
+  "exit_code": 0,
+  "response": {
+    "data": {
+      "repository": {
+        "defaultBranchRef": {
+          "name": "main",
+          "target": {
+            "oid": "b33b41f5c15c0ebac40e25882de81f0b383bc81b"
+          }
+        },
+        "issue": {
+          "id": "I_kwDOVKj6Bc8AAAABYbtilQ",
+          "state": "CLOSED",
+          "closedAt": "2026-10-20T02:10:09Z",
+          "timelineItems": {
+            "nodes": [
+              {
+                "__typename": "ClosedEvent",
+                "createdAt": "2026-10-20T02:10:10Z",
+                "actor": {
+                  "login": "markd3ng"
+                },
+                "closer": {
+                  "__typename": "PullRequest",
+                  "number": 19,
+                  "url": "https://github.com/Skyline-Gazer/ADS/pull/19"
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "stderr": ""
+}

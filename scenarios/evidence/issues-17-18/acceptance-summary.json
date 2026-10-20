@@ -1,0 +1,39 @@
+{
+  "baseline": "b33b41f5c15c0ebac40e25882de81f0b383bc81b",
+  "task_1_issue_17": "PARTIAL",
+  "task_2_issue_18": "PARTIAL",
+  "local_consumer_lifecycle": "PASS",
+  "dependent_phase": "HOLD",
+  "project_api": "VERIFIED_READ_ONLY",
+  "project_id": "PVT_kwHODRFUbM4BlFsV",
+  "project_url": "https://github.com/users/markd3ng/projects/1",
+  "project_items_read": 33,
+  "project_fields_read": 16,
+  "project_pagination_complete": true,
+  "project_snapshots_identical": true,
+  "project_mutations": 0,
+  "issue_state_mutations": 0,
+  "acceptance_board": "PROJECT_UNVERIFIED: no isolated test Project designated or write authorization granted; ADS repository has zero associated Projects",
+  "access_blocker": "No Project permission denial observed. GraphQL reads succeeded. Missing canonical isolated test board/write grant, not missing API credentials.",
+  "status_drift": "#17 CLOSED by PR #19 while its own live acceptance remains incomplete",
+  "scope_coverage": "PR #19 delivered normative guidance only; Issue #17 requires actual live reconciliation. This is not a verified outdated/split Project-item repair.",
+  "evidence_gaps": [
+    "isolated Project status repair, correct/false-open closure and re-read",
+    "false-Done with actual failed CI/security and draft-item trial",
+    "outdated/split Project item canonical-identity repair",
+    "remote isolated consumer upgrade PR and hosted CI"
+  ],
+  "closure_recommendation": {
+    "17": "Do not treat existing closure as verified; owner should reopen until live acceptance completes",
+    "18": "Keep open"
+  },
+  "host_policy_deviation": "Approval tool persisted execution rules in user default.rules. Formal native lifecycle inventories match; entire-task no-global-file-change is not claimed.",
+  "new_runtime_or_dependency_installs": 0,
+  "production_writes": 0,
+  "consumer_remote": "local bare repository only",
+  "review_pr_role": "ADS evidence/report PR, not the missing remote consumer upgrade PR",
+  "metadata_read_window_utc": [
+    "2026-10-20T02:16:51.177335+00:00",
+    "2026-10-20T02:22:25.819596+00:00"
+  ]
+}

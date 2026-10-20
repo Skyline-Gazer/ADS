@@ -1,0 +1,21 @@
+{
+  "time_utc": "2026-10-20T02:16:51.177335+00:00",
+  "command": [
+    "gh",
+    "repo",
+    "view",
+    "Skyline-Gazer/ADS",
+    "--json",
+    "nameWithOwner,isPrivate,url,defaultBranchRef"
+  ],
+  "exit_code": 0,
+  "response": {
+    "defaultBranchRef": {
+      "name": "main"
+    },
+    "isPrivate": true,
+    "nameWithOwner": "Skyline-Gazer/ADS",
+    "url": "https://github.com/Skyline-Gazer/ADS"
+  },
+  "stderr": ""
+}

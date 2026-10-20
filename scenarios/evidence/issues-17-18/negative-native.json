@@ -1,0 +1,13 @@
+{
+  "command": [
+    "codex",
+    "-c",
+    "projects={\"$RUN/negative\"={trust_level=\"trusted\"}}",
+    "app-server",
+    "--stdio"
+  ],
+  "request": "skills/list",
+  "selected": [],
+  "errors": [],
+  "global_policy_unchanged": true
+}

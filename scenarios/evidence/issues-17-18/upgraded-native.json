@@ -1,0 +1,27 @@
+{
+  "command": [
+    "codex",
+    "-c",
+    "projects={\"$RUN/consumer\"={trust_level=\"trusted\"}}",
+    "app-server",
+    "--stdio"
+  ],
+  "request": "skills/list",
+  "selected": [
+    {
+      "name": "deliver",
+      "path": "$RUN/consumer/.ads/skills/deliver/SKILL.md",
+      "scope": "repo",
+      "enabled": true,
+      "description": "Execute an approved software goal through implementation, relevant testing, PR and permitted merge without repeated phase approval."
+    }
+  ],
+  "errors": [],
+  "loaded": {
+    "realpath": "$RUN/consumer/.ads/skills/deliver/SKILL.md",
+    "sha256": "55ed390a5db0a8b23d494f29912de2039b508441c7790ee40d450c80bd02c874",
+    "heading": "# Goal-driven delivery",
+    "bytes": 3013
+  },
+  "global_policy_unchanged": true
+}

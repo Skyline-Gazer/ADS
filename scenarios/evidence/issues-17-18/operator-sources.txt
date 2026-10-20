@@ -1,0 +1,380 @@
+FILE: read_github.py
+SHA256: b688fff40699274e0e44dd1f75dc7d67b6aadf01b499af6fe3a38401850f5526
+import datetime, hashlib, json, pathlib, subprocess, sys
+
+ROOT = pathlib.Path(__file__).resolve().parent
+E = ROOT / 'evidence' / ('final-read' if '--final' in sys.argv else '.')
+E.mkdir(parents=True, exist_ok=True)
+
+def request(name, args):
+    p = subprocess.run(['gh'] + args, text=True, capture_output=True, timeout=90)
+    try:
+        data = json.loads(p.stdout)
+    except ValueError:
+        data = p.stdout
+    record = {'time_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              'command': ['gh'] + args, 'exit_code': p.returncode,
+              'response': data, 'stderr': p.stderr}
+    (E / (name + '.json')).write_text(json.dumps(record, indent=2) + '\n')
+    print(name, 'exit', p.returncode, flush=True)
+    return data
+
+repo = request('ads-repository', ['repo', 'view', 'Skyline-Gazer/ADS', '--json',
+    'nameWithOwner,isPrivate,url,defaultBranchRef'])
+for n in [17, 18]:
+    request('issue-' + str(n), ['issue', 'view', str(n), '--repo', 'Skyline-Gazer/ADS',
+        '--json', 'number,title,body,state,url,milestone,projectItems,comments,closedAt'])
+pr = request('pr-19', ['pr', 'view', '19', '--repo', 'Skyline-Gazer/ADS', '--json',
+    'number,title,body,state,url,mergedAt,mergeCommit,headRefOid,baseRefOid,baseRefName,headRefName,statusCheckRollup,files'])
+for label, sha in [('baseline', 'b33b41f5c15c0ebac40e25882de81f0b383bc81b'),
+                   ('pr19-head', pr['headRefOid'])]:
+    request(label + '-ci', ['api', 'repos/Skyline-Gazer/ADS/commits/' + sha + '/check-runs'])
+    request(label + '-runs', ['api', 'repos/Skyline-Gazer/ADS/actions/runs?head_sha=' + sha])
+request('issue-17-close-event', ['api', 'graphql', '-f', 'query=query { repository(owner:"Skyline-Gazer",name:"ADS") { defaultBranchRef { name target { oid } } issue(number:17) { id state closedAt timelineItems(last:20,itemTypes:[CLOSED_EVENT,REOPENED_EVENT]) { nodes { __typename ... on ClosedEvent { createdAt actor { login } closer { __typename ... on PullRequest { number url } ... on Commit { oid url } } } ... on ReopenedEvent { createdAt actor { login } } } } } } }'])
+request('pr19-closing-references', ['api', 'graphql', '-f', 'query=query { repository(owner:"Skyline-Gazer",name:"ADS") { pullRequest(number:19) { number closingIssuesReferences(first:100) { pageInfo { hasNextPage endCursor } nodes { id number state url } } } } }'])
+request('project-discovery', ['api', 'graphql', '-f', 'query=query { viewer { login projectsV2(first:100) { totalCount pageInfo { hasNextPage endCursor } nodes { id number title url closed } } } repository(owner:"Skyline-Gazer",name:"ADS") { projectsV2(first:100) { totalCount pageInfo { hasNextPage endCursor } nodes { id number title url } } } }'])
+
+# Only IDs, types, states and discovered fields are requested from the existing board.
+cursor = None
+pages = []
+while True:
+    after = ',after:' + json.dumps(cursor) if cursor else ''
+    query = '''query { node(id:"PVT_kwHODRFUbM4BlFsV") { ... on ProjectV2 { id number closed fields(first:100) { pageInfo { hasNextPage endCursor } nodes { __typename ... on ProjectV2FieldCommon { id name } ... on ProjectV2SingleSelectField { options { id name } } } } items(first:100%s) { totalCount pageInfo { hasNextPage endCursor } nodes { id type isArchived content { __typename ... on Issue { id number state } ... on PullRequest { id number state merged headRefOid } ... on DraftIssue { id } } fieldValues(first:100) { pageInfo { hasNextPage endCursor } nodes { __typename ... on ProjectV2ItemFieldSingleSelectValue { name optionId field { ... on ProjectV2SingleSelectField { id name } } } } } } } } } }''' % after
+    data = request('production-project-readonly-page-' + str(len(pages) + 1),
+                   ['api', 'graphql', '-f', 'query=' + query])
+    if 'errors' in data or not data.get('data', {}).get('node'):
+        break
+    node = data['data']['node']
+    assert not node['fields']['pageInfo']['hasNextPage']
+    assert all(not i['fieldValues']['pageInfo']['hasNextPage'] for i in node['items']['nodes'])
+    pages.append(node)
+    if not node['items']['pageInfo']['hasNextPage']:
+        break
+    cursor = node['items']['pageInfo']['endCursor']
+if pages:
+    assert sum(len(n['items']['nodes']) for n in pages) == pages[0]['items']['totalCount']
+    print('project_items_read', pages[0]['items']['totalCount'], flush=True)
+
+
+FILE: lifecycle.py
+SHA256: d0a8a8fc8c53ffcbe80570f23d8e7af5bda3a5c37ef7d1ba6078be0ddddb5c5c
+import datetime, hashlib, json, os, pathlib, selectors, subprocess, time
+
+ROOT = pathlib.Path(__file__).resolve().parent
+E = ROOT / 'evidence'
+E.mkdir(exist_ok=True)
+OLD = 'ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f'
+NEW = 'b33b41f5c15c0ebac40e25882de81f0b383bc81b'
+SOURCE = 'https://github.com/Skyline-Gazer/ADS.git'
+C = ROOT / 'consumer'
+LOG = []
+
+def run(args, cwd=ROOT, ok=True, env=None):
+    p = subprocess.run(args, cwd=cwd, env=env, text=True, capture_output=True, timeout=150)
+    record = {'command': args, 'cwd': str(cwd), 'exit_code': p.returncode,
+              'stdout': p.stdout, 'stderr': p.stderr}
+    LOG.append(record)
+    (E / 'submodule-commands.json').write_text(json.dumps(LOG, indent=2) + '\n')
+    print(len(LOG), args[0], args[1:3], 'exit', p.returncode, flush=True)
+    if ok:
+        assert p.returncode == 0, record
+    return p
+
+def git(*args, cwd=C, ok=True, env=None):
+    return run(['git'] + list(args), cwd=cwd, ok=ok, env=env)
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+def globals_snapshot():
+    home = pathlib.Path.home()
+    paths = [home / '.codex/config.toml', home / '.codex/AGENTS.md', home / '.gitconfig']
+    paths += sorted((home / '.codex/rules').glob('*.rules'))
+    return {str(p): {'sha256': digest(p), 'size': p.stat().st_size,
+                     'mtime_ns': p.stat().st_mtime_ns, 'mode': p.stat().st_mode & 0o777}
+            if p.is_file() else None for p in paths}
+
+def state(label, cwd=C):
+    s = {'parent_head': git('rev-parse', 'HEAD', cwd=cwd).stdout.strip(),
+         'gitlink': git('ls-tree', 'HEAD', '.ads', cwd=cwd).stdout.strip(),
+         'submodule_head': git('-C', '.ads', 'rev-parse', 'HEAD', cwd=cwd).stdout.strip(),
+         'submodule_status': git('submodule', 'status', '.ads', cwd=cwd).stdout,
+         'status': git('status', '--porcelain=v1', '--untracked-files=all', cwd=cwd).stdout,
+         'nested_status': git('-C', '.ads', 'status', '--porcelain=v1', '--untracked-files=all', cwd=cwd).stdout,
+         'agents_sha256': digest(cwd / 'AGENTS.md'),
+         'contract_sha256': digest(cwd / 'health.py')}
+    (E / (label + '-git.json')).write_text(json.dumps(s, indent=2) + '\n')
+    return s
+
+def native_index(label, cwd):
+    before = globals_snapshot()
+    trust = 'projects={' + json.dumps(str(cwd)) + '={trust_level="trusted"}}'
+    args = ['codex', '-c', trust, 'app-server', '--stdio']
+    with (E / (label + '-native.stderr.txt')).open('w') as err:
+        p = subprocess.Popen(args, cwd=cwd, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                             stderr=err, text=True, bufsize=1)
+        sel = selectors.DefaultSelector()
+        sel.register(p.stdout, selectors.EVENT_READ)
+        def rpc(i, method, params):
+            p.stdin.write(json.dumps({'id': i, 'method': method, 'params': params}) + '\n')
+            p.stdin.flush()
+            end = time.monotonic() + 45
+            while time.monotonic() < end:
+                if not sel.select(1):
+                    continue
+                line = p.stdout.readline()
+                assert line, 'app-server EOF'
+                data = json.loads(line)
+                if data.get('id') == i:
+                    assert 'error' not in data, data
+                    return data['result']
+            raise TimeoutError(method)
+        try:
+            rpc(1, 'initialize', {'clientInfo': {'name': 'ads-1718', 'version': '1'}})
+            p.stdin.write('{"method":"initialized"}\n')
+            p.stdin.flush()
+            raw = rpc(2, 'skills/list', {'cwds': [str(cwd)], 'forceReload': True})
+            selected = [{k: s.get(k) for k in ['name', 'path', 'scope', 'enabled', 'description']}
+                        for d in raw['data'] for s in d['skills'] if s['name'] == 'deliver']
+            errors = [err for d in raw['data'] for err in d['errors']]
+            result = {'command': args, 'request': 'skills/list', 'selected': selected, 'errors': errors}
+            local = [s for s in selected if s['scope'] == 'repo']
+            if label == 'negative':
+                assert not local, local
+            else:
+                assert len(local) == 1 and local[0]['enabled'], selected
+                path = pathlib.Path(local[0]['path'])
+                assert path.resolve() == (cwd / '.ads/skills/deliver/SKILL.md').resolve()
+                content = path.read_text()
+                assert 'name: deliver' in content and '# Goal-driven delivery' in content
+                result['loaded'] = {'realpath': str(path.resolve()), 'sha256': digest(path),
+                                    'heading': '# Goal-driven delivery', 'bytes': len(path.read_bytes())}
+            after = globals_snapshot()
+            assert before == after, 'global policy drift'
+            result['global_policy_unchanged'] = True
+            (E / (label + '-native.json')).write_text(json.dumps(result, indent=2) + '\n')
+            print(label, 'native discovery/load PASS', flush=True)
+        finally:
+            p.terminate()
+            p.wait(timeout=10)
+            sel.close()
+
+def update_status(target):
+    dirty = git('status', '--porcelain=v1', '--untracked-files=all').stdout
+    nested = git('-C', '.ads', 'status', '--porcelain=v1', '--untracked-files=all').stdout
+    if dirty or nested:
+        return 'DIRTY'
+    exists = git('-C', '.ads', 'cat-file', '-e', target + '^{commit}', ok=False)
+    return 'UPDATE_AVAILABLE' if exists.returncode == 0 else 'UNKNOWN'
+
+before = globals_snapshot()
+(E / 'global-policy-before.json').write_text(json.dumps(before, indent=2) + '\n')
+git('init', '-b', 'main', str(C), cwd=ROOT)
+git('config', 'user.name', 'ADS Acceptance')
+git('config', 'user.email', 'ads-acceptance@example.invalid')
+(C / 'health.py').write_text('def health():\n    return {"status": "ok", "schema": 1}\n')
+(C / 'test_health.py').write_text('import unittest\nfrom health import health\n\nclass Contract(unittest.TestCase):\n    def test_existing_contract(self):\n        self.assertEqual(health(), {"status": "ok", "schema": 1})\n')
+git('add', 'health.py', 'test_health.py')
+git('commit', '-m', 'test: initialize isolated consumer contract')
+git('submodule', 'add', SOURCE, '.ads')
+git('-C', '.ads', 'checkout', OLD)
+(C / '.agents/skills').mkdir(parents=True)
+(C / '.agents/skills/deliver').symlink_to('../../.ads/skills/deliver', target_is_directory=True)
+agents = ('# Isolated ADS consumer\n\nPinned revision: ' + OLD + '\n'
+          'Read .ads/STANDARD.md, .ads/SAFETY.md, .ads/QUALITY.md and .ads/skills/deliver/SKILL.md.\n'
+          'Purpose: isolated Git lifecycle acceptance; health.py contract must remain schema 1.\n'
+          'Test: python3 -B -m unittest discover -v\n'
+          'Default branch: main; local bare origin only; no deployment.\n'
+          'No credentials, production actions, global settings or unattended updates.\n')
+(C / 'AGENTS.md').write_text(agents)
+for path in ['STANDARD.md', 'SAFETY.md', 'QUALITY.md', 'skills/deliver/SKILL.md']:
+    assert (C / '.ads' / path).is_file(), path
+git('add', '.gitmodules', '.ads', 'AGENTS.md', '.agents')
+git('commit', '-m', 'chore: adopt ADS v0.2 as pinned submodule')
+run(['python3', '-B', '-m', 'unittest', 'discover', '-v'], cwd=C)
+installed = state('installed')
+assert installed['gitlink'].startswith('160000 commit ' + OLD)
+assert installed['submodule_head'] == OLD and not installed['status']
+native_index('installed', C)
+negative = ROOT / 'negative'
+negative.mkdir()
+git('init', '-b', 'main', str(negative), cwd=ROOT)
+native_index('negative', negative)
+
+git('init', '--bare', str(ROOT / 'consumer.git'), cwd=ROOT)
+git('remote', 'add', 'origin', str(ROOT / 'consumer.git'))
+git('push', '-u', 'origin', 'main')
+git('-c', 'protocol.file.allow=always', 'clone', '--recurse-submodules', '--branch', 'main',
+    str(ROOT / 'consumer.git'), str(ROOT / 'checkout'), cwd=ROOT)
+checkout = ROOT / 'checkout'
+cloned = state('checkout-old', cwd=checkout)
+assert cloned['submodule_head'] == OLD and cloned['gitlink'].startswith('160000 commit ' + OLD)
+git('submodule', 'update', '--init', '--recursive', cwd=checkout)
+assert git('-C', '.ads', 'rev-parse', 'HEAD', cwd=checkout).stdout.strip() == OLD
+upstream_head = git('-C', '.ads', 'rev-parse', 'origin/main', cwd=checkout).stdout.strip()
+assert upstream_head == NEW and upstream_head != OLD
+run(['python3', '-B', '-m', 'unittest', 'discover', '-v'], cwd=checkout)
+
+git('switch', '-c', 'test/approved-ads-upgrade')
+git('-C', '.ads', 'fetch', '--tags', 'origin')
+assert git('-C', '.ads', 'rev-parse', 'v0.2^{commit}').stdout.strip() == OLD
+diff = git('-C', '.ads', 'diff', OLD + '..' + NEW, '--', 'STANDARD.md', 'SAFETY.md',
+           'QUALITY.md', 'skills', 'templates', 'docs/how-to-update.md', 'docs/agent-adoption.md')
+(E / 'upstream-guidance.diff').write_text(diff.stdout)
+assert update_status(NEW) == 'UPDATE_AVAILABLE'
+git('-C', '.ads', 'checkout', NEW)
+(C / 'AGENTS.md').write_text(agents.replace(OLD, NEW))
+git('add', '.ads', 'AGENTS.md')
+staged = git('diff', '--cached', '--submodule=log').stdout
+(E / 'consumer-upgrade.diff').write_text(staged)
+assert set(git('diff', '--cached', '--name-only').stdout.splitlines()) == {'.ads', 'AGENTS.md'}
+run(['python3', '-B', '-m', 'unittest', 'discover', '-v'], cwd=C)
+native_index('upgraded', C)
+git('commit', '-m', 'chore: propose approved ADS baseline upgrade')
+upgraded = state('upgraded')
+assert upgraded['submodule_head'] == NEW and upgraded['gitlink'].startswith('160000 commit ' + NEW)
+assert installed['contract_sha256'] == upgraded['contract_sha256']
+git('push', '-u', 'origin', 'test/approved-ads-upgrade')
+git('fetch', 'origin', cwd=checkout)
+git('checkout', '--detach', 'origin/test/approved-ads-upgrade', cwd=checkout)
+git('submodule', 'update', '--init', '--recursive', cwd=checkout)
+cloned_new = state('checkout-upgraded', cwd=checkout)
+assert cloned_new['submodule_head'] == NEW
+run(['python3', '-B', '-m', 'unittest', 'discover', '-v'], cwd=checkout)
+
+# Exercise both tracked and untracked dirt; restore only this driver's own fixture bytes.
+rule = C / '.ads/STANDARD.md'
+original_rule = rule.read_bytes()
+rule.write_bytes(original_rule + b'\nLocal uncommitted acceptance fixture.\n')
+untracked = C / '.ads/acceptance-untracked.txt'
+untracked.write_text('Preserve this dirty fixture.\n')
+before_dirty = state('dirty-before')
+dirty_bytes = digest(rule), digest(untracked)
+assert update_status(OLD) == 'DIRTY'
+after_dirty = state('dirty-after')
+assert before_dirty == after_dirty and dirty_bytes == (digest(rule), digest(untracked))
+rule.write_bytes(original_rule)
+untracked.unlink()
+assert not git('status', '--porcelain=v1').stdout
+assert update_status('f' * 40) == 'UNKNOWN'
+incompatible = run(['python3', '-B', '-c',
+    'from pathlib import Path; text=Path(".ads/README.md").read_text(); '
+    'assert "development candidate (not released or adopted)" not in text, '
+    '"HOLD: simulated consumer accepts published ADS releases only"'], cwd=C, ok=False)
+assert incompatible.returncode != 0 and 'HOLD:' in incompatible.stderr
+assert git('-C', '.ads', 'rev-parse', 'HEAD').stdout.strip() == NEW
+(E / 'update-guards.json').write_text(json.dumps({
+    'dirty': 'DIRTY; refused before any checkout; tracked and untracked bytes preserved',
+    'unavailable_target': 'UNKNOWN; cat-file failed; current gitlink preserved',
+    'incompatible_update': 'HOLD; actual failing assertion simulates published-release-only consumer; approved target is an unreleased candidate; no merge',
+    'remote_consumer': 'local bare repository only; GitHub upgrade PR/hosted consumer CI NOT TESTED'
+}, indent=2) + '\n')
+
+# No global credential change: this one child process uses no helper and an isolated HOME.
+anonymous_home = ROOT / 'anonymous-home'
+anonymous_home.mkdir()
+anonymous = os.environ.copy()
+for key in list(anonymous):
+    if key in ['GH_TOKEN', 'GITHUB_TOKEN', 'GH_ENTERPRISE_TOKEN', 'GITHUB_ENTERPRISE_TOKEN'] or key.startswith('GIT_CONFIG_'):
+        anonymous.pop(key, None)
+anonymous.update({'HOME': str(anonymous_home), 'XDG_CONFIG_HOME': str(anonymous_home),
+                  'GIT_CONFIG_NOSYSTEM': '1', 'GIT_TERMINAL_PROMPT': '0',
+                  'GIT_ASKPASS': '/usr/bin/false', 'SSH_ASKPASS': '/usr/bin/false'})
+private = git('-c', 'credential.helper=', '-c', 'credential.interactive=never',
+              'ls-remote', SOURCE, 'HEAD', cwd=ROOT, ok=False, env=anonymous)
+assert private.returncode != 0, 'private source unexpectedly accessible anonymously'
+(E / 'private-access.json').write_text(json.dumps({
+    'classification': 'INACCESSIBLE', 'actual_private_source': SOURCE,
+    'privacy_verified_by': 'ads-repository.json isPrivate=true',
+    'method': 'real unauthenticated Git HTTPS; process-local empty helper and isolated HOME',
+    'exit_code': private.returncode, 'stdout': private.stdout, 'stderr': private.stderr,
+    'credentials_read_or_modified': False
+}, indent=2) + '\n')
+
+# Reviewed rollback is a new commit, preserving both historical gitlinks.
+git('-C', '.ads', 'checkout', OLD)
+(C / 'AGENTS.md').write_text(agents)
+git('add', '.ads', 'AGENTS.md')
+git('commit', '-m', 'chore: roll back isolated ADS proposal to approved v0.2')
+git('push', 'origin', 'test/approved-ads-upgrade')
+git('fetch', 'origin', cwd=checkout)
+git('checkout', '--detach', 'origin/test/approved-ads-upgrade', cwd=checkout)
+git('submodule', 'sync', '--recursive', cwd=checkout)
+git('submodule', 'update', '--init', '--recursive', cwd=checkout)
+rolled_back = state('rolled-back')
+collaborator = state('checkout-rolled-back', cwd=checkout)
+assert rolled_back['submodule_head'] == OLD == collaborator['submodule_head']
+assert rolled_back['gitlink'].startswith('160000 commit ' + OLD)
+assert rolled_back['agents_sha256'] == installed['agents_sha256']
+assert not rolled_back['status'] and not collaborator['status']
+run(['python3', '-B', '-m', 'unittest', 'discover', '-v'], cwd=C)
+run(['python3', '-B', '-m', 'unittest', 'discover', '-v'], cwd=checkout)
+native_index('rolled-back', C)
+git('log', '--oneline', '--all', '--decorate')
+after = globals_snapshot()
+assert before == after, 'global policy drift'
+(E / 'global-policy-after.json').write_text(json.dumps(after, indent=2) + '\n')
+summary = {'time_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'old_sha': OLD,
+           'approved_target': NEW, 'source': SOURCE, 'installed': installed,
+           'upgraded': upgraded, 'rollback': rolled_back, 'checkout_rollback': collaborator,
+           'command_count': len(LOG), 'global_policy_changed': [], 'local_lifecycle': 'PASS',
+           'consumer_github_pr_and_ci': 'NOT TESTED', 'automatic_or_scheduled_update': 'NOT CONFIGURED'}
+(E / 'submodule-summary.json').write_text(json.dumps(summary, indent=2) + '\n')
+print('LOCAL SUBMODULE LIFECYCLE PASS', flush=True)
+
+
+FILE: verify.py
+SHA256: a5336405f9e8a0ccc940d5ac5e4b84c301690b36c6d6d95af8d710be31e382c3
+import hashlib, json, os, pathlib, subprocess
+
+R = pathlib.Path(__file__).resolve().parent
+E = R / 'evidence'
+out = []
+def run(args, cwd=R, env=None, ok=True):
+    p = subprocess.run(args, cwd=cwd, env=env, text=True, capture_output=True, timeout=120)
+    out.append({'command': args, 'cwd': str(cwd), 'exit_code': p.returncode,
+                'stdout': p.stdout, 'stderr': p.stderr})
+    (E / 'independent-verification.json').write_text(json.dumps(out, indent=2) + '\n')
+    if ok:
+        assert p.returncode == 0, out[-1]
+    return p
+
+old = 'ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f'
+new = 'b33b41f5c15c0ebac40e25882de81f0b383bc81b'
+summary = json.loads((E / 'submodule-summary.json').read_text())
+for d in ['consumer', 'checkout']:
+    cwd = R / d
+    assert not run(['git', 'status', '--porcelain=v1'], cwd).stdout
+    assert not run(['git', '-C', '.ads', 'status', '--porcelain=v1'], cwd).stdout
+    assert run(['git', 'ls-tree', 'HEAD', '.ads'], cwd).stdout.startswith('160000 commit ' + old)
+    assert run(['git', '-C', '.ads', 'rev-parse', 'HEAD'], cwd).stdout.strip() == old
+    run(['python3', '-B', '-m', 'unittest', 'discover', '-v'], cwd)
+    for name in ['STANDARD.md', 'SAFETY.md', 'QUALITY.md', 'skills/deliver/SKILL.md']:
+        expected = run(['git', 'show', old + ':' + name], R / 'ads').stdout
+        assert (cwd / '.ads' / name).read_text() == expected
+up = summary['upgraded']['parent_head']
+assert run(['git', 'ls-tree', up, '.ads'], R / 'consumer').stdout.startswith('160000 commit ' + new)
+assert run(['git', 'merge-base', '--is-ancestor', up, 'HEAD'], R / 'consumer').returncode == 0
+assert set(run(['git', 'diff-tree', '--no-commit-id', '--name-only', '-r', up], R / 'consumer').stdout.splitlines()) == {'.ads', 'AGENTS.md'}
+
+# Real clone/init failure, rather than merely assuming failed ls-remote implies it.
+run(['git', 'clone', '--branch', 'main', str(R / 'consumer.git'), str(R / 'private-checkout')])
+anon = os.environ.copy()
+for k in list(anon):
+    if k in ['GH_TOKEN', 'GITHUB_TOKEN', 'GH_ENTERPRISE_TOKEN', 'GITHUB_ENTERPRISE_TOKEN'] or k.startswith('GIT_CONFIG_'):
+        anon.pop(k, None)
+anon.update({'HOME': str(R / 'anonymous-home'), 'XDG_CONFIG_HOME': str(R / 'anonymous-home'),
+             'GIT_CONFIG_NOSYSTEM': '1', 'GIT_TERMINAL_PROMPT': '0',
+             'GIT_ASKPASS': '/usr/bin/false', 'SSH_ASKPASS': '/usr/bin/false'})
+failed = run(['git', '-c', 'credential.helper=', '-c', 'credential.interactive=never',
+              'submodule', 'update', '--init', '--recursive'], R / 'private-checkout', anon, ok=False)
+assert failed.returncode != 0 and 'clone' in failed.stderr
+assert run(['git', 'ls-tree', 'HEAD', '.ads'], R / 'private-checkout').stdout.startswith('160000 commit ' + old)
+assert not (R / 'private-checkout/.ads/STANDARD.md').exists()
+(E / 'private-submodule-failure.json').write_text(json.dumps({
+    'classification': 'INACCESSIBLE', 'exit_code': failed.returncode,
+    'stderr': failed.stderr, 'gitlink_preserved': old, 'guidance_materialized': False,
+    'global_credentials_changed': False
+}, indent=2) + '\n')
+assert json.loads((E / 'global-policy-before.json').read_text()) == json.loads((E / 'global-policy-after.json').read_text())
+print('Independent Git, byte-content, contract, history and private-submodule failure verification PASS')

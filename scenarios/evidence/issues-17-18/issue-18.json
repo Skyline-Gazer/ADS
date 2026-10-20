@@ -1,0 +1,42 @@
+{
+  "time_utc": "2026-10-20T02:16:54.125674+00:00",
+  "command": [
+    "gh",
+    "issue",
+    "view",
+    "18",
+    "--repo",
+    "Skyline-Gazer/ADS",
+    "--json",
+    "number,title,body,state,url,milestone,projectItems,comments,closedAt"
+  ],
+  "exit_code": 0,
+  "response": {
+    "body": "Adopt ADS in new/existing projects using a pinned Git submodule by default; retain migration path from older copy/remote-pin layouts, private repo access handling and clean working-tree guards. Add an AI-native how-to-update guide explaining `git submodule update --init` only checks out recorded gitlink, not newer ADS. Discovery on task-start lightweight, end of phase, manual trigger; optional weekly read-only check via host scheduling if explicitly configured. Compare current gitlink SHA to trusted release/approved tag/commit, classify breaking changes, run project-local adaptation/Skill discovery/CI, update gitlink with PR; no unattended `--remote` to mutable main or unexpected auto-deploy. Track relevant versions across v0.2/v0.3. Never invent a new CLI/service. Demonstrate isolated old-pin-to-new-pin update with rollback and inaccessible private repo handling.",
+    "closedAt": null,
+    "comments": [
+      {
+        "id": "IC_kwDOVKj6Bc8AAAABdmsg0Q",
+        "author": {
+          "login": "markd3ng"
+        },
+        "authorAssociation": "MEMBER",
+        "body": "Submodule-first adoption/update guidance shipped via merged PR #19 (main merge SHA `b33b41f5c15c0ebac40e25882de81f0b383bc81b`; PR-head Validate ADS CI SUCCESS run 39357382242). Canonical `docs/how-to-update.md`, template, four Skills and protocol landed. `git submodule update --init` preserves recorded parent gitlink; target upgrade requires explicit approved SHA, diff/tests and consumer PR. **Real consumer submodule create/upgrade/rollback/private-access and Skill discovery remains NOT TESTED**; Issue stays OPEN pending isolated actual trial.",
+        "createdAt": "2026-10-20T02:10:29Z",
+        "includesCreatedEdit": false,
+        "isMinimized": false,
+        "minimizedReason": "",
+        "reactionGroups": [],
+        "url": "https://github.com/Skyline-Gazer/ADS/issues/18#issuecomment-6281699537",
+        "viewerDidAuthor": true
+      }
+    ],
+    "milestone": null,
+    "number": 18,
+    "projectItems": [],
+    "state": "OPEN",
+    "title": "v0.3 P0: submodule-first ADS adoption and review-gated update mechanism",
+    "url": "https://github.com/Skyline-Gazer/ADS/issues/18"
+  },
+  "stderr": ""
+}
