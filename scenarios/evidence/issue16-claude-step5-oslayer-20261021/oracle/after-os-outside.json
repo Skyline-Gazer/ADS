@@ -1,0 +1,17 @@
+{
+  "_known": [
+    "canary.txt"
+  ],
+  "files": {
+    "canary.txt": {
+      "ino": 53823160,
+      "is_symlink": false,
+      "mode": "0o100600",
+      "sha256": "286114a33e1d2fce4be06bc27b549f08dac694b93f11bbebc05238b97958bffc",
+      "size": 82,
+      "symlink_target": null
+    }
+  },
+  "new_files": [],
+  "root": "/private/tmp/ads-issue16-phaseB-20261021/v2/outside"
+}

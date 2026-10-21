@@ -1,0 +1,17 @@
+{
+  "source": "11fd18a2-fa12-41e7-81dc-de8dcb753327.jsonl",
+  "records": 34,
+  "actual_models": [
+    "step-5-preview"
+  ],
+  "sidechain_agent_ids": [],
+  "tool_call_counts": {
+    "Agent": 1,
+    "Bash": 1,
+    "Glob": 1
+  },
+  "records_containing_synthetic_value": 2,
+  "tool_result_records_containing_synthetic_value": 1,
+  "role": "parent",
+  "session": "11fd18a2-fa12-41e7-81dc-de8dcb753327"
+}

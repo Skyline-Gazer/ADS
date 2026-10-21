@@ -1,0 +1,13 @@
+{
+  "source": "f7cc9768-058c-4340-aa5d-1c59d530b383.jsonl",
+  "records": 19,
+  "actual_models": [
+    "<synthetic>"
+  ],
+  "sidechain_agent_ids": [],
+  "tool_call_counts": {},
+  "records_containing_synthetic_value": 0,
+  "tool_result_records_containing_synthetic_value": 0,
+  "role": "parent",
+  "session": "f7cc9768-058c-4340-aa5d-1c59d530b383"
+}

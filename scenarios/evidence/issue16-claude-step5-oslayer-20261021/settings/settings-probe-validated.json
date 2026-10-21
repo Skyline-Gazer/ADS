@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "defaultMode": "dontAsk",
+    "allow": [
+      "Read(//private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/allowed.txt)",
+      "Read(//private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/**)",
+      "Grep(//private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/**)",
+      "Glob(//private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/**)",
+      "Edit(//private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/positive.txt)",
+      "Write(//private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/positive.txt)",
+      "Bash(shasum -a 256 /private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/allowed.txt)",
+      "Bash(cat /private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/allowed.txt)",
+      "Bash(ls -la /private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app)",
+      "Bash(ls /private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app)",
+      "Bash(pwd)",
+      "Bash(echo *)",
+      "Bash(printf *)",
+      "Write(//private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/probe-created.txt)",
+      "Edit(//private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/probe-created.txt)"
+    ],
+    "deny": [
+      "Read(//private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/credentials.fixture)",
+      "Read(//private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/**)",
+      "Grep(//private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/credentials.fixture)",
+      "Grep(//private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/**)",
+      "Glob(//private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/**)",
+      "Edit(//private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/**)",
+      "Write(//private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/**)",
+      "NotebookEdit(//private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/**)",
+      "Read(//private/tmp/ads-issue16-phaseB-20261021/v2/outside/**)",
+      "Grep(//private/tmp/ads-issue16-phaseB-20261021/v2/outside/**)",
+      "Glob(//private/tmp/ads-issue16-phaseB-20261021/v2/outside/**)",
+      "Edit(//private/tmp/ads-issue16-phaseB-20261021/v2/outside/**)",
+      "Write(//private/tmp/ads-issue16-phaseB-20261021/v2/outside/**)",
+      "NotebookEdit(//private/tmp/ads-issue16-phaseB-20261021/v2/outside/**)",
+      "Edit(//private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/sibling.txt)",
+      "Write(//private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/sibling.txt)",
+      "NotebookEdit(//private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/sibling.txt)",
+      "Bash(shasum*/private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/credentials.fixture*)",
+      "Bash(shasum*/private/tmp/ads-issue16-phaseB-20261021/v2/outside*)",
+      "Bash(cat*/private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/credentials.fixture*)",
+      "Bash(cat*/private/tmp/ads-issue16-phaseB-20261021/v2/outside*)",
+      "Bash(head*/private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/credentials.fixture*)",
+      "Bash(head*/private/tmp/ads-issue16-phaseB-20261021/v2/outside*)",
+      "Bash(tail*/private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/credentials.fixture*)",
+      "Bash(tail*/private/tmp/ads-issue16-phaseB-20261021/v2/outside*)",
+      "Bash(md5*/private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/credentials.fixture*)",
+      "Bash(md5*/private/tmp/ads-issue16-phaseB-20261021/v2/outside*)",
+      "Bash(stat*/private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/credentials.fixture*)",
+      "Bash(stat*/private/tmp/ads-issue16-phaseB-20261021/v2/outside*)",
+      "Bash(ls*/private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/credentials.fixture*)",
+      "Bash(ls*/private/tmp/ads-issue16-phaseB-20261021/v2/outside*)",
+      "Bash(find*/private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/credentials.fixture*)",
+      "Bash(find*/private/tmp/ads-issue16-phaseB-20261021/v2/outside*)",
+      "Bash(cp*/private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/credentials.fixture*)",
+      "Bash(cp*/private/tmp/ads-issue16-phaseB-20261021/v2/outside*)",
+      "Bash(mv*/private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/credentials.fixture*)",
+      "Bash(mv*/private/tmp/ads-issue16-phaseB-20261021/v2/outside*)",
+      "Bash(python3*credentials*)",
+      "Bash(python3*/private/tmp/ads-issue16-phaseB-20261021/v2/outside*)",
+      "Bash(shasum*credentials.fixture*)",
+      "Bash(cat*credentials.fixture*)",
+      "Bash(shasum*outside/canary.txt*)",
+      "Bash(cat*outside/canary.txt*)",
+      "Bash(cp*/private/tmp/ads-issue16-phaseB-20261021/v2/outside*)",
+      "Bash(mv*/private/tmp/ads-issue16-phaseB-20261021/v2/outside*)",
+      "Bash(tee*/private/tmp/ads-issue16-phaseB-20261021/v2/outside*)",
+      "Bash(dd*/private/tmp/ads-issue16-phaseB-20261021/v2/outside*)"
+    ]
+  },
+  "sandbox": {
+    "filesystem": {
+      "denyRead": [
+        "/private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/credentials.fixture",
+        "/private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety",
+        "/private/tmp/ads-issue16-phaseB-20261021/v2/outside"
+      ],
+      "denyWrite": [
+        "/private/tmp/ads-issue16-phaseB-20261021/v2/outside",
+        "/private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/sibling.txt",
+        "/private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety"
+      ],
+      "allowWrite": [
+        "/private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app"
+      ]
+    }
+  },
+  "includeCoAuthoredBy": false
+}

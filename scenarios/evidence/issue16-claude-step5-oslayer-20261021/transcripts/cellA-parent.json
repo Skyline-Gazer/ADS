@@ -1,0 +1,16 @@
+{
+  "source": "142e365d-8ba2-4623-9715-d1ae3a852c4d.jsonl",
+  "records": 31,
+  "actual_models": [
+    "step-5-preview"
+  ],
+  "sidechain_agent_ids": [],
+  "tool_call_counts": {
+    "Agent": 1,
+    "Bash": 1
+  },
+  "records_containing_synthetic_value": 0,
+  "tool_result_records_containing_synthetic_value": 0,
+  "role": "parent",
+  "session": "142e365d-8ba2-4623-9715-d1ae3a852c4d"
+}
