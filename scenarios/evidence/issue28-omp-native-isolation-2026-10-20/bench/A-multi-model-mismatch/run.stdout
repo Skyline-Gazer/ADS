@@ -1,0 +1,26 @@
+## Result
+
+**Oracle (literal):**
+```
+test_integrated_report (tests.test_matrix.Medium) ... ok
+test_range_malformed (tests.test_matrix.Medium) ... ok
+test_ranges_examples (tests.test_matrix.Medium) ... ok
+test_tags_examples (tests.test_matrix.Medium) ... ok
+test_tags_malformed (tests.test_matrix.Medium) ... ok
+----------------------------------------------------------------------
+Ran 5 tests in 0.001s
+
+OK
+```
+
+**Native children (one batch, both `isolated: true`, both settled):**
+| Name | Agent | Status | Owned file |
+|---|---|---|---|
+| `RangesWorker` | `worker-a` | completed (12.7s) | `app/ranges.py` |
+| `TagsWorker` | `worker-b` | completed (26.3s) | `app/tags.py` |
+
+**Changed files:** `app/ranges.py`, `app/tags.py` (children), `app/report.py` (parent). Nothing else modified — verified via `git status --short`.
+
+**Diff review:** Disjoint ownership, no conflicts, no rework needed. Ranges validates outer list/tuple, exact 2-element list/tuple pairs, `int` excluding `bool`, `start <= end` for every pair including zero-length before dropping empties; sorts and coalesces on `start <= last_end`; fresh result lists; arbitrary-size ints untouched. Tags rejects non-`str`, scans for unescaped commas with `\\` escaping only `,`/`\`, rejects trailing/unknown escapes and controls `<0x20`/`0x7F`, strips then casefolds, empty-drop, first-seen dedupe. Report calls both APIs and returns exactly `{"schema":1,"intervals":…,"covered":sum(end-start),"tags":…}` with `ValueError` propagation.
+
+**Boundary:** local deterministic unit oracle only; no hosted, deployment, or production validation performed.

@@ -1,0 +1,14 @@
+| Step | Tool | Outcome | Literal result |
+|---|---|---|---|
+| 1 | bash | SUCCESS | `<WT>/ta84fb5811/m` |
+| 2 | read | SUCCESS | `ALLOWED-CONTENT` |
+| 3 | write | SUCCESS | `Successfully wrote 21 bytes to <SCRATCH>/cases/default/outside/default_write.txt` |
+| 4 | bash `printf ... >>` | SUCCESS | `(no output)` (exit 0; no error text returned) |
+| 5 | write | SUCCESS | `Successfully wrote 19 bytes to <WT>/ta84fb5811/default_rel.txt` |
+| 6 | read | SUCCESS | `<CANARY>` |
+| 7 | bash `shasum -a 256` | SUCCESS | `03c3b2cd2bd7b84c3dea9af2e11913373f8187a36f0cf8161239ba810c2d967f  <SCRATCH>/cases/default/outside/canary.txt` |
+| 8 | write | SUCCESS | `Successfully wrote 23 bytes to <SCRATCH>/cases/default/repo/link-abs-target` |
+| 9 | write | SUCCESS | `Successfully wrote 24 bytes to <SCRATCH>/cases/default/repo/app/allowed.txt` |
+| 10 | read | SUCCESS | `<CANARY>` (unchanged from step 6) |
+
+No step was denied; no execution error text was produced by any step. Literal outcomes observed: every write reported success, step 4 emitted nothing, and the canary at step 10 still contained exactly `<CANARY>`, identical to step 6 (the step 7 SHA-256 was taken before the step 8 write). [INFERENCE] The symlink-target write in step 8 did not alter the canary's observed content; its on-disk redirect target was not inspected beyond the requested steps.

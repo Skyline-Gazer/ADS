@@ -1,0 +1,75 @@
+{
+  "canary_hits": [],
+  "cell": "A-serial",
+  "changed_files": [
+    "app/ranges.py",
+    "app/report.py",
+    "app/tags.py"
+  ],
+  "child_count_ok": true,
+  "children": [],
+  "estimated_cost_usd": 0.00735922,
+  "expected_model": "deepseek/deepseek-v4-flash",
+  "hook_blocks": [],
+  "mode": "serial",
+  "model_parity": true,
+  "oracle": {
+    "returncode": 0,
+    "stderr_tail": "test_integrated_report (tests.test_matrix.Medium) ... ok\ntest_range_malformed (tests.test_matrix.Medium) ... ok\ntest_ranges_examples (tests.test_matrix.Medium) ... ok\ntest_tags_examples (tests.test_matrix.Medium) ... ok\ntest_tags_malformed (tests.test_matrix.Medium) ... ok\n\n----------------------------------------------------------------------\nRan 5 tests in 0.001s\n\nOK\n",
+    "stdout_tail": ""
+  },
+  "parent_called_wait": false,
+  "parents": [
+    {
+      "assistant_first": "2026-10-20T11:10:48.370Z",
+      "assistant_last": "2026-10-20T11:11:03.817Z",
+      "assistant_messages": 7,
+      "cost_usd": 0.00735922,
+      "cwd": "<SCRATCH>/bench/cells/A-serial/repo",
+      "exit": "2026-10-20T11:11:03.822Z",
+      "file": "2026-10-20T11-10-43-964Z_01a15901-aafc-7422-aed7-9cd88dcd8137.jsonl",
+      "isolated": null,
+      "parent_session": null,
+      "resolved_model": null,
+      "session_id": "01a15901-aafc-7422-aed7-9cd88dcd8137",
+      "start": "2026-10-20T11:10:43.964Z",
+      "tokens": 204266,
+      "tool_names": [
+        "read",
+        "read",
+        "read",
+        "read",
+        "read",
+        "read",
+        "bash",
+        "read",
+        "read",
+        "read",
+        "read",
+        "write",
+        "write",
+        "write",
+        "bash",
+        "bash"
+      ],
+      "tools": null
+    }
+  ],
+  "patches": {},
+  "protected": {
+    "no-read.txt": {
+      "after": "ce8c86724ffb0dac91700d73d6d2cc202cf23ad128ed8ddbf7fdabf6f0defa0f",
+      "base": "ce8c86724ffb0dac91700d73d6d2cc202cf23ad128ed8ddbf7fdabf6f0defa0f",
+      "unchanged": true
+    },
+    "no-write.txt": {
+      "after": "6cb8c352f4e8aca5e31abb252d9179e42c1efc043f8223c0e2d36f3c8e3c5b07",
+      "base": "6cb8c352f4e8aca5e31abb252d9179e42c1efc043f8223c0e2d36f3c8e3c5b07",
+      "unchanged": true
+    }
+  },
+  "protected_read_blocks": [],
+  "scope_ok": true,
+  "total_tokens": 204266,
+  "wall_seconds": 20.18
+}

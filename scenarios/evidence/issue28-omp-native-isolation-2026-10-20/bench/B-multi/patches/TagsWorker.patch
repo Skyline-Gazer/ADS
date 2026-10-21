@@ -1,0 +1,64 @@
+diff --git a/app/tags.py b/app/tags.py
+index 6f29941..7ead7c4 100644
+--- a/app/tags.py
++++ b/app/tags.py
+@@ -1,4 +1,57 @@
+-"""Implement the frozen contract in MATRIX_SPEC.md."""
++"""Tag-list parsing for the matrix fixture.
++
++parse_tags splits a string on unescaped commas, honouring backslash escapes
++for only the comma and backslash characters themselves.
++"""
++
+ 
+ def parse_tags(text):
+-    raise NotImplementedError("frozen baseline")
++    """Parse a comma-separated tag string into a deduplicated list.
++
++    Accepts ``str`` only (including the empty string, which yields ``[]``).
++    Raises ``ValueError`` for any non-str input, a trailing backslash, an
++    unknown backslash escape, or any ASCII control character
++    (U+0000..U+001F and U+007F) anywhere in the input.
++    """
++    if not isinstance(text, str):
++        raise ValueError("parse_tags expects a str")
++
++    for ch in text:
++        code = ord(ch)
++        if code <= 0x1F or code == 0x7F:
++            raise ValueError("control character in tag input")
++
++    result = []
++    seen = set()
++    segment = []
++    i = 0
++    n = len(text)
++
++    while i < n:
++        c = text[i]
++        if c == "\\":
++            if i + 1 >= n:
++                raise ValueError("trailing backslash")
++            nxt = text[i + 1]
++            if nxt == "\\" or nxt == ",":
++                segment.append(nxt)
++                i += 2
++            else:
++                raise ValueError("unknown escape sequence")
++        elif c == ",":
++            decoded = "".join(segment).strip().casefold()
++            if decoded and decoded not in seen:
++                seen.add(decoded)
++                result.append(decoded)
++            segment = []
++            i += 1
++        else:
++            segment.append(c)
++            i += 1
++
++    decoded = "".join(segment).strip().casefold()
++    if decoded and decoded not in seen:
++        seen.add(decoded)
++        result.append(decoded)
++
++    return result

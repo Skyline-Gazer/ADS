@@ -1,0 +1,60 @@
+diff --git a/app/ranges.py b/app/ranges.py
+index a0a0704..12b2ea5 100644
+--- a/app/ranges.py
++++ b/app/ranges.py
+@@ -1,4 +1,53 @@
+-"""Implement the frozen contract in MATRIX_SPEC.md."""
++"""Half-open integer interval merging.
++
++The frozen contract is defined in MATRIX_SPEC.md (Medium). This module exposes
++one public function, :func:`merge_ranges`, which validates caller input fully,
++never mutates it, and works with arbitrary-size Python integers only.
++"""
++
++
++def _is_endpoint(value):
++    """Return True for a valid integer endpoint (bool is excluded)."""
++    return isinstance(value, int) and not isinstance(value, bool)
++
+ 
+ def merge_ranges(spans):
+-    raise NotImplementedError("frozen baseline")
++    """Merge half-open integer intervals from ``spans``.
++
++    ``spans`` must be a list or tuple whose elements are list/tuple pairs
++    ``[start, end)``. Endpoints must be integers other than bool, arbitrary
++    magnitude allowed, with ``start <= end``.
++
++    Every element is validated before zero-length pairs are discarded. Invalid
++    input raises :class:`ValueError`. The caller's containers are never mutated.
++
++    Returns a list of ``[start, end]`` lists, sorted ascending with overlapping
++    and adjacent nonempty intervals coalesced.
++    """
++    if not isinstance(spans, (list, tuple)):
++        raise ValueError("spans must be a list or tuple of pairs")
++
++    validated = []
++    for pair in spans:
++        if not isinstance(pair, (list, tuple)):
++            raise ValueError("each span must be a list or tuple pair")
++        if len(pair) != 2:
++            raise ValueError("each span must contain exactly two endpoints")
++        start, end = pair[0], pair[1]
++        if not _is_endpoint(start) or not _is_endpoint(end):
++            raise ValueError("span endpoints must be integers excluding bool")
++        if start > end:
++            raise ValueError("span start must not exceed end")
++        if start != end:
++            validated.append((start, end))
++
++    validated.sort()
++
++    merged = []
++    for start, end in validated:
++        if merged and start <= merged[-1][1]:
++            if end > merged[-1][1]:
++                merged[-1][1] = end
++        else:
++            merged.append([start, end])
++    return merged

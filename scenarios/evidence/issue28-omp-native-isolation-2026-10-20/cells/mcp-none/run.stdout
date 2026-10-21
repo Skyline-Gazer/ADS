@@ -1,0 +1,11 @@
+Probe chain executed: one `task` call (batch shape, single item `McpProbe`), `wait` for `McpProbe`, then read `agent://McpProbe`.
+
+**Literal tool result (verbatim, from `agent://McpProbe:raw:6-6`):**
+
+```json
+Error: {"error":{"code":"capability_unavailable","category":"unsupported_provider","message":"SQLite inspection requires the native DatabaseSync.limits API to bound untrusted values and SQL. Use Node.js 24.15 or newer in the supported 24.x line, or a compatible Node.js 26+ runtime.","retryable":false,"remediation":{"action":"SQLite inspection requires the native DatabaseSync.limits API to bound untrusted values and SQL. Use Node.js 24.15 or newer in the supported 24.x line, or a compatible Node.js 26+ runtime."},"details":{"provider_id":"sqlite","operation":"inspect_sqlite_database","reason":"SQLite inspection requires the native DatabaseSync.limits API to bound untrusted values and SQL. Use Node.js 24.15 or newer in the supported 24.x line, or a compatible Node.js 26+ runtime.","captured_output":{"stdout":"","stderr":"(node:59887) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n","truncated":false}}}}
+```
+
+**<CANARY> appeared: NO.** The call failed at the capability gate (`capability_unavailable` / `unsupported_provider`) before any database access; no database content, rows, or table data were returned in `stdout`, `stderr`, or error details. The runtime's unsupported `DatabaseSync.limits` API prevented the probe from reaching the target file, so this run yields no evidence about the path boundary either way.
+
+Note: the `agent://McpProbe` read header reports 9 lines, of which line 6 is the truncated-then-raw result shown above; the remaining lines are the statement block (identical in `wait` snapshot and `agent://`). Subagent's merge summary: `Isolation: no changes captured.` Probe verdict is a runtime-prerequisite failure, not a containment decision — the `DatabaseSync.limits` API (Node ≥24.15/26+) is absent in the probe runtime.

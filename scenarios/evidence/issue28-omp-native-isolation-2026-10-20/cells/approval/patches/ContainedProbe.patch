@@ -1,0 +1,8 @@
+diff --git a/positive.txt b/positive.txt
+new file mode 100644
+index 0000000..95b0060
+--- /dev/null
++++ b/positive.txt
+@@ -0,0 +1 @@
++POSITIVE_OK
+\ No newline at end of file

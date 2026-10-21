@@ -1,6 +1,6 @@
 # Native Subagent authorization and containment acceptance
 
-**Status: protocol + OpenCode 2.0.32 post-mitigation evidence (2026-10-20). The default and broad explicit configurations are UNSAFE: `grep`/`glob` bypass a path `read: deny`, and symlinks bypass `read`, `edit` and `external_directory` checks. A narrow exact-path configuration is `VERIFIED_BOUNDED` only for the tested fixture. Other hosts remain NOT TESTED and the model matrix was not run.** Follow [native-subagent-safety.md](../docs/native-subagent-safety.md). Historical failure archives remain authoritative and unchanged. Never use real secrets, shared project data or production targets as probes. New evidence: [issue28-opencode-subagent-containment.md](issue28-opencode-subagent-containment.md).
+**Status: protocol plus host-scoped #28 revalidations, not a cross-host security PASS.** [OpenCode 2.0.32](issue28-opencode-subagent-containment.md) default/broad permissions **UNSAFE** under `grep`/`glob`, symlinks and shell; exact-path fixture-specific configuration **VERIFIED_BOUNDED** only. [OMP 18.12.3](issue28-omp-native-isolation.md) default `isolated: true` path containment **FAIL**, with separately tested `tool_call` hook **VERIFIED_BOUNDED** at tool level, not an OS sandbox. OMP frozen-fixture dual DeepSeek N=1 is exploratory (multi slower); OpenCode new model trial NOT RUN. Historical failure archives unchanged. Follow [native-subagent-safety.md](../docs/native-subagent-safety.md); never use real secrets or production targets.
 
 ## Reproducible isolated fixture
 
