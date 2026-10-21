@@ -1,0 +1,14 @@
+{
+  "ids": [
+    "build",
+    "compaction",
+    "explore",
+    "general",
+    "orchestrator",
+    "plan",
+    "shell-open-worker",
+    "summary",
+    "title"
+  ],
+  "ready": true
+}

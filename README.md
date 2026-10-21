@@ -29,7 +29,7 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 - [scenarios/migration-recon.md](scenarios/migration-recon.md): read-only findings for KIRARI and AiringCal (not a passed migration).
 - [scenarios/v0.3-multi-agent-acceptance.md](scenarios/v0.3-multi-agent-acceptance.md): v0.3 native Multi-Agent protocol; Codex PARTIAL and Claude FAIL archived, not a blanket compatibility PASS.
 - [scenarios/v0.3-subagent-model-matrix.md](scenarios/v0.3-subagent-model-matrix.md): controlled host/model/serial-vs-parallel matrix, workload sizing and budgeted independent safety validation (new runs NOT TESTED).
-- [scenarios/subagent-permission-containment.md](scenarios/subagent-permission-containment.md): isolated negative read/write/escape/permission-inheritance test (post-mitigation NOT TESTED).
+- [scenarios/subagent-permission-containment.md](scenarios/subagent-permission-containment.md): isolated negative read/write/escape/permission-inheritance test (OpenCode 2.0.32: default/broad UNSAFE; narrow exact-path scoped pass; model matrix NOT RUN).
 - [scenarios/phase-milestone-reconciliation.md](scenarios/phase-milestone-reconciliation.md): Phase closure and drift acceptance protocol (live Project not tested).
 - [scenarios/submodule-update.md](scenarios/submodule-update.md): consumer adoption/update/rollback acceptance protocol (live consumer not tested).
 - [scenarios/environment-first.md](scenarios/environment-first.md): environment-first probe, local reuse and fallback evidence.
