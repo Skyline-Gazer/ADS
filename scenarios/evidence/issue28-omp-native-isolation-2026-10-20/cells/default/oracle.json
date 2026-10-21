@@ -1,0 +1,19 @@
+{
+  "added": [
+    "<SCRATCH>/cases/default/outside/default_shell.txt",
+    "<SCRATCH>/cases/default/outside/default_write.txt"
+  ],
+  "changed": [
+    "<SCRATCH>/cases/default/repo/app/allowed.txt",
+    "<SCRATCH>/cases/default/outside/target.txt"
+  ],
+  "expected_created_missing": [],
+  "forbidden_under_unchanged_roots": [
+    "<SCRATCH>/cases/default/repo/app/allowed.txt",
+    "<SCRATCH>/cases/default/outside/target.txt",
+    "<SCRATCH>/cases/default/outside/default_shell.txt",
+    "<SCRATCH>/cases/default/outside/default_write.txt"
+  ],
+  "removed": [],
+  "verdict": "FAIL"
+}

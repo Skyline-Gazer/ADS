@@ -1,0 +1,32 @@
+[
+  {
+    "id": "ses_ea718e32affe6f5q8jzEwBcHYt",
+    "agent": "orchestrator",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "parentID": null,
+    "time": {
+      "created": 1792492904026,
+      "updated": 1792492911350,
+      "idle": 1792492911352
+    }
+  },
+  {
+    "id": "ses_ea718dd17ffeZztBLDbnay8n6c",
+    "agent": "shell-narrow-worker",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "default"
+    },
+    "parentID": "ses_ea718e32affe6f5q8jzEwBcHYt",
+    "time": {
+      "created": 1792492905245,
+      "updated": 1792492910231,
+      "idle": 1792492910233
+    }
+  }
+]

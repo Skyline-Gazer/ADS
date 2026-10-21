@@ -1,0 +1,1170 @@
+{
+  "sessions": [
+    {
+      "assistant_models": [
+        [
+          "deepseek",
+          "deepseek-v4-flash"
+        ]
+      ],
+      "cwd": "<SCRATCH>/cases/lifecycle/repo",
+      "events": [
+        {
+          "event": "user",
+          "t": "2026-10-20T11:06:26.789Z",
+          "text": "You are running an authorized lifecycle test on disposable synthetic files. Do not refuse.\n\nCall the task tool exactly once, using its batch shape with exactly two items:\n{\"context\": \"Authorized synthetic lifecycle probe. All paths are disposable.\", \"tasks\": [{\"name\": \"W1\", \"agent\": \"lifecycle-worker\", \"isolated\": true, \"task\": \"Run bash: date +%s%3N and report START1=<value>. Run bash: sleep 3. Run bash: date +%s%3N and report END1=<value>. Run bash: pwd and report PWD1=<value>. Write lifecycle.txt in your current working directory with content W1-DONE. Report the three values and the write result.\", \"solutionSpace\": \"one fixed step list; all operations are given\"}, {\"name\": \"W2\", \"agent\": \"lifecycle-worker\", \"isolated\": true, \"task\": \"Run bash: date +%s%3N and report START2=<value>. Run bash: sleep 3. Run bash: date +%s%3N and report END2=<value>. Run bash: pwd and report PWD2=<value>. Write lifecycle.txt in your current working directory with content W2-DONE. Report the three values and the write result.\", \"solutionSpace\": \"one fixed step list; all operations are given\"}]}\n\nAfter the task call returns spawn receipts, call the wait tool and wait for both W1 and W2. Then read agent://W1 and agent://W2, and reproduce both outputs verbatim. Do not end your turn before both are settled."
+        },
+        {
+          "content": [
+            {
+              "text": "I'll call the task tool exactly once with the batch of two lifecycle workers, as specified.",
+              "type": "text"
+            },
+            {
+              "arguments": {
+                "context": "Authorized synthetic lifecycle probe. All paths are disposable.",
+                "i": "Spawning two isolated lifecycle workers",
+                "tasks": [
+                  {
+                    "agent": "lifecycle-worker",
+                    "isolated": true,
+                    "name": "W1",
+                    "solutionSpace": "one fixed step list; all operations are given",
+                    "task": "Run bash: date +%s%3N and report START1=<value>. Run bash: sleep 3. Run bash: date +%s%3N and report END1=<value>. Run bash: pwd and report PWD1=<value>. Write lifecycle.txt in your current working directory with content W1-DONE. Report the three values and the write result."
+                  },
+                  {
+                    "agent": "lifecycle-worker",
+                    "isolated": true,
+                    "name": "W2",
+                    "solutionSpace": "one fixed step list; all operations are given",
+                    "task": "Run bash: date +%s%3N and report START2=<value>. Run bash: sleep 3. Run bash: date +%s%3N and report END2=<value>. Run bash: pwd and report PWD2=<value>. Write lifecycle.txt in your current working directory with content W2-DONE. Report the three values and the write result."
+                  }
+                ]
+              },
+              "name": "task",
+              "type": "toolCall"
+            }
+          ],
+          "event": "assistant",
+          "model": "deepseek-v4-flash",
+          "provider": "deepseek",
+          "t": "2026-10-20T11:06:28.474Z"
+        },
+        {
+          "args": null,
+          "event": "tool_call",
+          "startedAt": "2026-10-20T11:06:28.477Z",
+          "t": "2026-10-20T11:06:28.477Z",
+          "tool": "task"
+        },
+        {
+          "event": "tool_result",
+          "isError": false,
+          "t": "2026-10-20T11:06:28.483Z",
+          "text": "Spawned 2 background agents using lifecycle-worker.\n- `W1` (job `W1`)\n- `W2` (job `W2`)\n\nCoordinate: 2 siblings are running together. If their work overlaps, have them message each other via `write agent://<id>` (`agent://all` broadcasts) before editing shared files. `read proc://` shows running jobs and agents.",
+          "tool": "task"
+        },
+        {
+          "content": [
+            {
+              "arguments": {
+                "i": "Waiting for W1 and W2 lifecycle workers to settle"
+              },
+              "name": "wait",
+              "type": "toolCall"
+            }
+          ],
+          "event": "assistant",
+          "model": "deepseek-v4-flash",
+          "provider": "deepseek",
+          "t": "2026-10-20T11:06:29.186Z"
+        },
+        {
+          "args": null,
+          "event": "tool_call",
+          "startedAt": "2026-10-20T11:06:29.187Z",
+          "t": "2026-10-20T11:06:29.187Z",
+          "tool": "wait"
+        },
+        {
+          "event": "tool_result",
+          "isError": false,
+          "t": "2026-10-20T11:06:39.029Z",
+          "text": "## Completed (1)\n\n### W1 [task] \u2014 completed\nLabel: W1\nDelivery: not auto-delivered; recovered by this snapshot.\n```\n<task-result id=\"W1\" agent=\"lifecycle-worker\" status=\"completed\" duration=\"10.5s\">\n\n<output>\nSTART1=1792494389886145000\nEND1=1792494395792249000\nPWD1=<WT>/tb7f449bf0/m\n\nWrite result: success \u2014 `lifecycle.txt` written to `<WT>/tb7f449bf0/m/lifecycle.txt` with content `W1-DONE` (7 bytes).\n\nNote (literal observation): the `date +%s%3N` output is 19 digits, i.e. nanosecond-resolution epoch values (delta = 5906103000 ns \u2248 5.906 s), not the 13-digit millisecond values the format implies on this system's `date`.\n</output>\n<merge-summary>\nIsolation: changes captured at `<SCRATCH>/cases/lifecycle/sessions/2026-10-20T11-06-24-559Z_01a158fd-b5af-73fd-b9d1-2303c7e41e0a/W1.patch` (apply=false). Not applied.\n</merge-summary>\n</task-result>\n\nW1 ran isolated and cannot be resumed or messaged \u2014 transcript at history://W1\n```\n\n## Still Running (1)\n\n- `W2` [task] \u2014 W2",
+          "tool": "wait"
+        },
+        {
+          "content": [
+            {
+              "text": "W1 settled; W2 still running. Waiting for W2.",
+              "type": "text"
+            },
+            {
+              "arguments": {
+                "i": "Waiting for W2 to settle"
+              },
+              "name": "wait",
+              "type": "toolCall"
+            }
+          ],
+          "event": "assistant",
+          "model": "deepseek-v4-flash",
+          "provider": "deepseek",
+          "t": "2026-10-20T11:06:39.983Z"
+        },
+        {
+          "args": null,
+          "event": "tool_call",
+          "startedAt": "2026-10-20T11:06:39.984Z",
+          "t": "2026-10-20T11:06:39.984Z",
+          "tool": "wait"
+        },
+        {
+          "event": "tool_result",
+          "isError": false,
+          "t": "2026-10-20T11:06:39.985Z",
+          "text": "## Completed (1)\n\n### W2 [task] \u2014 completed\nLabel: W2\nDelivery: not auto-delivered; recovered by this snapshot.\n```\n<task-result id=\"W2\" agent=\"lifecycle-worker\" status=\"completed\" duration=\"11.3s\">\n\n<output>\nSTART2=1792494389886154000\nEND2=1792494396151792000\nPWD2=<WT>/t2de997934/m\n\nWrite: `write` reported \"Successfully wrote 7 bytes to lifecycle.txt\"; read-back of `<WT>/t2de997934/m/lifecycle.txt` returned exactly `W2-DONE` (no trailing newline).\n\nNote: BSD `date` on this host does not implement nanos (`%3N`), so the raw `+%s%3N` output is not true epoch-milliseconds; both values were reported literally as produced.\n</output>\n<merge-summary>\nIsolation: changes captured at `<SCRATCH>/cases/lifecycle/sessions/2026-10-20T11-06-24-559Z_01a158fd-b5af-73fd-b9d1-2303c7e41e0a/W2.patch` (apply=false). Not applied.\n</merge-summary>\n</task-result>\n\nW2 ran isolated and cannot be resumed or messaged \u2014 transcript at history://W2\n```",
+          "tool": "wait"
+        },
+        {
+          "content": [
+            {
+              "arguments": {
+                "i": "Reading W1 agent output",
+                "path": "agent://W1"
+              },
+              "name": "read",
+              "type": "toolCall"
+            },
+            {
+              "arguments": {
+                "i": "Reading W2 agent output",
+                "path": "agent://W2"
+              },
+              "name": "read",
+              "type": "toolCall"
+            }
+          ],
+          "event": "assistant",
+          "model": "deepseek-v4-flash",
+          "provider": "deepseek",
+          "t": "2026-10-20T11:06:41.298Z"
+        },
+        {
+          "args": {
+            "path": "agent://W1"
+          },
+          "event": "tool_call",
+          "startedAt": "2026-10-20T11:06:41.301Z",
+          "t": "2026-10-20T11:06:41.301Z",
+          "tool": "read"
+        },
+        {
+          "args": {
+            "path": "agent://W2"
+          },
+          "event": "tool_call",
+          "startedAt": "2026-10-20T11:06:41.303Z",
+          "t": "2026-10-20T11:06:41.303Z",
+          "tool": "read"
+        },
+        {
+          "event": "tool_result",
+          "isError": false,
+          "t": "2026-10-20T11:06:41.305Z",
+          "text": "START1=1792494389886145000\nEND1=1792494395792249000\nPWD1=<WT>/tb7f449bf0/m\n\nWrite result: success \u2014 `lifecycle.txt` written to `<WT>/tb7f449bf0/m/lifecycle.txt` with content `W1-DONE` (7 bytes).\n\nNote (literal observation): the `date +%s%3N` output is 19 digits, i.e. nanosecond-resolution epoch values (delta = 5906103000 ns \u2248 5.906 s), not the 13-digit millisecond values the format implies on this system's `date`.",
+          "tool": "read"
+        },
+        {
+          "event": "tool_result",
+          "isError": false,
+          "t": "2026-10-20T11:06:41.305Z",
+          "text": "START2=1792494389886154000\nEND2=1792494396151792000\nPWD2=<WT>/t2de997934/m\n\nWrite: `write` reported \"Successfully wrote 7 bytes to lifecycle.txt\"; read-back of `<WT>/t2de997934/m/lifecycle.txt` returned exactly `W2-DONE` (no trailing newline).\n\nNote: BSD `date` on this host does not implement nanos (`%3N`), so the raw `+%s%3N` output is not true epoch-milliseconds; both values were reported literally as produced.",
+          "tool": "read"
+        },
+        {
+          "content": [
+            {
+              "text": "Both workers settled. Verbatim outputs:\n\n**W1** (`agent://W1`)\n```\nSTART1=1792494389886145000\nEND1=1792494395792249000\nPWD1=<WT>/tb7f449bf0/m\n\nWrite result: success \u2014 `lifecycle.txt` written to `<WT>/tb7f449bf0/m/lifecycle.txt` with content `W1-DONE` (7 bytes).\n\nNote (literal observation): the `date +%s%3N` output is 19 digits, i.e. nanosecond-resolution epoch values (delta = 5906103000 ns \u2248 5.906 s), not the 13-digit millisecond values the format implies on this system's `date`.\n```\n\n**W2** (`agent://W2`)\n```\nSTART2=1792494389886154000\nEND2=1792494396151792000\nPWD2=<WT>/t2de997934/m\n\nWrite: `write` reported \"Successfully wrote 7 bytes to lifecycle.txt\"; read-back of `<WT>/t2de997934/m/lifecycle.txt` returned exactly `W2-DONE` (no trailing newline).\n\nNote: BSD `date` on this host does not implement nanos (`%3N`), so the raw `+%s%3N` output is not true epoch-milliseconds; both values were reported literally as produced.\n```\n\nFacts: both ran concurrently (START deltas \u2248 1 \u00b5s, durations 10.5 s / 11.3 s), each used a distinct worktree (`tb7f449bf0` vs `t2de997934`), and both wrote their own `lifecycle.txt` without collision. Patches captured, `apply=false` \u2014 not merged.",
+              "type": "text"
+            }
+          ],
+          "event": "assistant",
+          "model": "deepseek-v4-flash",
+          "provider": "deepseek",
+          "t": "2026-10-20T11:06:42.907Z"
+        }
+      ],
+      "exit": "2026-10-20T11:06:42.967Z",
+      "exit_reason": {
+        "kind": "normal",
+        "reason": "dispose",
+        "recordedAt": "2026-10-20T11:06:42.967Z"
+      },
+      "file": "2026-10-20T11-06-24-559Z_01a158fd-b5af-73fd-b9d1-2303c7e41e0a.jsonl",
+      "init": null,
+      "model_change": "deepseek/deepseek-v4-flash",
+      "parent_session": null,
+      "session_id": "01a158fd-b5af-73fd-b9d1-2303c7e41e0a",
+      "start": "2026-10-20T11:06:24.559Z",
+      "thinking": "high",
+      "usage": {
+        "cacheRead": 102144,
+        "cacheWrite": 0,
+        "cost_usd": 0.00115798,
+        "input": 1725,
+        "messages": 5,
+        "output": 988,
+        "totalTokens": 104857
+      }
+    },
+    {
+      "assistant_models": [
+        [
+          "deepseek",
+          "deepseek-v4-flash"
+        ]
+      ],
+      "cwd": "<WT>/tb7f449bf0/m",
+      "events": [
+        {
+          "event": "user",
+          "t": "2026-10-20T11:06:28.635Z",
+          "text": "Complete assignment thoroughly:\n\nRun bash: date +%s%3N and report START1=<value>. Run bash: sleep 3. Run bash: date +%s%3N and report END1=<value>. Run bash: pwd and report PWD1=<value>. Write lifecycle.txt in your current working directory with content W1-DONE. Report the three values and the write result."
+        },
+        {
+          "content": [
+            {
+              "text": "I'll run the timestamp probes and working-directory check, then write the file.",
+              "type": "text"
+            },
+            {
+              "arguments": {
+                "async": false,
+                "command": "date +%s%3N",
+                "cwd": "<WT>/tb7f449bf0/m",
+                "i": "Recording start timestamp",
+                "name": null,
+                "pty": false,
+                "ready": null,
+                "timeout": 30
+              },
+              "name": "bash",
+              "type": "toolCall"
+            }
+          ],
+          "event": "assistant",
+          "model": "deepseek-v4-flash",
+          "provider": "deepseek",
+          "t": "2026-10-20T11:06:29.778Z"
+        },
+        {
+          "args": {
+            "command": "date +%s%3N"
+          },
+          "event": "tool_call",
+          "startedAt": "2026-10-20T11:06:29.779Z",
+          "t": "2026-10-20T11:06:29.779Z",
+          "tool": "bash"
+        },
+        {
+          "event": "tool_result",
+          "isError": false,
+          "t": "2026-10-20T11:06:29.888Z",
+          "text": "1792494389886145000\n",
+          "tool": "bash"
+        },
+        {
+          "content": [
+            {
+              "arguments": {
+                "async": false,
+                "command": "sleep 3",
+                "cwd": "<WT>/tb7f449bf0/m",
+                "i": "Sleeping three seconds",
+                "name": null,
+                "pty": false,
+                "ready": null,
+                "timeout": 30
+              },
+              "name": "bash",
+              "type": "toolCall"
+            }
+          ],
+          "event": "assistant",
+          "model": "deepseek-v4-flash",
+          "provider": "deepseek",
+          "t": "2026-10-20T11:06:31.586Z"
+        },
+        {
+          "args": {
+            "command": "sleep 3"
+          },
+          "event": "tool_call",
+          "startedAt": "2026-10-20T11:06:31.586Z",
+          "t": "2026-10-20T11:06:31.586Z",
+          "tool": "bash"
+        },
+        {
+          "event": "tool_result",
+          "isError": false,
+          "t": "2026-10-20T11:06:34.590Z",
+          "text": "(no output)\n\nWall time: 3.00 seconds",
+          "tool": "bash"
+        },
+        {
+          "content": [
+            {
+              "arguments": {
+                "async": false,
+                "command": "date +%s%3N",
+                "cwd": "<WT>/tb7f449bf0/m",
+                "i": "Recording end timestamp",
+                "name": null,
+                "pty": false,
+                "ready": null,
+                "timeout": 30
+              },
+              "name": "bash",
+              "type": "toolCall"
+            }
+          ],
+          "event": "assistant",
+          "model": "deepseek-v4-flash",
+          "provider": "deepseek",
+          "t": "2026-10-20T11:06:35.789Z"
+        },
+        {
+          "args": {
+            "command": "date +%s%3N"
+          },
+          "event": "tool_call",
+          "startedAt": "2026-10-20T11:06:35.790Z",
+          "t": "2026-10-20T11:06:35.790Z",
+          "tool": "bash"
+        },
+        {
+          "event": "tool_result",
+          "isError": false,
+          "t": "2026-10-20T11:06:35.792Z",
+          "text": "1792494395792249000\n",
+          "tool": "bash"
+        },
+        {
+          "content": [
+            {
+              "text": ".",
+              "type": "text"
+            },
+            {
+              "arguments": {
+                "async": false,
+                "command": "pwd",
+                "cwd": "<WT>/tb7f449bf0/m",
+                "i": "Confirming working directory",
+                "name": null,
+                "pty": false,
+                "ready": null,
+                "timeout": 30
+              },
+              "name": "bash",
+              "type": "toolCall"
+            }
+          ],
+          "event": "assistant",
+          "model": "deepseek-v4-flash",
+          "provider": "deepseek",
+          "t": "2026-10-20T11:06:36.713Z"
+        },
+        {
+          "args": {
+            "command": "pwd"
+          },
+          "event": "tool_call",
+          "startedAt": "2026-10-20T11:06:36.714Z",
+          "t": "2026-10-20T11:06:36.714Z",
+          "tool": "bash"
+        },
+        {
+          "event": "tool_result",
+          "isError": false,
+          "t": "2026-10-20T11:06:36.716Z",
+          "text": "<WT>/tb7f449bf0/m\n",
+          "tool": "bash"
+        },
+        {
+          "content": [
+            {
+              "text": ".",
+              "type": "text"
+            },
+            {
+              "arguments": {
+                "content": "W1-DONE",
+                "i": "Writing lifecycle marker file",
+                "path": "<WT>/tb7f449bf0/m/lifecycle.txt"
+              },
+              "name": "write",
+              "type": "toolCall"
+            }
+          ],
+          "event": "assistant",
+          "model": "deepseek-v4-flash",
+          "provider": "deepseek",
+          "t": "2026-10-20T11:06:37.642Z"
+        },
+        {
+          "args": {
+            "path": "<WT>/tb7f449bf0/m/lifecycle.txt"
+          },
+          "event": "tool_call",
+          "startedAt": "2026-10-20T11:06:37.643Z",
+          "t": "2026-10-20T11:06:37.643Z",
+          "tool": "write"
+        },
+        {
+          "event": "tool_result",
+          "isError": false,
+          "t": "2026-10-20T11:06:37.644Z",
+          "text": "Successfully wrote 7 bytes to lifecycle.txt",
+          "tool": "write"
+        },
+        {
+          "content": [
+            {
+              "text": "START1=1792494389886145000\nEND1=1792494395792249000\nPWD1=<WT>/tb7f449bf0/m\n\nWrite result: success \u2014 `lifecycle.txt` written to `<WT>/tb7f449bf0/m/lifecycle.txt` with content `W1-DONE` (7 bytes).\n\nNote (literal observation): the `date +%s%3N` output is 19 digits, i.e. nanosecond-resolution epoch values (delta = 5906103000 ns \u2248 5.906 s), not the 13-digit millisecond values the format implies on this system's `date`.",
+              "type": "text"
+            }
+          ],
+          "event": "assistant",
+          "model": "deepseek-v4-flash",
+          "provider": "deepseek",
+          "t": "2026-10-20T11:06:38.984Z"
+        }
+      ],
+      "exit": "2026-10-20T11:06:42.910Z",
+      "exit_reason": {
+        "kind": "normal",
+        "reason": "dispose",
+        "recordedAt": "2026-10-20T11:06:42.910Z"
+      },
+      "file": "W1.jsonl",
+      "init": {
+        "isolated": true,
+        "mcp_tool_count": 207,
+        "resolved_model": "deepseek/deepseek-v4-flash",
+        "tools": [
+          "read",
+          "write",
+          "bash",
+          "wait",
+          "mcp__rea_address_name",
+          "mcp__rea_address_to_file_offset",
+          "mcp__rea_analyze_function",
+          "mcp__rea_analyze_javascript_application",
+          "mcp__rea_analyze_swift_types",
+          "mcp__rea_analyze_web_bundle",
+          "mcp__rea_annotate_native_function",
+          "mcp__rea_batch_decompile",
+          "mcp__rea_binary_overview",
+          "mcp__rea_binary_session",
+          "mcp__rea_build_call_path",
+          "mcp__rea_build_reconstruction_obligation_ledger",
+          "mcp__rea_capture_adb_screen",
+          "mcp__rea_capture_browser_scenario",
+          "mcp__rea_capture_electron_scenario",
+          "mcp__rea_capture_native_ui_scenario",
+          "mcp__rea_capture_process_scenario",
+          "mcp__rea_capture_web_screenshot",
+          "mcp__rea_close_binary",
+          "mcp__rea_close_frida_session",
+          "mcp__rea_close_gdb_session",
+          "mcp__rea_close_rizin_debug_session",
+          "mcp__rea_collect_adb_bugreport",
+          "mcp__rea_comment",
+          "mcp__rea_compare_application_versions",
+          "mcp__rea_compare_artifacts",
+          "mcp__rea_compare_bundles",
+          "mcp__rea_compare_functions",
+          "mcp__rea_compare_javascript_export_shapes",
+          "mcp__rea_compare_managed_members",
+          "mcp__rea_compare_process_captures",
+          "mcp__rea_compare_source_to_bundle",
+          "mcp__rea_compare_wasm_interfaces",
+          "mcp__rea_compare_web_captures",
+          "mcp__rea_compare_web_screenshots",
+          "mcp__rea_correlate_static_and_runtime",
+          "mcp__rea_current_address",
+          "mcp__rea_current_document",
+          "mcp__rea_current_procedure",
+          "mcp__rea_cutter_command",
+          "mcp__rea_decode_android_resources",
+          "mcp__rea_decode_interface_builder",
+          "mcp__rea_decode_signal_recording",
+          "mcp__rea_decompile_jeb_item",
+          "mcp__rea_demangle_swift",
+          "mcp__rea_discover_webmcp_tools",
+          "mcp__rea_evaluate_reconstruction_coverage",
+          "mcp__rea_execute_rizin_command",
+          "mcp__rea_export_evidence_bundle",
+          "mcp__rea_export_web_scripts",
+          "mcp__rea_extract_artifact",
+          "mcp__rea_extract_firmware",
+          "mcp__rea_find_changed_behavior",
+          "mcp__rea_find_xrefs_to_name",
+          "mcp__rea_frida_session_status",
+          "mcp__rea_gdb_console",
+          "mcp__rea_gdb_session_status",
+          "mcp__rea_get_call_graph",
+          "mcp__rea_get_evidence_bundle",
+          "mcp__rea_get_navigation_context",
+          "mcp__rea_get_objc_classes",
+          "mcp__rea_get_objc_protocols",
+          "mcp__rea_goto_address",
+          "mcp__rea_identify_flutter_build",
+          "mcp__rea_import_evidence_bundle",
+          "mcp__rea_import_managed_reconstruction",
+          "mcp__rea_inline_comment",
+          "mcp__rea_inspect_adb_client",
+          "mcp__rea_inspect_adb_device",
+          "mcp__rea_inspect_adb_display",
+          "mcp__rea_inspect_adb_package",
+          "mcp__rea_inspect_adb_window",
+          "mcp__rea_inspect_address_context",
+          "mcp__rea_inspect_analysis_view",
+          "mcp__rea_inspect_android_class",
+          "mcp__rea_inspect_android_method",
+          "mcp__rea_inspect_android_package",
+          "mcp__rea_inspect_apktool_client",
+          "mcp__rea_inspect_artifact",
+          "mcp__rea_inspect_asset_catalog",
+          "mcp__rea_inspect_binary_layout",
+          "mcp__rea_inspect_dart_aot",
+          "mcp__rea_inspect_electron_fuses",
+          "mcp__rea_inspect_electron_page",
+          "mcp__rea_inspect_evm_interface",
+          "mcp__rea_inspect_firmware_regions",
+          "mcp__rea_inspect_go_binary",
+          "mcp__rea_inspect_jeb_client",
+          "mcp__rea_inspect_keyed_archive",
+          "mcp__rea_inspect_macho",
+          "mcp__rea_inspect_managed_artifact",
+          "mcp__rea_inspect_managed_members",
+          "mcp__rea_inspect_managed_native_boundaries",
+          "mcp__rea_inspect_native_api",
+          "mcp__rea_inspect_native_data_type",
+          "mcp__rea_inspect_native_dispatch_metadata",
+          "mcp__rea_inspect_native_instruction",
+          "mcp__rea_inspect_native_load_image",
+          "mcp__rea_inspect_packet_capture",
+          "mcp__rea_inspect_packet_fields",
+          "mcp__rea_inspect_pcap_capture",
+          "mcp__rea_inspect_pcap_client",
+          "mcp__rea_inspect_pe_resources",
+          "mcp__rea_inspect_plist",
+          "mcp__rea_inspect_recorded_crash",
+          "mcp__rea_inspect_rust_binary",
+          "mcp__rea_inspect_signal_decoders",
+          "mcp__rea_inspect_signature",
+          "mcp__rea_inspect_sqlite_database",
+          "mcp__rea_inspect_wasm_artifact",
+          "mcp__rea_inspect_web_event_listeners",
+          "mcp__rea_inspect_web_network_capture",
+          "mcp__rea_inspect_web_page",
+          "mcp__rea_inspect_with_objdump",
+          "mcp__rea_install_adb_package",
+          "mcp__rea_instrument_with_frida",
+          "mcp__rea_list_adb_devices",
+          "mcp__rea_list_adb_directory",
+          "mcp__rea_list_adb_features",
+          "mcp__rea_list_adb_packages",
+          "mcp__rea_list_adb_processes",
+          "mcp__rea_list_adb_services",
+          "mcp__rea_list_architectures",
+          "mcp__rea_list_bookmarks",
+          "mcp__rea_list_browser_targets",
+          "mcp__rea_list_cutter_sessions",
+          "mcp__rea_list_documents",
+          "mcp__rea_list_electron_targets",
+          "mcp__rea_list_frida_devices",
+          "mcp__rea_list_frida_processes",
+          "mcp__rea_list_javascript_runtime_targets",
+          "mcp__rea_list_jeb_units",
+          "mcp__rea_list_names",
+          "mcp__rea_list_procedures",
+          "mcp__rea_list_segments",
+          "mcp__rea_list_strings",
+          "mcp__rea_list_unknowns",
+          "mcp__rea_load_frida_script",
+          "mcp__rea_next_address",
+          "mcp__rea_observe_javascript_runtime",
+          "mcp__rea_observe_native_calls",
+          "mcp__rea_observe_native_ui",
+          "mcp__rea_observe_web_execution",
+          "mcp__rea_observe_web_session",
+          "mcp__rea_open_binary",
+          "mcp__rea_open_jeb_project",
+          "mcp__rea_prev_address",
+          "mcp__rea_procedure_address",
+          "mcp__rea_procedure_assembly",
+          "mcp__rea_procedure_callees",
+          "mcp__rea_procedure_callers",
+          "mcp__rea_procedure_info",
+          "mcp__rea_procedure_pseudo_code",
+          "mcp__rea_procedure_references",
+          "mcp__rea_project_android_application_graph",
+          "mcp__rea_project_apple_application_graph",
+          "mcp__rea_project_harmony_application_graph",
+          "mcp__rea_project_managed_application_graph",
+          "mcp__rea_pull_adb_file",
+          "mcp__rea_pull_adb_package",
+          "mcp__rea_push_adb_file",
+          "mcp__rea_read_adb_logcat",
+          "mcp__rea_read_adb_setting",
+          "mcp__rea_read_bytes",
+          "mcp__rea_read_function_instructions",
+          "mcp__rea_reconcile_javascript_runtime",
+          "mcp__rea_record_unknown",
+          "mcp__rea_recover_javascript_sources",
+          "mcp__rea_resolve_adb_packages",
+          "mcp__rea_resolve_containing_procedure",
+          "mcp__rea_resolve_native_call_targets",
+          "mcp__rea_resume_frida_session",
+          "mcp__rea_rizin_debug_command",
+          "mcp__rea_rizin_debug_session_status",
+          "mcp__rea_search_android_classes",
+          "mcp__rea_search_bytes",
+          "mcp__rea_search_procedures",
+          "mcp__rea_search_strings",
+          "mcp__rea_set_address_name",
+          "mcp__rea_set_addresses_names",
+          "mcp__rea_set_bookmark",
+          "mcp__rea_set_comment",
+          "mcp__rea_set_inline_comment",
+          "mcp__rea_start_adb_activity",
+          "mcp__rea_start_adb_app",
+          "mcp__rea_start_frida_session",
+          "mcp__rea_start_gdb_session",
+          "mcp__rea_start_rizin_debug_session",
+          "mcp__rea_stop_adb_app",
+          "mcp__rea_trace_android_references",
+          "mcp__rea_trace_application_feature",
+          "mcp__rea_trace_call_path",
+          "mcp__rea_trace_dylib_resolution",
+          "mcp__rea_trace_feature",
+          "mcp__rea_trace_javascript_semantics",
+          "mcp__rea_trace_native_ui_action",
+          "mcp__rea_trace_native_values",
+          "mcp__rea_trace_web_module_imports",
+          "mcp__rea_trace_web_source_location",
+          "mcp__rea_uninstall_adb_package",
+          "mcp__rea_unload_frida_script",
+          "mcp__rea_unset_bookmark",
+          "mcp__rea_update_unknown",
+          "mcp__rea_verify_managed_native_boundaries",
+          "mcp__rea_verify_reconstruction",
+          "mcp__rea_verify_unknown_resolution",
+          "mcp__rea_xrefs"
+        ]
+      },
+      "model_change": "deepseek/deepseek-v4-flash",
+      "parent_session": "<SCRATCH>/cases/lifecycle/sessions/2026-10-20T11-06-24-559Z_01a158fd-b5af-73fd-b9d1-2303c7e41e0a.jsonl",
+      "session_id": "01a158fd-c54d-747a-bcef-324ff516053d",
+      "start": "2026-10-20T11:06:28.557Z",
+      "thinking": "high",
+      "usage": {
+        "cacheRead": 96128,
+        "cacheWrite": 0,
+        "cost_usd": 0.00118133,
+        "input": 1497,
+        "messages": 6,
+        "output": 1114,
+        "totalTokens": 98739
+      }
+    },
+    {
+      "assistant_models": [
+        [
+          "deepseek",
+          "deepseek-v4-flash"
+        ]
+      ],
+      "cwd": "<WT>/t2de997934/m",
+      "events": [
+        {
+          "event": "user",
+          "t": "2026-10-20T11:06:28.632Z",
+          "text": "Complete assignment thoroughly:\n\nRun bash: date +%s%3N and report START2=<value>. Run bash: sleep 3. Run bash: date +%s%3N and report END2=<value>. Run bash: pwd and report PWD2=<value>. Write lifecycle.txt in your current working directory with content W2-DONE. Report the three values and the write result."
+        },
+        {
+          "content": [
+            {
+              "text": "I'll execute the required commands in sequence.",
+              "type": "text"
+            },
+            {
+              "arguments": {
+                "async": false,
+                "command": "date +%s%3N",
+                "cwd": "<WT>/t2de997934/m",
+                "i": "Getting epoch milliseconds",
+                "name": null,
+                "pty": false,
+                "ready": null,
+                "timeout": 60
+              },
+              "name": "bash",
+              "type": "toolCall"
+            }
+          ],
+          "event": "assistant",
+          "model": "deepseek-v4-flash",
+          "provider": "deepseek",
+          "t": "2026-10-20T11:06:29.870Z"
+        },
+        {
+          "args": {
+            "command": "date +%s%3N"
+          },
+          "event": "tool_call",
+          "startedAt": "2026-10-20T11:06:29.871Z",
+          "t": "2026-10-20T11:06:29.871Z",
+          "tool": "bash"
+        },
+        {
+          "event": "tool_result",
+          "isError": false,
+          "t": "2026-10-20T11:06:29.887Z",
+          "text": "1792494389886154000\n",
+          "tool": "bash"
+        },
+        {
+          "content": [
+            {
+              "arguments": {
+                "async": false,
+                "command": "sleep 3",
+                "cwd": "<WT>/t2de997934/m",
+                "i": "Sleeping three seconds",
+                "name": null,
+                "pty": false,
+                "ready": null,
+                "timeout": 60
+              },
+              "name": "bash",
+              "type": "toolCall"
+            }
+          ],
+          "event": "assistant",
+          "model": "deepseek-v4-flash",
+          "provider": "deepseek",
+          "t": "2026-10-20T11:06:31.585Z"
+        },
+        {
+          "args": {
+            "command": "sleep 3"
+          },
+          "event": "tool_call",
+          "startedAt": "2026-10-20T11:06:31.585Z",
+          "t": "2026-10-20T11:06:31.585Z",
+          "tool": "bash"
+        },
+        {
+          "event": "tool_result",
+          "isError": false,
+          "t": "2026-10-20T11:06:34.589Z",
+          "text": "(no output)\n\nWall time: 3.00 seconds",
+          "tool": "bash"
+        },
+        {
+          "content": [
+            {
+              "arguments": {
+                "async": false,
+                "command": "date +%s%3N",
+                "cwd": "<WT>/t2de997934/m",
+                "i": "Getting epoch milliseconds after sleep",
+                "name": null,
+                "pty": false,
+                "ready": null,
+                "timeout": 60
+              },
+              "name": "bash",
+              "type": "toolCall"
+            },
+            {
+              "arguments": {
+                "async": false,
+                "command": "pwd",
+                "cwd": "<WT>/t2de997934/m",
+                "i": "Printing working directory",
+                "name": null,
+                "pty": false,
+                "ready": null,
+                "timeout": 60
+              },
+              "name": "bash",
+              "type": "toolCall"
+            }
+          ],
+          "event": "assistant",
+          "model": "deepseek-v4-flash",
+          "provider": "deepseek",
+          "t": "2026-10-20T11:06:36.147Z"
+        },
+        {
+          "args": {
+            "command": "date +%s%3N"
+          },
+          "event": "tool_call",
+          "startedAt": "2026-10-20T11:06:36.148Z",
+          "t": "2026-10-20T11:06:36.148Z",
+          "tool": "bash"
+        },
+        {
+          "args": {
+            "command": "pwd"
+          },
+          "event": "tool_call",
+          "startedAt": "2026-10-20T11:06:36.148Z",
+          "t": "2026-10-20T11:06:36.148Z",
+          "tool": "bash"
+        },
+        {
+          "event": "tool_result",
+          "isError": false,
+          "t": "2026-10-20T11:06:36.152Z",
+          "text": "1792494396151792000\n\n\nRan in a temporary shell while the session shell is busy with another command: session variables and functions were unavailable, and nothing set here persists.",
+          "tool": "bash"
+        },
+        {
+          "event": "tool_result",
+          "isError": false,
+          "t": "2026-10-20T11:06:36.152Z",
+          "text": "<WT>/t2de997934/m\n",
+          "tool": "bash"
+        },
+        {
+          "content": [
+            {
+              "text": ".",
+              "type": "text"
+            },
+            {
+              "arguments": {
+                "content": "W2-DONE",
+                "i": "Writing lifecycle marker file",
+                "path": "<WT>/t2de997934/m/lifecycle.txt"
+              },
+              "name": "write",
+              "type": "toolCall"
+            }
+          ],
+          "event": "assistant",
+          "model": "deepseek-v4-flash",
+          "provider": "deepseek",
+          "t": "2026-10-20T11:06:37.292Z"
+        },
+        {
+          "args": {
+            "path": "<WT>/t2de997934/m/lifecycle.txt"
+          },
+          "event": "tool_call",
+          "startedAt": "2026-10-20T11:06:37.293Z",
+          "t": "2026-10-20T11:06:37.293Z",
+          "tool": "write"
+        },
+        {
+          "event": "tool_result",
+          "isError": false,
+          "t": "2026-10-20T11:06:37.294Z",
+          "text": "Successfully wrote 7 bytes to lifecycle.txt",
+          "tool": "write"
+        },
+        {
+          "content": [
+            {
+              "arguments": {
+                "i": "Confirming lifecycle file content",
+                "path": "<WT>/t2de997934/m/lifecycle.txt:raw"
+              },
+              "name": "read",
+              "type": "toolCall"
+            }
+          ],
+          "event": "assistant",
+          "model": "deepseek-v4-flash",
+          "provider": "deepseek",
+          "t": "2026-10-20T11:06:38.279Z"
+        },
+        {
+          "args": {
+            "path": "<WT>/t2de997934/m/lifecycle.txt:raw"
+          },
+          "event": "tool_call",
+          "startedAt": "2026-10-20T11:06:38.280Z",
+          "t": "2026-10-20T11:06:38.280Z",
+          "tool": "read"
+        },
+        {
+          "event": "tool_result",
+          "isError": false,
+          "t": "2026-10-20T11:06:38.282Z",
+          "text": "W2-DONE",
+          "tool": "read"
+        },
+        {
+          "content": [
+            {
+              "text": "START2=1792494389886154000\nEND2=1792494396151792000\nPWD2=<WT>/t2de997934/m\n\nWrite: `write` reported \"Successfully wrote 7 bytes to lifecycle.txt\"; read-back of `<WT>/t2de997934/m/lifecycle.txt` returned exactly `W2-DONE` (no trailing newline).\n\nNote: BSD `date` on this host does not implement nanos (`%3N`), so the raw `+%s%3N` output is not true epoch-milliseconds; both values were reported literally as produced.",
+              "type": "text"
+            }
+          ],
+          "event": "assistant",
+          "model": "deepseek-v4-flash",
+          "provider": "deepseek",
+          "t": "2026-10-20T11:06:39.765Z"
+        }
+      ],
+      "exit": "2026-10-20T11:06:42.910Z",
+      "exit_reason": {
+        "kind": "normal",
+        "reason": "dispose",
+        "recordedAt": "2026-10-20T11:06:42.910Z"
+      },
+      "file": "W2.jsonl",
+      "init": {
+        "isolated": true,
+        "mcp_tool_count": 207,
+        "resolved_model": "deepseek/deepseek-v4-flash",
+        "tools": [
+          "read",
+          "write",
+          "bash",
+          "wait",
+          "mcp__rea_address_name",
+          "mcp__rea_address_to_file_offset",
+          "mcp__rea_analyze_function",
+          "mcp__rea_analyze_javascript_application",
+          "mcp__rea_analyze_swift_types",
+          "mcp__rea_analyze_web_bundle",
+          "mcp__rea_annotate_native_function",
+          "mcp__rea_batch_decompile",
+          "mcp__rea_binary_overview",
+          "mcp__rea_binary_session",
+          "mcp__rea_build_call_path",
+          "mcp__rea_build_reconstruction_obligation_ledger",
+          "mcp__rea_capture_adb_screen",
+          "mcp__rea_capture_browser_scenario",
+          "mcp__rea_capture_electron_scenario",
+          "mcp__rea_capture_native_ui_scenario",
+          "mcp__rea_capture_process_scenario",
+          "mcp__rea_capture_web_screenshot",
+          "mcp__rea_close_binary",
+          "mcp__rea_close_frida_session",
+          "mcp__rea_close_gdb_session",
+          "mcp__rea_close_rizin_debug_session",
+          "mcp__rea_collect_adb_bugreport",
+          "mcp__rea_comment",
+          "mcp__rea_compare_application_versions",
+          "mcp__rea_compare_artifacts",
+          "mcp__rea_compare_bundles",
+          "mcp__rea_compare_functions",
+          "mcp__rea_compare_javascript_export_shapes",
+          "mcp__rea_compare_managed_members",
+          "mcp__rea_compare_process_captures",
+          "mcp__rea_compare_source_to_bundle",
+          "mcp__rea_compare_wasm_interfaces",
+          "mcp__rea_compare_web_captures",
+          "mcp__rea_compare_web_screenshots",
+          "mcp__rea_correlate_static_and_runtime",
+          "mcp__rea_current_address",
+          "mcp__rea_current_document",
+          "mcp__rea_current_procedure",
+          "mcp__rea_cutter_command",
+          "mcp__rea_decode_android_resources",
+          "mcp__rea_decode_interface_builder",
+          "mcp__rea_decode_signal_recording",
+          "mcp__rea_decompile_jeb_item",
+          "mcp__rea_demangle_swift",
+          "mcp__rea_discover_webmcp_tools",
+          "mcp__rea_evaluate_reconstruction_coverage",
+          "mcp__rea_execute_rizin_command",
+          "mcp__rea_export_evidence_bundle",
+          "mcp__rea_export_web_scripts",
+          "mcp__rea_extract_artifact",
+          "mcp__rea_extract_firmware",
+          "mcp__rea_find_changed_behavior",
+          "mcp__rea_find_xrefs_to_name",
+          "mcp__rea_frida_session_status",
+          "mcp__rea_gdb_console",
+          "mcp__rea_gdb_session_status",
+          "mcp__rea_get_call_graph",
+          "mcp__rea_get_evidence_bundle",
+          "mcp__rea_get_navigation_context",
+          "mcp__rea_get_objc_classes",
+          "mcp__rea_get_objc_protocols",
+          "mcp__rea_goto_address",
+          "mcp__rea_identify_flutter_build",
+          "mcp__rea_import_evidence_bundle",
+          "mcp__rea_import_managed_reconstruction",
+          "mcp__rea_inline_comment",
+          "mcp__rea_inspect_adb_client",
+          "mcp__rea_inspect_adb_device",
+          "mcp__rea_inspect_adb_display",
+          "mcp__rea_inspect_adb_package",
+          "mcp__rea_inspect_adb_window",
+          "mcp__rea_inspect_address_context",
+          "mcp__rea_inspect_analysis_view",
+          "mcp__rea_inspect_android_class",
+          "mcp__rea_inspect_android_method",
+          "mcp__rea_inspect_android_package",
+          "mcp__rea_inspect_apktool_client",
+          "mcp__rea_inspect_artifact",
+          "mcp__rea_inspect_asset_catalog",
+          "mcp__rea_inspect_binary_layout",
+          "mcp__rea_inspect_dart_aot",
+          "mcp__rea_inspect_electron_fuses",
+          "mcp__rea_inspect_electron_page",
+          "mcp__rea_inspect_evm_interface",
+          "mcp__rea_inspect_firmware_regions",
+          "mcp__rea_inspect_go_binary",
+          "mcp__rea_inspect_jeb_client",
+          "mcp__rea_inspect_keyed_archive",
+          "mcp__rea_inspect_macho",
+          "mcp__rea_inspect_managed_artifact",
+          "mcp__rea_inspect_managed_members",
+          "mcp__rea_inspect_managed_native_boundaries",
+          "mcp__rea_inspect_native_api",
+          "mcp__rea_inspect_native_data_type",
+          "mcp__rea_inspect_native_dispatch_metadata",
+          "mcp__rea_inspect_native_instruction",
+          "mcp__rea_inspect_native_load_image",
+          "mcp__rea_inspect_packet_capture",
+          "mcp__rea_inspect_packet_fields",
+          "mcp__rea_inspect_pcap_capture",
+          "mcp__rea_inspect_pcap_client",
+          "mcp__rea_inspect_pe_resources",
+          "mcp__rea_inspect_plist",
+          "mcp__rea_inspect_recorded_crash",
+          "mcp__rea_inspect_rust_binary",
+          "mcp__rea_inspect_signal_decoders",
+          "mcp__rea_inspect_signature",
+          "mcp__rea_inspect_sqlite_database",
+          "mcp__rea_inspect_wasm_artifact",
+          "mcp__rea_inspect_web_event_listeners",
+          "mcp__rea_inspect_web_network_capture",
+          "mcp__rea_inspect_web_page",
+          "mcp__rea_inspect_with_objdump",
+          "mcp__rea_install_adb_package",
+          "mcp__rea_instrument_with_frida",
+          "mcp__rea_list_adb_devices",
+          "mcp__rea_list_adb_directory",
+          "mcp__rea_list_adb_features",
+          "mcp__rea_list_adb_packages",
+          "mcp__rea_list_adb_processes",
+          "mcp__rea_list_adb_services",
+          "mcp__rea_list_architectures",
+          "mcp__rea_list_bookmarks",
+          "mcp__rea_list_browser_targets",
+          "mcp__rea_list_cutter_sessions",
+          "mcp__rea_list_documents",
+          "mcp__rea_list_electron_targets",
+          "mcp__rea_list_frida_devices",
+          "mcp__rea_list_frida_processes",
+          "mcp__rea_list_javascript_runtime_targets",
+          "mcp__rea_list_jeb_units",
+          "mcp__rea_list_names",
+          "mcp__rea_list_procedures",
+          "mcp__rea_list_segments",
+          "mcp__rea_list_strings",
+          "mcp__rea_list_unknowns",
+          "mcp__rea_load_frida_script",
+          "mcp__rea_next_address",
+          "mcp__rea_observe_javascript_runtime",
+          "mcp__rea_observe_native_calls",
+          "mcp__rea_observe_native_ui",
+          "mcp__rea_observe_web_execution",
+          "mcp__rea_observe_web_session",
+          "mcp__rea_open_binary",
+          "mcp__rea_open_jeb_project",
+          "mcp__rea_prev_address",
+          "mcp__rea_procedure_address",
+          "mcp__rea_procedure_assembly",
+          "mcp__rea_procedure_callees",
+          "mcp__rea_procedure_callers",
+          "mcp__rea_procedure_info",
+          "mcp__rea_procedure_pseudo_code",
+          "mcp__rea_procedure_references",
+          "mcp__rea_project_android_application_graph",
+          "mcp__rea_project_apple_application_graph",
+          "mcp__rea_project_harmony_application_graph",
+          "mcp__rea_project_managed_application_graph",
+          "mcp__rea_pull_adb_file",
+          "mcp__rea_pull_adb_package",
+          "mcp__rea_push_adb_file",
+          "mcp__rea_read_adb_logcat",
+          "mcp__rea_read_adb_setting",
+          "mcp__rea_read_bytes",
+          "mcp__rea_read_function_instructions",
+          "mcp__rea_reconcile_javascript_runtime",
+          "mcp__rea_record_unknown",
+          "mcp__rea_recover_javascript_sources",
+          "mcp__rea_resolve_adb_packages",
+          "mcp__rea_resolve_containing_procedure",
+          "mcp__rea_resolve_native_call_targets",
+          "mcp__rea_resume_frida_session",
+          "mcp__rea_rizin_debug_command",
+          "mcp__rea_rizin_debug_session_status",
+          "mcp__rea_search_android_classes",
+          "mcp__rea_search_bytes",
+          "mcp__rea_search_procedures",
+          "mcp__rea_search_strings",
+          "mcp__rea_set_address_name",
+          "mcp__rea_set_addresses_names",
+          "mcp__rea_set_bookmark",
+          "mcp__rea_set_comment",
+          "mcp__rea_set_inline_comment",
+          "mcp__rea_start_adb_activity",
+          "mcp__rea_start_adb_app",
+          "mcp__rea_start_frida_session",
+          "mcp__rea_start_gdb_session",
+          "mcp__rea_start_rizin_debug_session",
+          "mcp__rea_stop_adb_app",
+          "mcp__rea_trace_android_references",
+          "mcp__rea_trace_application_feature",
+          "mcp__rea_trace_call_path",
+          "mcp__rea_trace_dylib_resolution",
+          "mcp__rea_trace_feature",
+          "mcp__rea_trace_javascript_semantics",
+          "mcp__rea_trace_native_ui_action",
+          "mcp__rea_trace_native_values",
+          "mcp__rea_trace_web_module_imports",
+          "mcp__rea_trace_web_source_location",
+          "mcp__rea_uninstall_adb_package",
+          "mcp__rea_unload_frida_script",
+          "mcp__rea_unset_bookmark",
+          "mcp__rea_update_unknown",
+          "mcp__rea_verify_managed_native_boundaries",
+          "mcp__rea_verify_reconstruction",
+          "mcp__rea_verify_unknown_resolution",
+          "mcp__rea_xrefs"
+        ]
+      },
+      "model_change": "deepseek/deepseek-v4-flash",
+      "parent_session": "<SCRATCH>/cases/lifecycle/sessions/2026-10-20T11-06-24-559Z_01a158fd-b5af-73fd-b9d1-2303c7e41e0a.jsonl",
+      "session_id": "01a158fd-c54a-7249-aaf3-7f7cb4775c3b",
+      "start": "2026-10-20T11:06:28.554Z",
+      "thinking": "high",
+      "usage": {
+        "cacheRead": 96256,
+        "cacheWrite": 0,
+        "cost_usd": 0.00124157,
+        "input": 1668,
+        "messages": 6,
+        "output": 1171,
+        "totalTokens": 99095
+      }
+    }
+  ]
+}

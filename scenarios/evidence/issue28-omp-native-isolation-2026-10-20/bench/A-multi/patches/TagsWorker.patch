@@ -1,0 +1,55 @@
+diff --git a/app/tags.py b/app/tags.py
+index 6f29941..6c3fdb0 100644
+--- a/app/tags.py
++++ b/app/tags.py
+@@ -1,4 +1,48 @@
+-"""Implement the frozen contract in MATRIX_SPEC.md."""
++"""Parse comma-separated tags with escapes, stripping and Unicode deduplication."""
++
++_CONTROL_CHARS = frozenset(chr(code) for code in range(0x20)) | {"\x7f"}
++_ESCAPABLE = frozenset({",", "\\"})
++
+ 
+ def parse_tags(text):
+-    raise NotImplementedError("frozen baseline")
++    """Return de-duplicated casefolded tags parsed from ``text``.
++
++    Commas separate tags; a backslash escapes only a comma or a backslash.
++    Invalid argument types, control characters and bad escapes raise ValueError.
++    """
++    if not isinstance(text, str):
++        raise ValueError("tags input must be a str")
++
++    for char in text:
++        if char in _CONTROL_CHARS:
++            raise ValueError("tags input must not contain control characters")
++
++    decoded = []
++    segment = []
++    escaped = False
++    for char in text:
++        if escaped:
++            if char not in _ESCAPABLE:
++                raise ValueError("invalid escape sequence in tags input")
++            segment.append(char)
++            escaped = False
++        elif char == "\\":
++            escaped = True
++        elif char == ",":
++            decoded.append("".join(segment))
++            segment = []
++        else:
++            segment.append(char)
++    if escaped:
++        raise ValueError("trailing backslash in tags input")
++    decoded.append("".join(segment))
++
++    tags = []
++    seen = set()
++    for segment in decoded:
++        tag = segment.strip().casefold()
++        if not tag or tag in seen:
++            continue
++        seen.add(tag)
++        tags.append(tag)
++    return tags

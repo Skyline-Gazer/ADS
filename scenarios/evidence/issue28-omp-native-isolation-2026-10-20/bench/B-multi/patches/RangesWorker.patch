@@ -1,0 +1,55 @@
+diff --git a/app/ranges.py b/app/ranges.py
+index a0a0704..de269d9 100644
+--- a/app/ranges.py
++++ b/app/ranges.py
+@@ -1,4 +1,49 @@
+ """Implement the frozen contract in MATRIX_SPEC.md."""
+ 
++
++def _check_endpoint(value):
++    """Return True if value is a valid endpoint: int, not bool, not a subclass."""
++    # bool is a subclass of int; reject it explicitly.
++    if isinstance(value, bool):
++        return False
++    # Require an exact int (rejects int subclasses other than bool too).
++    return type(value) is int
++
++
+ def merge_ranges(spans):
+-    raise NotImplementedError("frozen baseline")
++    """Merge an outer list/tuple of [start, end) pairs, coalescing overlap and adjacency.
++
++    Returns sorted, nonempty lists [start, end]. Never mutates the input.
++    Raises ValueError for any malformed input.
++    """
++    if not isinstance(spans, (list, tuple)):
++        raise ValueError("outer spans must be a list or tuple")
++
++    pairs = []
++    for pair in spans:
++        if not isinstance(pair, (list, tuple)):
++            raise ValueError("each span must be a list or tuple pair")
++        if len(pair) != 2:
++            raise ValueError("each span must have exactly two elements")
++        start, end = pair
++        if not _check_endpoint(start) or not _check_endpoint(end):
++            raise ValueError("endpoints must be integers excluding bool")
++        if start > end:
++            raise ValueError("start must be <= end")
++        pairs.append((start, end))
++
++    pairs.sort()
++
++    merged = []
++    for start, end in pairs:
++        if start == end:
++            # Zero-length pair: validated above, but contributes no interval.
++            continue
++        if merged and start <= merged[-1][1]:
++            # Overlap or adjacency: coalesce.
++            if end > merged[-1][1]:
++                merged[-1][1] = end
++        else:
++            merged.append([start, end])
++
++    return merged

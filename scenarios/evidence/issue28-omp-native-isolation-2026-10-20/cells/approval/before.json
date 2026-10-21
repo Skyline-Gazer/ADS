@@ -1,0 +1,164 @@
+{
+  "<SCRATCH>/cases/approval/outside/canary.txt": {
+    "mode": "0o644",
+    "mtime_ns": 1792494103039135889,
+    "sha256": "03c3b2cd2bd7b84c3dea9af2e11913373f8187a36f0cf8161239ba810c2d967f",
+    "size": 28,
+    "type": "file"
+  },
+  "<SCRATCH>/cases/approval/outside/leakdir": {
+    "mode": "0o755",
+    "mtime_ns": 1792494103042335860,
+    "size": 96,
+    "type": "dir"
+  },
+  "<SCRATCH>/cases/approval/outside/leakdir/canary2.txt": {
+    "mode": "0o644",
+    "mtime_ns": 1792494103042401527,
+    "sha256": "a772d9c74d54434d6a83643f02dba9af616bf975a319d9985624a2c1af412bf1",
+    "size": 34,
+    "type": "file"
+  },
+  "<SCRATCH>/cases/approval/outside/peer.txt": {
+    "mode": "0o644",
+    "mtime_ns": 1792494103039312515,
+    "sha256": "ebfbb4e6eeaeaf8e1fed108589da03be85a71a93619ff8ee69758a51344b2a63",
+    "size": 14,
+    "type": "file"
+  },
+  "<SCRATCH>/cases/approval/outside/secret.plist": {
+    "mode": "0o644",
+    "mtime_ns": 1792494103039392682,
+    "sha256": "511966b73885bfef14aa10c48172634708fba350d96318cda5bd061e009820e1",
+    "size": 32,
+    "type": "file"
+  },
+  "<SCRATCH>/cases/approval/outside/target.txt": {
+    "mode": "0o644",
+    "mtime_ns": 1792494103039232473,
+    "sha256": "fbf8a129c10b3a24a2d278437d2a66246175359083b90587e22ce353120efeea",
+    "size": 16,
+    "type": "file"
+  },
+  "<SCRATCH>/cases/approval/repo/.omp": {
+    "mode": "0o755",
+    "mtime_ns": 1792494103098259708,
+    "size": 160,
+    "type": "dir"
+  },
+  "<SCRATCH>/cases/approval/repo/.omp/agents": {
+    "mode": "0o755",
+    "mtime_ns": 1792494103087010122,
+    "size": 192,
+    "type": "dir"
+  },
+  "<SCRATCH>/cases/approval/repo/.omp/agents/contained-worker.md": {
+    "mode": "0o644",
+    "mtime_ns": 1792494103082232269,
+    "sha256": "b76c9a5ab4055ae676eceac289c96f63d6dc1e40cd32c8384fd139a22c2cbb1c",
+    "size": 407,
+    "type": "file"
+  },
+  "<SCRATCH>/cases/approval/repo/.omp/agents/escape-worker.md": {
+    "mode": "0o644",
+    "mtime_ns": 1792494103078322670,
+    "sha256": "7b8283542e39c20e6956e2af94e6620d08736615718581987179e2a14b61de46",
+    "size": 348,
+    "type": "file"
+  },
+  "<SCRATCH>/cases/approval/repo/.omp/agents/lifecycle-worker.md": {
+    "mode": "0o644",
+    "mtime_ns": 1792494103089703341,
+    "sha256": "3caadca35169d54d9da76ac9b0c2f7e2be05c8df7dace60529a6c5d7a39c3ee9",
+    "size": 276,
+    "type": "file"
+  },
+  "<SCRATCH>/cases/approval/repo/.omp/agents/reporter.md": {
+    "mode": "0o644",
+    "mtime_ns": 1792494103085804950,
+    "sha256": "43eed4198787767140a1be74c96ebffd9afb9a6d5326a6e265a9c8006fd376b6",
+    "size": 261,
+    "type": "file"
+  },
+  "<SCRATCH>/cases/approval/repo/.omp/config.yml": {
+    "mode": "0o644",
+    "mtime_ns": 1792494103104245691,
+    "sha256": "25e0be381a6291b0ebb92830ad309efc4c0bd1f5ae915625d84b82621a8ab5f5",
+    "size": 86,
+    "type": "file"
+  },
+  "<SCRATCH>/cases/approval/repo/.omp/hooks": {
+    "mode": "0o755",
+    "mtime_ns": 1792494103092820728,
+    "size": 96,
+    "type": "dir"
+  },
+  "<SCRATCH>/cases/approval/repo/.omp/hooks/pre": {
+    "mode": "0o755",
+    "mtime_ns": 1792494103096842203,
+    "size": 96,
+    "type": "dir"
+  },
+  "<SCRATCH>/cases/approval/repo/.omp/hooks/pre/contain.js": {
+    "mode": "0o644",
+    "mtime_ns": 1792494103097164037,
+    "sha256": "6563d85bd9dc05014683c35c359b9a21732eb9e2c38f2aebbcaf4ad43eef57c3",
+    "size": 5364,
+    "type": "file"
+  },
+  "<SCRATCH>/cases/approval/repo/app": {
+    "mode": "0o755",
+    "mtime_ns": 1792494103038870513,
+    "size": 128,
+    "type": "dir"
+  },
+  "<SCRATCH>/cases/approval/repo/app/allowed.txt": {
+    "mode": "0o644",
+    "mtime_ns": 1792494103038782679,
+    "sha256": "eae2944f805733bb99692cc96f5b034c4d5ce13d5538e707a87580497c063994",
+    "size": 16,
+    "type": "file"
+  },
+  "<SCRATCH>/cases/approval/repo/app/contract.txt": {
+    "mode": "0o644",
+    "mtime_ns": 1792494103038903555,
+    "sha256": "e9f6809e92b21e10da81e3c8ca9071b29ec6e8ac51bb0412bc95c6edd147dc97",
+    "size": 40,
+    "type": "file"
+  },
+  "<SCRATCH>/cases/approval/repo/link-abs-outside": {
+    "mode": "0o755",
+    "mtime_ns": 1792494103051418063,
+    "size": 77,
+    "target": "<SCRATCH>/cases/approval/outside/canary.txt",
+    "type": "symlink"
+  },
+  "<SCRATCH>/cases/approval/repo/link-abs-target": {
+    "mode": "0o755",
+    "mtime_ns": 1792494103059001635,
+    "size": 77,
+    "target": "<SCRATCH>/cases/approval/outside/target.txt",
+    "type": "symlink"
+  },
+  "<SCRATCH>/cases/approval/repo/link-dangling": {
+    "mode": "0o755",
+    "mtime_ns": 1792494103069291384,
+    "size": 87,
+    "target": "<SCRATCH>/cases/approval/outside/dangling-created.txt",
+    "type": "symlink"
+  },
+  "<SCRATCH>/cases/approval/repo/link-dir-outside": {
+    "mode": "0o755",
+    "mtime_ns": 1792494103074843240,
+    "size": 66,
+    "target": "<SCRATCH>/cases/approval/outside",
+    "type": "symlink"
+  },
+  "<SCRATCH>/cases/approval/repo/link-rel-outside": {
+    "mode": "0o755",
+    "mtime_ns": 1792494103064190072,
+    "size": 21,
+    "target": "../outside/canary.txt",
+    "type": "symlink"
+  }
+}

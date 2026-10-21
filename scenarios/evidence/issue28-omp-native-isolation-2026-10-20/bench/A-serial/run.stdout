@@ -1,0 +1,23 @@
+Implemented MEDIUM serially. No subagents dispatched; no protected files read or modified.
+
+**Changed files (only these):**
+- `app/ranges.py` — validates outer list/tuple, pair shape, int-excluding-bool endpoints for every span (including zero-length) before dropping empties; sorts, coalesces overlap and adjacency, returns fresh lists, no mutation.
+- `app/tags.py` — str-only, rejects ASCII controls U+0000..U+001F/U+007F, decodes only `\,` and `\\` (rejects trailing/unknown escapes), splits on unescaped commas, strips + Unicode casefolds + first-seen dedupe.
+- `app/report.py` — `{"schema": 1, "intervals": merged, "covered": sum(end-start), "tags": parsed}`; ValueError propagates from either API.
+
+**Literal oracle result** (`python3 -B -m unittest tests.test_matrix.Medium -v` in the checkout):
+
+```
+test_integrated_report (tests.test_matrix.Medium) ... ok
+test_range_malformed (tests.test_matrix.Medium) ... ok
+test_ranges_examples (tests.test_matrix.Medium) ... ok
+test_tags_examples (tests.test_matrix.Medium) ... ok
+test_tags_malformed (tests.test_matrix.Medium) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.001s
+
+OK
+```
+
+`git status --porcelain` shows exactly `M app/ranges.py`, `M app/report.py`, `M app/tags.py`. Local deterministic tests only — no hosted/production validation claimed.

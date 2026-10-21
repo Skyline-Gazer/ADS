@@ -1,0 +1,15 @@
+{
+  "arch": "arm64",
+  "build": "26A434",
+  "git": "2.54.0",
+  "global_config_sha256": "892b47a5347829dcbacfdbdcc4bbbaac3879125a267bea250bb365d6eb8fb7dd",
+  "global_mcp_sha256": "d23d5d704b5527b6554ca8958ba073f95e7963c4be6bfbbf0015f35e606b17fa",
+  "isolation_root": "<WT>",
+  "network": "model provider only; no fixture network tools",
+  "omp": "omp/18.12.3",
+  "omp_binary": "/opt/homebrew/Cellar/omp/18.12.3/bin/omp",
+  "omp_binary_sha256": "f2a657b3320fcafa23055053940a45b26a8d3254e1412a158838013d670d6ec5",
+  "os": "macOS 27.0.1",
+  "python": "3.9.6",
+  "scratch": "<SCRATCH>"
+}

@@ -1,0 +1,45 @@
+diff --git a/app/tags.py b/app/tags.py
+index 6f29941..fd2e6cb 100644
+--- a/app/tags.py
++++ b/app/tags.py
+@@ -1,4 +1,39 @@
+ """Implement the frozen contract in MATRIX_SPEC.md."""
+ 
++
+ def parse_tags(text):
+-    raise NotImplementedError("frozen baseline")
++    if not isinstance(text, str):
++        raise ValueError("parse_tags requires a str")
++
++    for ch in text:
++        if ord(ch) < 0x20 or ord(ch) == 0x7F:
++            raise ValueError("control character not allowed")
++
++    segments = []
++    current = []
++    i = 0
++    n = len(text)
++    while i < n:
++        ch = text[i]
++        if ch == '\\':
++            if i + 1 >= n or text[i + 1] not in ('\\', ','):
++                raise ValueError("invalid escape")
++            current.append(text[i + 1])
++            i += 2
++        elif ch == ',':
++            segments.append(''.join(current))
++            current = []
++            i += 1
++        else:
++            current.append(ch)
++            i += 1
++    segments.append(''.join(current))
++
++    result = []
++    seen = set()
++    for seg in segments:
++        seg = seg.strip().casefold()
++        if seg and seg not in seen:
++            seen.add(seg)
++            result.append(seg)
++    return result
