@@ -1,0 +1,156 @@
+{
+  "cell": "exact-grant",
+  "child": "exact-worker",
+  "model": "deepseek/deepseek-flash",
+  "canary": "<REDACTED>",
+  "credential": "<REDACTED>",
+  "outside_sentinel": "<REDACTED>",
+  "child_permissions": [
+    {
+      "action": "subagent",
+      "resource": "*",
+      "effect": "deny"
+    },
+    {
+      "action": "execute",
+      "resource": "*",
+      "effect": "deny"
+    },
+    {
+      "action": "skill",
+      "resource": "*",
+      "effect": "deny"
+    },
+    {
+      "action": "question",
+      "resource": "*",
+      "effect": "deny"
+    },
+    {
+      "action": "webfetch",
+      "resource": "*",
+      "effect": "deny"
+    },
+    {
+      "action": "websearch",
+      "resource": "*",
+      "effect": "deny"
+    },
+    {
+      "action": "external_directory",
+      "resource": "*",
+      "effect": "deny"
+    },
+    {
+      "action": "read",
+      "resource": "*",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "secret/*",
+      "effect": "deny"
+    },
+    {
+      "action": "edit",
+      "resource": "*",
+      "effect": "deny"
+    },
+    {
+      "action": "edit",
+      "resource": "work/allowed.txt",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "*",
+      "effect": "deny"
+    }
+  ],
+  "parent_permissions": [
+    {
+      "action": "subagent",
+      "resource": "*",
+      "effect": "deny"
+    },
+    {
+      "action": "execute",
+      "resource": "*",
+      "effect": "deny"
+    },
+    {
+      "action": "skill",
+      "resource": "*",
+      "effect": "deny"
+    },
+    {
+      "action": "question",
+      "resource": "*",
+      "effect": "deny"
+    },
+    {
+      "action": "webfetch",
+      "resource": "*",
+      "effect": "deny"
+    },
+    {
+      "action": "websearch",
+      "resource": "*",
+      "effect": "deny"
+    },
+    {
+      "action": "external_directory",
+      "resource": "*",
+      "effect": "deny"
+    },
+    {
+      "action": "subagent",
+      "resource": "*",
+      "effect": "deny"
+    },
+    {
+      "action": "subagent",
+      "resource": "exact-worker",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "*",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "secret/*",
+      "effect": "deny"
+    },
+    {
+      "action": "edit",
+      "resource": "*",
+      "effect": "deny"
+    },
+    {
+      "action": "shell",
+      "resource": "*",
+      "effect": "deny"
+    }
+  ],
+  "expected": {
+    "kind": "exact-positive",
+    "allowed_success": "work/allowed.txt",
+    "denied_outcomes": [
+      "write work/sibling.txt",
+      "shell echo SHELL-EXACT",
+      "write absolute outside/absolute-exact.txt",
+      "write ../escape-exact.txt",
+      "write work/out-link/symlink-exact.txt"
+    ],
+    "changes": {
+      "work/allowed.txt": "changed"
+    }
+  },
+  "paths": {
+    "m": "<SCRATCH>/run/exact-grant/m",
+    "outside": "<SCRATCH>/run/exact-grant/outside",
+    "cell": "<SCRATCH>/run/exact-grant"
+  }
+}

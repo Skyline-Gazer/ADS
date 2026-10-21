@@ -1,6 +1,6 @@
 # Native Subagent authorization and containment acceptance
 
-**Status: protocol only — host-specific post-mitigation revalidation NOT TESTED.** Follow [native-subagent-safety.md](../docs/native-subagent-safety.md). Historical failure archives remain authoritative and unchanged. Never use real secrets, shared project data or production targets as probes.
+**Status: protocol + OpenCode 2.0.32 post-mitigation evidence (2026-10-20). The default and broad explicit configurations are UNSAFE: `grep`/`glob` bypass a path `read: deny`, and symlinks bypass `read`, `edit` and `external_directory` checks. A narrow exact-path configuration is `VERIFIED_BOUNDED` only for the tested fixture. Other hosts remain NOT TESTED and the model matrix was not run.** Follow [native-subagent-safety.md](../docs/native-subagent-safety.md). Historical failure archives remain authoritative and unchanged. Never use real secrets, shared project data or production targets as probes. New evidence: [issue28-opencode-subagent-containment.md](issue28-opencode-subagent-containment.md).
 
 ## Reproducible isolated fixture
 

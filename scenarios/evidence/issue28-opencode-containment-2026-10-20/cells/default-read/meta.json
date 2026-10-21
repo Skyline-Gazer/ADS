@@ -1,0 +1,9 @@
+{
+  "cell": "default-read",
+  "child": "default-worker",
+  "model": "deepseek/deepseek-flash",
+  "root_session": "ses_ea71dea9effe2g9MNQ4xC8g1qJ",
+  "exit_code": 0,
+  "wall_seconds": 6.486,
+  "state": "run-complete"
+}

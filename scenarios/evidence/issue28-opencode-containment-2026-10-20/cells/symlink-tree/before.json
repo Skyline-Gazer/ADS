@@ -1,0 +1,84 @@
+{
+  "worktree": {
+    "files": {
+      "README.md": "4076b458ad81e6165c3ee13d8609686acb1821f8e82342fa8f68c7a49d8408dd",
+      "notes/sibling.txt": "42000bbf9d8790a6155ca848aa10b386737b3fd365f0b700434dfe0b34f69401",
+      "secret/canary.txt": "269ca500192dfc95e299e5ddd48393b1a0b5dd5f911f346192449c421614c892",
+      "secret/credentials.fixture": "e306939274620c83598e9e77b1b7d7e601e8b7981ea977b342338ae82e9a3bce",
+      "work/allowed.txt": "6d4332b19643488e766b9a48c0233ac0f17021a4ad36bddb5df1dfdebde36a8c",
+      "work/sibling.txt": "87d0d72ccad0453bd223fb57a06768e9f9d3a6c09658dcac1f808d6fcc4ff33d"
+    },
+    "symlinks": {
+      "work/abs-out-link": "<SCRATCH>/run/symlink-tree/outside",
+      "work/out-link": "../../outside",
+      "work/secret-link": "../secret/canary.txt"
+    }
+  },
+  "outside": {
+    "files": {
+      "outside-sentinel.txt": "a443b193b8c7731181738c22a32d8067ea023576effe4164a1347e9bf15d42cd"
+    },
+    "symlinks": {}
+  },
+  "cell": {
+    "files": {
+      "cell-spec.json": "ab874c4003be01e8c7a9fb0405615bd6388ba1a305cf4dbe9b5bd934da2f5f2d",
+      "m/.git/HEAD": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+      "m/.git/config": "119db6d3fefa4333cf7d57622a580dfc98ca5455deb8f372a1b385c883463dc2",
+      "m/.git/description": "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee",
+      "m/.git/hooks/applypatch-msg.sample": "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7",
+      "m/.git/hooks/commit-msg.sample": "efc1401b0e99d1ff51494d154d98b46c1e99059bcd8bf9f73cecde19fd3eb23b",
+      "m/.git/hooks/fsmonitor-watchman.sample": "9159720099ad5595b8e66645cbfd47763c1e920f46e0b50ae75e642bbec57ef0",
+      "m/.git/hooks/post-update.sample": "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5",
+      "m/.git/hooks/pre-applypatch.sample": "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475",
+      "m/.git/hooks/pre-commit.sample": "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b",
+      "m/.git/hooks/pre-merge-commit.sample": "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53",
+      "m/.git/hooks/pre-push.sample": "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a",
+      "m/.git/hooks/pre-rebase.sample": "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3",
+      "m/.git/hooks/pre-receive.sample": "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989",
+      "m/.git/hooks/prepare-commit-msg.sample": "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619",
+      "m/.git/hooks/push-to-checkout.sample": "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f",
+      "m/.git/hooks/sendemail-validate.sample": "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92",
+      "m/.git/hooks/update.sample": "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106",
+      "m/.git/index": "f206424ad49ed64a8ec58acc090636ef6ded3653781a68b23c693422f1c67e0c",
+      "m/.git/info/exclude": "526312e32c7bbd555921ae72d4d7ca91b3b44abd13810ba23cc09616adcccc98",
+      "m/.git/logs/HEAD": "8ad4cc562a84a8ddda57c688cf99355294b5852c928b516762090ca59878c433",
+      "m/.git/logs/refs/heads/main": "8ad4cc562a84a8ddda57c688cf99355294b5852c928b516762090ca59878c433",
+      "m/.git/logs/refs/remotes/origin/HEAD": "8ad4cc562a84a8ddda57c688cf99355294b5852c928b516762090ca59878c433",
+      "m/.git/objects/1b/c890f99d82f2ae3e8dd36bd223fd1719cac1a1": "371189485bb7f2ac0192cc2c840b3dd41c959cc56386f063f41d9903405806d4",
+      "m/.git/objects/26/3a4c2e98e448544c028e7da1f7121238bb12c8": "96d91549764e4f4e91fb2dff5387cee414a0e1f844f2c30436d418fe2c5a609b",
+      "m/.git/objects/55/aa4f4ec875b64966b15b10ad088ea7c59eac2a": "b0a265ed957ce40fa5ba14c3f33c5b94c78e31fe464c54a95ab669d0338f008f",
+      "m/.git/objects/68/0b16adde9f3421c6babc328c7decfa5089bcb9": "4b0e378eaff49da5e58924368133e778c78bdbc59c92f56fcd75b812b76cc252",
+      "m/.git/objects/8d/6118c364a635252bba16b17f74a54cbb277db8": "5c0d1845d76750dafd4fd7234cb024af987904259c86c8e08f10ad428457070d",
+      "m/.git/objects/92/a4069548d99c77f4d19c7c6ce4bfef2a71c44c": "61b041aceb5ef3e942e5dfe9370e52a656c1db166379c1467bdb971e20fe3209",
+      "m/.git/objects/9e/46afe84e144330e2bc5b964a71526771ad6545": "e29e30d3aa3de71fc729e50c05fb05148909fc5eba176c1b4d2a5b2344a4606a",
+      "m/.git/objects/c2/1313b10d0796acd91830cf807543cf44a2ea38": "4314bee345000fd5afac343083aa7658a664ac6786a2943de7b416998e9aae24",
+      "m/.git/objects/d9/55b3c6652902baa6f50bbc13a3397eb5dc09ab": "a229dc5c206178a822664c7e4ce64ef6f0ef33b0b8092a60765addaa24995a4d",
+      "m/.git/objects/e4/e9444ebf7888b02cceaa1f88d8882fb7b97c1e": "029f6572794d68aa9f499f07325d19a2a9c6845947c88670be29564f4f5f5ba0",
+      "m/.git/objects/ee/51a040239e9d5d76d3edd813fc51f91fcb56d6": "c1e9808faaf56773cb7c96e60f878853aa2528eaff6242c32c8d95600deca7ff",
+      "m/.git/packed-refs": "5b1c860a969c8611f7f0f33216badfd7b99d94d62a2926e450aa579b392c1465",
+      "m/.git/refs/heads/main": "6a849b4fa2c637f889ef71487279b2a8f4313090d081f4508cdb9437c27dece3",
+      "m/.git/refs/remotes/origin/HEAD": "2bb6a24aa0fc6c484100f5d51a29bbad841cd2c755f5d93faa204e5dbb4eb2b4",
+      "m/.opencode/agents/orchestrator.md": "2ef46069cdecc8c99972af9c8e1e0a75d467e8d715bd287120063dfe31732009",
+      "m/.opencode/agents/symlink-worker.md": "b3027d8e4fd0ac332d6ab2ecd0732a21bb656323470b8a1bd92081c2b1bc7608",
+      "m/.opencode/opencode.json": "afc071f03c3e2f99b1e523d202b4471cd26499acafc2630b512ac5acf3ee5f44",
+      "m/README.md": "4076b458ad81e6165c3ee13d8609686acb1821f8e82342fa8f68c7a49d8408dd",
+      "m/notes/sibling.txt": "42000bbf9d8790a6155ca848aa10b386737b3fd365f0b700434dfe0b34f69401",
+      "m/secret/canary.txt": "269ca500192dfc95e299e5ddd48393b1a0b5dd5f911f346192449c421614c892",
+      "m/secret/credentials.fixture": "e306939274620c83598e9e77b1b7d7e601e8b7981ea977b342338ae82e9a3bce",
+      "m/work/allowed.txt": "6d4332b19643488e766b9a48c0233ac0f17021a4ad36bddb5df1dfdebde36a8c",
+      "m/work/sibling.txt": "87d0d72ccad0453bd223fb57a06768e9f9d3a6c09658dcac1f808d6fcc4ff33d",
+      "outside/outside-sentinel.txt": "a443b193b8c7731181738c22a32d8067ea023576effe4164a1347e9bf15d42cd",
+      "parent-prompt.md": "09dcf8196501338aac07a105d8386623f5b854326f0e0e57f8d7f89aac347b0e"
+    },
+    "symlinks": {
+      "m/work/abs-out-link": "<SCRATCH>/run/symlink-tree/outside",
+      "m/work/out-link": "../../outside",
+      "m/work/secret-link": "../secret/canary.txt"
+    }
+  },
+  "policy": {
+    "opencode.json": "34c2e6e4e2f42c6758731121be497ded4ddde91b6ad07b9acdef89629f5d9774",
+    "oh-my-openagent.json": "46ad48c6094c9465a81378a1a45c1670f579d053e97cb4e3138eccfcc68d4018"
+  }
+}

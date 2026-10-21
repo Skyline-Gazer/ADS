@@ -1,0 +1,14 @@
+{
+  "ids": [
+    "build",
+    "compaction",
+    "explore",
+    "general",
+    "orchestrator",
+    "path-worker",
+    "plan",
+    "summary",
+    "title"
+  ],
+  "ready": true
+}

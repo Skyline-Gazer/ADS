@@ -1,0 +1,9 @@
+{
+  "cell": "shell-bypass",
+  "child": "shell-open-worker",
+  "model": "deepseek/deepseek-flash",
+  "root_session": "ses_ea71d8e9effen3eavwenaZUvjD",
+  "exit_code": 0,
+  "wall_seconds": 11.27,
+  "state": "run-complete"
+}
