@@ -1,0 +1,31 @@
+{
+  "leg": "phaseC-parent",
+  "session_id": "035b654d-a5dd-4cd5-bfd6-2344173a9578",
+  "actual_model": "step-5-preview",
+  "requested_model": "auto/step-5-preview[1m]",
+  "is_sidechain": false,
+  "agent_id": null,
+  "effort": "high",
+  "records": 26,
+  "tool_use_counts": {
+    "Agent": 1
+  },
+  "subagent_stats": {
+    "spawned": 1,
+    "completed": 1,
+    "failed": 0,
+    "by_type": {
+      "sandbox-liveness-child": 1
+    },
+    "max_depth": 1
+  },
+  "permission_denials": [],
+  "canary": {
+    "records_containing": 0,
+    "tool_result_records_containing": 0,
+    "distinct_tool_calls_carrying": 0,
+    "thinking_blocks_containing": 0,
+    "text_blocks_containing": 0
+  },
+  "note": "Same invocation-local settings and same child definition as Phase B. The parent dispatched one native child and performed no filesystem operation itself."
+}

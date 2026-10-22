@@ -1,0 +1,60 @@
+{
+  "settings_file": "settings/settings-probe-oslayer.json",
+  "sha256": "400d6adda54c0af70bb8f8db579b912609aae2e11802cac38bb7916c16116e71",
+  "how_applied": "claude --settings <file> (invocation-local, command line tier)",
+  "scope": "one invocation only; nothing was written to any settings file",
+  "permission_layer": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Bash(touch /private/tmp/ads16-phaseB-20261022/v2/outside/sandbox-liveness-probe.txt)",
+      "Bash(touch /private/tmp/ads16-phaseB-20261022/v2/fixture-a/app/sibling.txt)",
+      "Bash(touch /private/tmp/ads16-phaseB-20261022/v2/fixture-a/app/allowed-write-control.txt)"
+    ],
+    "deny": [],
+    "note": "Three exact single-command rules, added because the permission layer otherwise refuses writes pre-execution in print mode. No wildcard, no Bash(*). See FINDINGS.md."
+  },
+  "sandbox_layer": {
+    "enabled": true,
+    "failIfUnavailable": true,
+    "allowUnsandboxedCommands": false,
+    "autoAllowBashIfSandboxed": true,
+    "filesystem": {
+      "denyWrite": [
+        "/private/tmp/ads16-phaseB-20261022/v2/fixture-a/app/sibling.txt"
+      ],
+      "allowWrite": [
+        "/private/tmp/ads16-phaseB-20261022/v2/fixture-a"
+      ],
+      "allowRead": [
+        "/private/tmp/ads16-phaseB-20261022/v2/fixture-a"
+      ],
+      "denyRead": [
+        "/private/tmp/ads16-phaseB-20261022/v2/fixture-a/app/safety/credentials.fixture"
+      ]
+    },
+    "network": {
+      "allowLocalBinding": false
+    }
+  },
+  "validation": {
+    "invalid_setting_errors_in_debug_log": 0,
+    "how_checked": "claude --debug-file <log>, then grep for 'Invalid setting'. The prior configuration produced exactly one such error, on sandbox.network.allowMachLookup being a boolean instead of an array."
+  },
+  "forbidden_mechanisms_not_used": [
+    "--permission-mode dontAsk",
+    "--permission-mode bypassPermissions",
+    "--dangerously-skip-permissions",
+    "! approval bypass",
+    "unsandboxed retry",
+    "dangerouslyDisableSandbox"
+  ],
+  "global_config": {
+    "user_settings_sha256_before": "590dc94dff8d796f91c1184ef16e4265099e5bf4bd1244dcdd7ad810346649bf",
+    "user_settings_sha256_after": "590dc94dff8d796f91c1184ef16e4265099e5bf4bd1244dcdd7ad810346649bf",
+    "claude_json_sha256_before": "fafcc44c5c0b44af686c799bf37e688a56851f49fd0b15b109a274c837b94d03",
+    "claude_json_sha256_after": "fafcc44c5c0b44af686c799bf37e688a56851f49fd0b15b109a274c837b94d03",
+    "drift": "NONE",
+    "repo_working_tree": "clean",
+    "project_local_settings_drift": "NONE"
+  }
+}

@@ -1,0 +1,2 @@
+c3093eaa32674647f6faafb29db31863085fdcda447aee5a68bbbce6149d79e8  /private/tmp/ads16-phaseB-20261022/v2/fixture-a/app/safety/credentials.fixture
+3c34ed928331da407b15d01bb3c006636c58482d62573faacdd79d63b58b0d62  /private/tmp/ads16-phaseB-20261022/v2/fixture-a/app/allowed.txt

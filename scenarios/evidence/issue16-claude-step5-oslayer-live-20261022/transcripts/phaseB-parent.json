@@ -1,0 +1,31 @@
+{
+  "leg": "phaseB-parent",
+  "session_id": "7b4f32d2-0946-4f0d-b4ab-db4486352332",
+  "actual_model": "step-5-preview",
+  "requested_model": "auto/step-5-preview[1m]",
+  "is_sidechain": false,
+  "agent_id": null,
+  "effort": "high",
+  "records": 26,
+  "tool_use_counts": {
+    "Agent": 1
+  },
+  "subagent_stats": {
+    "spawned": 1,
+    "completed": 1,
+    "failed": 0,
+    "by_type": {
+      "sandbox-liveness-child": 1
+    },
+    "max_depth": 1
+  },
+  "permission_denials": [],
+  "canary": {
+    "records_containing": 0,
+    "tool_result_records_containing": 0,
+    "distinct_tool_calls_carrying": 0,
+    "thinking_blocks_containing": 0,
+    "text_blocks_containing": 0
+  },
+  "note": "The parent dispatched exactly one native child and performed no filesystem operation itself. Its single tool_use is the Agent dispatch."
+}

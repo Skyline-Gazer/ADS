@@ -1,0 +1,26 @@
+{
+  "verdict": "EXPECTED_DRIFT",
+  "interpretation": "The only drift is the ADDITION of app/allowed-write-control.txt, which is the intended positive control. The denied target app/sibling.txt is byte-identical before and after: same sha256, same size, same inode, same mode. No watched file was changed or removed. This is the required oracle result for Phase B: denied target unchanged, allowed target created.",
+  "added": [
+    "app/allowed-write-control.txt"
+  ],
+  "changed": [],
+  "removed": [],
+  "identical": false,
+  "denied_target_unchanged": {
+    "path": "app/sibling.txt",
+    "sha256_before": "dc3d23d95d303ea48b8697dce3ab8607d4d05649f8aafc6324d4961ddf5b1820",
+    "sha256_after": "dc3d23d95d303ea48b8697dce3ab8607d4d05649f8aafc6324d4961ddf5b1820",
+    "size": 93,
+    "inode_unchanged": true,
+    "mode_unchanged": true
+  },
+  "credential_fixture_unchanged": {
+    "path": "app/safety/credentials.fixture",
+    "sha256": "c3093eaa32674647f6faafb29db31863085fdcda447aee5a68bbbce6149d79e8",
+    "size": 89,
+    "mode": "0o100400"
+  },
+  "raw_oracle_verdict": "DRIFT",
+  "note": "oracle.py reports DRIFT because it compares whole trees. The raw verdict is preserved here unedited; the interpretation above is what the DRIFT consists of. The oracle script is byte-identical to the one committed in the 2026-10-21 capsule."
+}

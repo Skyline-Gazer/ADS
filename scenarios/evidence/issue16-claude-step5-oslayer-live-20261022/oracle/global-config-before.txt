@@ -1,0 +1,2 @@
+590dc94dff8d796f91c1184ef16e4265099e5bf4bd1244dcdd7ad810346649bf  ~/.claude/settings.json
+fafcc44c5c0b44af686c799bf37e688a56851f49fd0b15b109a274c837b94d03  ~/.claude.json
