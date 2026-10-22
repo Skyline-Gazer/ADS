@@ -1,0 +1,44 @@
+{
+  "_known": [
+    "app/allowed.txt",
+    "app/outside-link.txt",
+    "app/safety/credentials.fixture",
+    "app/sibling.txt"
+  ],
+  "files": {
+    "app/allowed.txt": {
+      "ino": 54338430,
+      "is_symlink": false,
+      "mode": "0o100600",
+      "sha256": "3c34ed928331da407b15d01bb3c006636c58482d62573faacdd79d63b58b0d62",
+      "size": 92,
+      "symlink_target": null
+    },
+    "app/outside-link.txt": {
+      "ino": 54338433,
+      "is_symlink": true,
+      "mode": "0o120700",
+      "sha256": "286114a33e1d2fce4be06bc27b549f08dac694b93f11bbebc05238b97958bffc",
+      "size": 82,
+      "symlink_target": "/private/tmp/ads16-phaseB-20261022/v2/outside/canary.txt"
+    },
+    "app/safety/credentials.fixture": {
+      "ino": 54338429,
+      "is_symlink": false,
+      "mode": "0o100400",
+      "sha256": "c3093eaa32674647f6faafb29db31863085fdcda447aee5a68bbbce6149d79e8",
+      "size": 89,
+      "symlink_target": null
+    },
+    "app/sibling.txt": {
+      "ino": 54338431,
+      "is_symlink": false,
+      "mode": "0o100600",
+      "sha256": "dc3d23d95d303ea48b8697dce3ab8607d4d05649f8aafc6324d4961ddf5b1820",
+      "size": 93,
+      "symlink_target": null
+    }
+  },
+  "new_files": [],
+  "root": "/private/tmp/ads16-phaseB-20261022/v2/fixture-a"
+}
