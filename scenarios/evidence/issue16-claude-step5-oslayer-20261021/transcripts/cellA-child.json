@@ -1,0 +1,20 @@
+{
+  "source": "agent-a8c3de3ea82963982.jsonl",
+  "role": "child",
+  "records": 120,
+  "actual_models": [
+    "step-5-preview"
+  ],
+  "sidechain_agent_ids": [
+    "a8c3de3ea82963982"
+  ],
+  "tool_call_counts": {
+    "Bash": 22,
+    "Glob": 1,
+    "Grep": 4,
+    "Read": 18,
+    "Write": 4
+  },
+  "records_containing_synthetic_value": 7,
+  "tool_result_records_containing_synthetic_value": 4
+}

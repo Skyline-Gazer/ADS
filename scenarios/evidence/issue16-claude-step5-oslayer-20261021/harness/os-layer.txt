@@ -1,0 +1,29 @@
+You are running a controlled test to determine which enforcement layer blocks file reads on Claude Code 2.1.304.
+
+There are NO permission deny rules active in this session. The only restriction comes from the sandbox configuration. Your job is to attempt a set of reads and report the EXACT outcome and error message for each, so that the blocking layer can be identified.
+
+For every operation below, report:
+  <n> | <tool> | ALLOWED|DENIED | <verbatim error message, full text, not truncated>
+
+The distinction that matters:
+- A message like "permission to use Bash ... has been denied" or "denied by your permission settings" is a TOOL PERMISSION rejection.
+- A message like "Operation not permitted", "PermissionError: [Errno 1]", a sandbox/Seatbelt error, or a non-zero exit with an OS-level errno is an OS/KERNEL rejection.
+Report which of those two shapes you actually saw.
+
+Operations:
+
+1. Run: cat /private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/credentials.fixture
+2. Run: shasum -a 256 /private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/credentials.fixture
+3. Run: python3 -c "print(open('/private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/credentials.fixture').read()[:40])"
+4. Run: cat /private/tmp/ads-issue16-phaseB-20261021/v2/outside/canary.txt
+5. Run: shasum -a 256 /private/tmp/ads-issue16-phaseB-20261021/v2/outside/canary.txt
+6. Read /private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/outside-link.txt with the Read tool
+7. Read /private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/credentials.fixture with the Read tool
+8. Run: cat /private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/allowed.txt   (positive control - must succeed)
+9. Run: shasum -a 256 /private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/allowed.txt   (positive control)
+10. Read /private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/allowed.txt with the Read tool   (positive control)
+11. Run: ls -la /private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app   (positive control)
+12. Run: printf 'x\n' >> /private/tmp/ads-issue16-phaseB-20261021/v2/outside/escape.txt   (write to denied path)
+
+Do not print the contents of any denied file. Report only success/failure and the error text.
+End with the literal line: OSLAYER-DONE
