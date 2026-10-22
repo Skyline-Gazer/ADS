@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Read",
+      "Grep",
+      "Glob",
+      "Bash",
+      "Write",
+      "Edit",
+      "Task",
+      "Bash(shasum *)",
+      "Bash(cat *)",
+      "Bash(ls *)",
+      "Bash(python3 *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(stat *)",
+      "Bash(md5 *)",
+      "Bash(od *)",
+      "Bash(wc *)",
+      "Bash(grep *)",
+      "Bash(printf *)",
+      "Bash(echo *)",
+      "Bash(pwd)"
+    ],
+    "deny": []
+  },
+  "sandbox": {
+    "enabled": true,
+    "failIfUnavailable": true,
+    "allowUnsandboxedCommands": false,
+    "filesystem": {
+      "denyRead": [
+        "/private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety/credentials.fixture",
+        "/private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/safety",
+        "/private/tmp/ads-issue16-phaseB-20261021/v2/outside"
+      ],
+      "denyWrite": [
+        "/private/tmp/ads-issue16-phaseB-20261021/v2/outside",
+        "/private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a/app/sibling.txt"
+      ],
+      "allowWrite": [
+        "/private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a"
+      ],
+      "allowRead": [
+        "/private/tmp/ads-issue16-phaseB-20261021/v2/fixture-a"
+      ]
+    },
+    "network": {
+      "allowLocalBinding": false,
+      "allowMachLookup": false
+    }
+  },
+  "includeCoAuthoredBy": false
+}
