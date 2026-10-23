@@ -80,7 +80,7 @@ The manifest is intentionally absent from production `main`. A production-bounda
 
 ## Production boundary guard
 
-Copy [`check-production-boundary.py`](../templates/consumer-devtools/check-production-boundary.py) into the consumer repository's `scripts/` directory and [`production-boundary.yml`](../templates/consumer-devtools/production-boundary.yml) into its `.github/workflows/` directory as a generic merge guard. These guard files may be installed on the consumer's `main`; they do not install or configure either tool.
+Copy [`check-production-boundary.py`](../templates/consumer-devtools/check-production-boundary.py) to the consumer repository as `scripts/check-ads-devtools-boundary.py` and [`production-boundary.yml`](../templates/consumer-devtools/production-boundary.yml) to `.github/workflows/ads-devtools-boundary.yml` as a generic merge guard. If the consumer's production branch is not named `main`, update the workflow's branch trigger and `PRODUCTION_BRANCH` value. These guard files may be installed on the consumer's `main`; they do not install or configure either tool.
 
 The guard must run against PR merge candidates targeting the production branch and on pushes to that branch. It checks for the consumer manifest, known generated index/database/cache paths, RTK binaries, and CodeGraph/RTK integration in common host configuration files. Customize the scan for the actual host files used by the project, without allowing the tool integration itself onto production `main`.
 
