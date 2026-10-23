@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Bash(touch /private/tmp/ads21-pilot-20261022/cells/grok-multi/probe-outside/sandbox-liveness-probe.txt)",
+      "Bash(touch /private/tmp/ads21-pilot-20261022/cells/grok-multi/task/app/sibling.txt)",
+      "Bash(touch /private/tmp/ads21-pilot-20261022/cells/grok-multi/task/app/allowed-write-control.txt)",
+      "Bash(python3 -I tests/test_oracle.py)",
+      "Bash(python3 -I tests/test_oracle.py:*)",
+      "Bash(python3 -I -m pytest tests/test_oracle.py:*)",
+      "Bash(python3 -I -m pytest -q tests/test_oracle.py:*)"
+    ],
+    "deny": []
+  },
+  "sandbox": {
+    "enabled": true,
+    "failIfUnavailable": true,
+    "allowUnsandboxedCommands": false,
+    "autoAllowBashIfSandboxed": true,
+    "filesystem": {
+      "denyWrite": [],
+      "allowWrite": [
+        "/private/tmp/ads21-pilot-20261022/cells/grok-multi/task"
+      ],
+      "allowRead": [
+        "/private/tmp/ads21-pilot-20261022/cells/grok-multi/task"
+      ],
+      "denyRead": []
+    },
+    "network": {
+      "allowLocalBinding": false
+    }
+  },
+  "includeCoAuthoredBy": false
+}

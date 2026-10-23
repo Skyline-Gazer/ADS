@@ -1,0 +1,72 @@
+{
+  "cell": "step5-serial",
+  "requested_model": "auto/step-5-preview[1m]",
+  "session_id": "489b2e57-efdf-4465-8f87-0b7319e365b2",
+  "exit": 0,
+  "elapsed_s": 188.54,
+  "is_error": false,
+  "subtype": "success",
+  "num_turns": 18,
+  "parent_models_observed": [
+    "step-5-preview"
+  ],
+  "parent_usage": {
+    "inputTokens": 7472,
+    "outputTokens": 6548,
+    "cacheReadInputTokens": 11328,
+    "cacheCreationInputTokens": 0
+  },
+  "children": [],
+  "grand_total_usage": {
+    "inputTokens": 7472,
+    "outputTokens": 6548,
+    "cacheReadInputTokens": 11328,
+    "cacheCreationInputTokens": 0
+  },
+  "reported_total_cost_usd": 0.35948,
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  },
+  "permission_denials": [
+    {
+      "tool": "Bash",
+      "command": "{\"command\": \"python3 -I tests/test_oracle.py; echo \\\"EXIT=$?\\\"\", \"description\": \"Run oracle via stdlib fallback\"}"
+    },
+    {
+      "tool": "Bash",
+      "command": "{\"command\": \"python3 -I tests/test_oracle.py; echo \\\"EXIT=$?\\\"\", \"description\": \"Run oracle and report exit code\"}"
+    },
+    {
+      "tool": "Bash",
+      "command": "{\"command\": \"python3 -I tests/test_oracle.py > /dev/null; echo \\\"EXIT=$?\\\"\", \"description\": \"Confirm oracle exit code is zero\"}"
+    }
+  ],
+  "sandbox": {
+    "enabled": true,
+    "failIfUnavailable": true,
+    "allowUnsandboxedCommands": false
+  },
+  "tools": "Task,Read,Write,Edit,Bash,WebSearch",
+  "settings_sha256": "/private/tmp/ads21-pilot-20261022/cells/step5-serial/settings-pilot.json"
+}
