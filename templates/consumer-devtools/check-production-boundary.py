@@ -15,6 +15,10 @@ from pathlib import Path
 
 FORBIDDEN_NAMES = {
     ".ads-devtools.json",
+    "codegraph.json",
+    ".codegraph.json",
+    "rtk.json",
+    ".rtk.json",
     "codegraph.db",
     "codegraph.sqlite",
     "codegraph.sqlite3",
@@ -32,6 +36,11 @@ HOST_CONFIGS = {
     ".cursor/mcp.json",
     ".agents/settings.json",
 }
+AGENT_INSTRUCTIONS = {"CLAUDE.md", "GEMINI.md", "CODEX.md", ".github/copilot-instructions.md"}
+AGENT_TOOL_INSTRUCTION = re.compile(
+    r"(?i)(?:\buse\s+rtk\s+(?:instead|for|to)\b|\brtk\s+(?:git|grep|find|ls|read|test|cargo|npm|pnpm|init)\b|"
+    r"\bcodegraph\s+(?:serve\s+--mcp|init|sync|status)\b)"
+)
 TOOL_MARKER = re.compile(r"(?i)\b(?:codegraph|rtk(?:-oss)?)\b")
 INTEGRATION_MARKER = re.compile(r"(?i)\b(?:command|hooks?|mcp|plugin|executable|binary|wrapper|sync|init)\b")
 GITIGNORE_TOOL_PATTERN = re.compile(r"(?im)^\s*/?(?:\.codegraph|\.rtk|codegraph(?:-index)?\.(?:db|sqlite3?)|rtk(?:-oss)?(?:\.exe)?)(?:/|\s|$|#)")
@@ -71,7 +80,7 @@ def violations(root: Path) -> list[str]:
             found.append(f"{rel_posix}: forbidden tool configuration/artifact directory")
         if rel.name.lower() in {"rtk", "rtk.exe"}:
             found.append(f"{rel_posix}: RTK executable must not enter production")
-        if rel_posix in HOST_CONFIGS or rel_posix == ".gitignore":
+        if rel_posix in HOST_CONFIGS or rel_posix in AGENT_INSTRUCTIONS or rel_posix == ".gitignore":
             try:
                 text = path.read_text(encoding="utf-8")
             except (OSError, UnicodeDecodeError):
@@ -80,6 +89,8 @@ def violations(root: Path) -> list[str]:
                 found.append(".gitignore: tool-specific generated-data ignore rules must remain development-only")
             if rel_posix in HOST_CONFIGS and TOOL_MARKER.search(text) and INTEGRATION_MARKER.search(text):
                 found.append(f"{rel_posix}: appears to contain CodeGraph/RTK host integration")
+            if rel_posix in AGENT_INSTRUCTIONS and AGENT_TOOL_INSTRUCTION.search(text):
+                found.append(f"{rel_posix}: appears to contain generated CodeGraph/RTK integration instructions")
 
     declared_paths = manifest.get("dev_only_paths", [])
     if not isinstance(declared_paths, list):
