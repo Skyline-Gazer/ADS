@@ -66,6 +66,11 @@ def violations(root: Path) -> list[str]:
 
     for rel, path in all_files:
         rel_posix = rel.as_posix()
+        lower_path = rel_posix.lower()
+        if rel.parts and rel.parts[0] == "scripts" and any(token in rel.name.lower() for token in ("devtools", "codegraph", "rtk")) and rel.name != "check-ads-devtools-boundary.py":
+            found.append(f"{rel_posix}: consumer developer-tool helper must remain on development branches")
+        if len(rel.parts) >= 3 and rel.parts[:2] == (".github", "workflows") and any(token in rel.name.lower() for token in ("ads-devtools", "codegraph", "rtk")) and rel.name != "ads-devtools-boundary.yml":
+            found.append(f"{rel_posix}: tool-specific workflow must remain on development branches")
         if rel.name in FORBIDDEN_NAMES and rel_posix != ".ads-devtools.json":
             found.append(f"{rel_posix}: forbidden generated artifact or tool binary")
         if any(part.lower() in FORBIDDEN_DIRS for part in rel.parts):
