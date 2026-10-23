@@ -6,6 +6,7 @@ Pinned revision: <full immutable ADS commit SHA recorded by the consumer gitlink
 Locally available guidance: .ads/ (Git submodule; use another explicit path if already occupied)
 Primary rules: .ads/STANDARD.md, .ads/SAFETY.md, .ads/QUALITY.md at that revision.
 Install/update guide: .ads/docs/how-to-update.md; use approved release diff + tested gitlink PR, never an unchecked moving-branch update.
+Git governance: follow .ads/docs/git-governance.md. `dev` is the required development/integration branch; start each task branch from latest `dev`, reference an Issue, and deliver via PR to `dev`. Promote to production only through a separate release PR. If `dev` is absent, establish it through a reviewable migration before normal work. Configure server-side branch protection separately where supported and report any enforcement gap.
 Phase checkpoint: .ads/docs/milestone-reconciliation.md; reconcile real GitHub Project issues/items/PR/CI when a Phase or goal ends.
 If private content is inaccessible, report it rather than pretending these rules were loaded.
 
