@@ -24,7 +24,8 @@ jobs:
         env:
           PR_BASE: ${{ github.base_ref }}
           REF_NAME: ${{ github.ref_name }}
+          PRODUCTION_BRANCH: main
         run: |
           set -euo pipefail
           target="${PR_BASE:-$REF_NAME}"
-          python3 scripts/check-ads-devtools-boundary.py --target-branch "$target"
+          python3 scripts/check-ads-devtools-boundary.py --target-branch "$target" --production-branch "$PRODUCTION_BRANCH"
