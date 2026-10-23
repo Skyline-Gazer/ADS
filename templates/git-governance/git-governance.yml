@@ -1,0 +1,20 @@
+name: ADS Git Governance
+on:
+  pull_request:
+    branches: [dev, main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  branch-policy:
+    runs-on: ubuntu-latest
+    env:
+      ADS_DEVELOPMENT_BRANCH: dev
+      ADS_PRODUCTION_BRANCH: main
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate PR base, branch type, and Issue reference
+        run: python3 scripts/check-ads-git-governance.py
