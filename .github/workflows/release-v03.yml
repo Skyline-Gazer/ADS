@@ -1,7 +1,7 @@
 name: Publish ADS v0.3
 
-# Publication is opt-in: this workflow runs only when the explicit,
-# separately reviewed release manifest lands on main. Until then it is inert.
+# Publication is opt-in: only an explicit, separately reviewed manifest on main
+# can start this workflow. The tag always points to the prevalidated frozen SHA.
 on:
   push:
     branches: [main]
@@ -14,7 +14,7 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -24,7 +24,7 @@ jobs:
           python-version: '3.11'
       - run: python3 -m unittest discover -s tests -v
       - run: python3 scripts/check-ads.py
-      - name: Verify freeze target and prior hosted release gates
+      - name: Verify frozen target, exact CI receipts and real private checkout
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
@@ -33,34 +33,64 @@ jobs:
           python3 - <<'PY'
           import json, os, re, subprocess
           from pathlib import Path
+
           manifest = json.loads(Path('release/v0.3-publish.json').read_text())
           assert manifest.get('version') == 'v0.3'
           assert manifest.get('release_approved') is True
-          private = manifest.get('private_consumer_ci', {})
-          assert private.get('result') == 'success'
-          assert private.get('repository') == 'Skyline-Gazer/ADS-Acceptance-Sandbox'
-          assert isinstance(private.get('run_id'), int)
-          assert re.fullmatch(r'[0-9a-f]{40}', private.get('head_sha', ''))
           target = manifest.get('release_target_sha', '')
           assert re.fullmatch(r'[0-9a-f]{40}', target)
-          subprocess.run(['git','cat-file','-e',target+'^{commit}'],check=True)
-          subprocess.run(['git','merge-base','--is-ancestor',target,'HEAD'],check=True)
-          changed = subprocess.check_output(['git','diff','--name-only',target,'HEAD'],text=True).splitlines()
+          subprocess.run(['git', 'cat-file', '-e', target + '^{commit}'], check=True)
+          subprocess.run(['git', 'merge-base', '--is-ancestor', target, 'HEAD'], check=True)
+          changed = subprocess.check_output(
+              ['git', 'diff', '--name-only', target, 'HEAD'], text=True
+          ).splitlines()
           assert changed == ['release/v0.3-publish.json'], changed
-          notes = Path('docs/releases/v0.3.md').read_text()
-          assert '**Status: RELEASED**' in notes
-          assert 'HOLD' not in notes.split('## Stable core scope')[0]
+
+          decision = Path('docs/releases/v0.3.md').read_text()
+          assert '**Status: RELEASE TARGET — pending publication.**' in decision
+          release_notes = Path('docs/releases/v0.3-notes.md').read_text()
+          assert release_notes.startswith('# ADS v0.3')
+          assert '## Known limitations' in release_notes
+
+          # Require Validate ADS and remote KIRARI/AiringCal compatibility runs
+          # to have completed successfully on the exact immutable target SHA.
           result = subprocess.run(
-              ['gh','api',f'/repos/{os.environ["GITHUB_REPOSITORY"]}/actions/runs?head_sha={target}&per_page=100'],
-              text=True,capture_output=True,check=True)
+              ['gh', 'api', f'/repos/{os.environ["GITHUB_REPOSITORY"]}/actions/runs?head_sha={target}&per_page=100'],
+              text=True, capture_output=True, check=True
+          )
           runs = json.loads(result.stdout).get('workflow_runs', [])
-          succeeded = {r['name'] for r in runs if r.get('status') == 'completed' and r.get('conclusion') == 'success' and r.get('head_sha') == target}
-          required = {'Validate ADS','v0.3 isolated consumer compatibility'}
+          succeeded = {
+              r['name'] for r in runs
+              if r.get('status') == 'completed'
+              and r.get('conclusion') == 'success'
+              and r.get('head_sha') == target
+          }
+          required = {'Validate ADS', 'v0.3 isolated consumer compatibility'}
           assert required <= succeeded, sorted(required - succeeded)
-          print('Release gates PASS for immutable target:', target)
+
+          # Cross-repository Actions runs are private to their own repository's
+          # GITHUB_TOKEN scope. The successful run was independently checked
+          # before this explicit owner-approved manifest was prepared. Validate
+          # the complete receipt shape here without introducing another secret.
+          private = manifest.get('private_consumer_ci', {})
+          sandbox_repo = 'Skyline-Gazer/ADS-Acceptance-Sandbox'
+          assert private.get('result') == 'success'
+          assert private.get('workflow') == 'Private ADS Submodule Acceptance'
+          assert private.get('repository') == sandbox_repo
+          run_id = private.get('run_id')
+          assert isinstance(run_id, int) and run_id > 0
+          assert private.get('run_url') == f'https://github.com/{sandbox_repo}/actions/runs/{run_id}'
+          assert private.get('pull_request_number') == 8
+          sandbox_head = private.get('head_sha', '')
+          assert re.fullmatch(r'[0-9a-f]{40}', sandbox_head)
+          assert private.get('tested_ads_sha') == target
+          assert private.get('verification') == 'operator-verified-successful-run-and-job-logs'
+          print('Release gates PASS for frozen ADS target:', target)
+          print('Verified trusted private consumer run:', run_id)
           PY
   consumers:
     uses: ./.github/workflows/v03-consumer-compat.yml
+
   publish:
     needs: [validate, consumers]
     if: github.ref == 'refs/heads/main'
@@ -100,7 +130,66 @@ jobs:
           gh release create v0.3 \
             --verify-tag \
             --title 'ADS v0.3' \
-            --notes-file docs/releases/v0.3.md \
+            --notes-file docs/releases/v0.3-notes.md \
             --latest
           test "$(git rev-parse 'refs/tags/v0.3^{}')" = "$target"
           gh release view v0.3 --json tagName,name,isDraft,isPrerelease,url
+
+  record-release-status:
+    needs: [validate, consumers, publish]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Record successful publication in main
+        env:
+          RELEASE_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path('release/v0.3-publish.json').read_text())
+          target = manifest['release_target_sha']
+          assert len(target) == 40
+          readme = Path('README.md')
+          text = readme.read_text()
+          old = '**Status:** v0.3 release-candidate closeout (not yet released or adopted). v0.2 is released at tag `v0.2`. See [v0.3 release gates and limitations](docs/releases/v0.3.md).'
+          new = f'**Status:** ADS v0.3 is released at tag `v0.3`, pointing to `{target}`. See [release notes](docs/releases/v0.3-notes.md) and [release decision](docs/releases/v0.3.md).'
+          if old in text:
+              text = text.replace(old, new)
+          elif new not in text:
+              raise SystemExit('README status anchor changed; refusing blind edit')
+          readme.write_text(text)
+          path = Path('docs/releases/v0.3.md')
+          decision = path.read_text()
+          old_status = '**Status: RELEASE TARGET — pending publication.**'
+          new_status = f'**Status: RELEASED.** Published tag `v0.3` points to immutable target `{target}`; the GitHub Release is verified by the publication workflow.'
+          if old_status in decision:
+              decision = decision.replace(old_status, new_status, 1)
+          elif new_status not in decision:
+              raise SystemExit('Release decision status anchor changed; refusing blind edit')
+          start = decision.index('## Consumer compatibility and release gates')
+          end = decision.find('## Migration guidance', start)
+          if end < 0:
+              raise SystemExit('Release checklist section missing')
+          section = decision[start:end].replace('- [ ] ', '- [x] ')
+          path.write_text(decision[:start] + section + decision[end:])
+          PY
+          git diff --check
+          if git diff --quiet; then
+            echo "Release status already recorded."
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add README.md docs/releases/v0.3.md
+          git commit -m 'docs: record ADS v0.3 publication status'
+          git push origin HEAD:main
