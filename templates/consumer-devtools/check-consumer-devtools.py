@@ -79,11 +79,11 @@ def verify_full_rtk_edition() -> tuple[str, str]:
     )
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--production-branch", default="main")
     parser.add_argument("--allow-production-checkout", action="store_true")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     branch_result = subprocess.run(
         ["git", "branch", "--show-current"],
