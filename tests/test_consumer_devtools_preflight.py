@@ -65,7 +65,7 @@ class ConsumerDevtoolsPreflightTests(TestCase):
         ):
             output = io.StringIO()
             with contextlib.redirect_stdout(output):
-                result = MODULE.main()
+                result = MODULE.main([])
         self.assertEqual(result, 1)
         self.assertIn("latest stable=1.2.3", output.getvalue())
         self.assertIn("latest stable=4.5.6", output.getvalue())
