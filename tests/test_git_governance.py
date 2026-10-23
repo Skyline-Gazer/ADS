@@ -46,6 +46,11 @@ class GitGovernanceTests(unittest.TestCase):
         errors = validate_pull_request(event("dev", "feat/user-auth", "Implement login #123"))
         self.assertTrue(any("must explicitly reference" in error for error in errors))
 
+    def test_issue_reference_placeholder_comment_is_not_enough(self):
+        body = "<!-- Required: Refs #123 or Closes #123 -->\nImplement login"
+        errors = validate_pull_request(event("dev", "feat/user-auth", body))
+        self.assertTrue(any("must explicitly reference" in error for error in errors))
+
     def test_direct_branch_as_task_head_is_rejected(self):
         errors = validate_pull_request(event("dev", "main"))
         self.assertTrue(any("separate task branch" in error for error in errors))
