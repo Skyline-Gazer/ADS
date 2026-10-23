@@ -1,0 +1,81 @@
+name: Publish ADS v0.3
+
+# Publication is opt-in: this workflow runs only when the explicit,
+# separately reviewed release manifest lands on main. Until then it is inert.
+on:
+  push:
+    branches: [main]
+    paths: ['release/v0.3-publish.json']
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python3 -m unittest discover -s tests -v
+      - run: python3 scripts/check-ads.py
+      - name: Verify explicit release decision
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path('release/v0.3-publish.json').read_text())
+          assert manifest.get('version') == 'v0.3'
+          assert manifest.get('release_approved') is True
+          assert manifest.get('private_consumer_ci', {}).get('result') == 'success'
+          assert manifest.get('private_consumer_ci', {}).get('repository') == 'Skyline-Gazer/ADS-Acceptance-Sandbox'
+          assert isinstance(manifest['private_consumer_ci'].get('run_id'), int)
+          assert len(manifest['private_consumer_ci'].get('head_sha', '')) == 40
+          notes = Path('docs/releases/v0.3.md').read_text()
+          assert '**Status: RELEASED**' in notes
+          assert 'HOLD' not in notes.split('## Stable core scope')[0]
+          PY
+  consumers:
+    uses: ./.github/workflows/v03-consumer-compat.yml
+  publish:
+    needs: [validate, consumers]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    concurrency:
+      group: ads-v0.3-release
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Create immutable tag and GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$RELEASE_SHA"
+          if gh release view v0.3 >/dev/null 2>&1; then
+            echo "::error::Release v0.3 already exists; refusing to overwrite"
+            exit 1
+          fi
+          if git ls-remote --tags --refs origin refs/tags/v0.3 | grep -q .; then
+            echo "::error::Tag v0.3 already exists; refusing to overwrite"
+            exit 1
+          fi
+          git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              tag -a v0.3 -m 'ADS v0.3 stable core release'
+          git push origin refs/tags/v0.3
+          gh release create v0.3 \
+            --verify-tag \
+            --title 'ADS v0.3' \
+            --notes-file docs/releases/v0.3.md \
+            --latest
+          gh release view v0.3 --json tagName,name,isDraft,isPrerelease,url
