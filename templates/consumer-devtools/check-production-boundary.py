@@ -34,6 +34,7 @@ HOST_CONFIGS = {
 }
 TOOL_MARKER = re.compile(r"(?i)\b(?:codegraph|rtk(?:-oss)?)\b")
 INTEGRATION_MARKER = re.compile(r"(?i)\b(?:command|hooks?|mcp|plugin|executable|binary|wrapper|sync|init)\b")
+GITIGNORE_TOOL_PATTERN = re.compile(r"(?im)^\s*/?(?:\.codegraph|\.rtk|rtk(?:-oss)?)(?:/|\s|$|#)")
 SKIP_DIRS = {".git", ".ads", "node_modules", ".venv", "venv"}
 
 
@@ -70,12 +71,14 @@ def violations(root: Path) -> list[str]:
             found.append(f"{rel_posix}: forbidden tool configuration/artifact directory")
         if rel.name.lower() in {"rtk", "rtk.exe"}:
             found.append(f"{rel_posix}: RTK executable must not enter production")
-        if rel_posix in HOST_CONFIGS:
+        if rel_posix in HOST_CONFIGS or rel_posix == ".gitignore":
             try:
                 text = path.read_text(encoding="utf-8")
             except (OSError, UnicodeDecodeError):
                 continue
-            if TOOL_MARKER.search(text) and INTEGRATION_MARKER.search(text):
+            if rel_posix == ".gitignore" and GITIGNORE_TOOL_PATTERN.search(text):
+                found.append(".gitignore: tool-specific generated-data ignore rules must remain development-only")
+            if rel_posix in HOST_CONFIGS and TOOL_MARKER.search(text) and INTEGRATION_MARKER.search(text):
                 found.append(f"{rel_posix}: appears to contain CodeGraph/RTK host integration")
 
     declared_paths = manifest.get("dev_only_paths", [])
