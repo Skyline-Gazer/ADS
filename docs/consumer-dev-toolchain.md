@@ -43,7 +43,7 @@ The latest-version check is dynamic. Record observed versions in run evidence, b
 
 ## Consumer branch boundary — mandatory
 
-The consumer must follow the mandatory [Git governance policy](git-governance.md): `dev` is the required development/integration branch, and every ordinary task branch starts from the latest `dev`. CodeGraph/RTK project configuration may exist on `dev` and its task branches, but must not enter the consumer's production `main` branch or production release/deployment artifacts. If the consumer has no `dev`, establish it through a reviewable migration before normal implementation.
+The consumer must follow ADS's mandatory Git governance policy: `dev` is the required development/integration branch, and every ordinary task branch starts from the latest `dev`. CodeGraph/RTK project configuration may exist on `dev` and its task branches, but must not enter the consumer's production `main` branch or production release/deployment artifacts. If the consumer has no `dev`, establish it through a reviewable migration before normal implementation.
 
 1. Identify the consumer's actual production branch from repository facts; use `main` when that is the project's production branch.
 2. Initialize CodeGraph and configure the host's RTK integration only in a consumer development checkout. Do not perform first-time project initialization on production `main`.
