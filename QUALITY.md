@@ -20,6 +20,10 @@ When a needed remote environment is absent, do not stop at reporting the gap: pr
 
 See [scenarios/remote-first-verification.md](scenarios/remote-first-verification.md) for decision order and acceptance cases.
 
+## Consumer developer-toolchain and production-boundary checks
+
+For every project adopting ADS, validate CodeGraph and the full RTK edition as required development capabilities. Check the official latest stable releases dynamically; do not treat an old pinned version as current. The consumer project must initialize the tools on a development branch, prove the active host integration works, and run CodeGraph sync/status after source-changing work. A deterministic guard must reject consumer tool configuration, generated indexes/caches and binaries from the production branch and release artifacts. The generic guard itself may remain on production main because it does not configure either tool. These requirements apply to ADS consumers, not to the ADS standards repository. See [consumer-dev-toolchain.md](docs/consumer-dev-toolchain.md).
+
 ## Multi-agent integration and efficiency evidence
 
 A child agent's summary, self-tested branch or reviewer finding is input to the main agent, not final verification. The main agent checks the combined diff, re-runs affected contract/integration checks after merging independent changes and reports skipped or unavailable checks. A delegated security review cannot widen authorization, and an AI-only review is not a substitute for deterministic CI. Before accepting safety claims for native Subagents, verify actual child read/edit/shell permissions, canonical path and absolute-path escape containment, and lifecycle waiting with the [targeted negative oracle](scenarios/subagent-permission-containment.md). Independent passing application tests do not erase an observed forbidden read or write. Worktrees alone do not prove containment; missing tool/OS restrictions are reported as unsafe or unverified.
