@@ -35,10 +35,23 @@ class ConsumerDevtoolsPreflightTests(TestCase):
             with self.assertRaises(ValueError):
                 MODULE.latest_stable("example/tool")
 
-    def test_full_rtk_rejects_rtk_oss_binary(self):
-        with patch.object(MODULE.shutil, "which", return_value="/tmp/rtk-oss"):
-            with self.assertRaisesRegex(ValueError, "full RTK is required"):
-                MODULE.installed_version("rtk")
+    def test_full_rtk_edition_uses_homebrew_package_metadata(self):
+        brew_results = [
+            subprocess.CompletedProcess([], 0, stdout="rtk 1.2.3", stderr=""),
+            subprocess.CompletedProcess([], 1, stdout="", stderr="Error: No such keg: rtk-oss"),
+        ]
+        with patch.object(MODULE.shutil, "which", return_value="/opt/homebrew/bin/brew"), patch.object(
+            MODULE.subprocess, "run", side_effect=brew_results
+        ):
+            state, evidence = MODULE.verify_full_rtk_edition()
+        self.assertEqual(state, "VERIFIED")
+        self.assertIn("formula rtk", evidence)
+
+    def test_full_rtk_edition_is_unverified_without_package_provenance(self):
+        with patch.object(MODULE.shutil, "which", return_value=None):
+            state, evidence = MODULE.verify_full_rtk_edition()
+        self.assertEqual(state, "UNVERIFIED")
+        self.assertIn("share the binary name", evidence)
 
     def test_missing_tools_report_latest_version_and_request_consent(self):
         git_branch = subprocess.CompletedProcess([], 0, stdout="feat/task\n", stderr="")
