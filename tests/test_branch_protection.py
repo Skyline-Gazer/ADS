@@ -27,7 +27,7 @@ class BranchProtectionTests(unittest.TestCase):
         base = {
             "required_status_checks": {"strict": True, "contexts": ["branch-policy"]},
             "enforce_admins": {"enabled": True},
-            "required_pull_request_reviews": {"required_approving_review_count": 0},
+            "required_pull_request_reviews": {"required_approving_review_count": 0, "dismiss_stale_reviews": True},
             "allow_force_pushes": {"enabled": False},
             "allow_deletions": {"enabled": False},
         }
