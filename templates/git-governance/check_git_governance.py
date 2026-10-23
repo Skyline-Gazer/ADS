@@ -37,7 +37,8 @@ def validate_pull_request(event, development_branch="dev", production_branch="ma
     else:
         errors.append(f"unsupported PR base {base!r}; ordinary work targets {development_branch!r}, production promotion targets {production_branch!r}")
 
-    if not ISSUE_REFERENCE.search(body):
+    body_without_comments = re.sub(r"<!--.*?-->", "", body, flags=re.DOTALL)
+    if not ISSUE_REFERENCE.search(body_without_comments):
         errors.append("PR description must explicitly reference a GitHub Issue (for example, Refs #123 or Closes #123)")
     return errors
 
