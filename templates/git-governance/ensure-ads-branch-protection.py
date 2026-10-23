@@ -119,6 +119,7 @@ def build_protection_payload(existing, required_checks):
     payload = {
         'required_status_checks': {
             'strict': True,
+            'contexts': sorted(check_by_context),
             'checks': [check_by_context[key] for key in sorted(check_by_context)],
         },
         'enforce_admins': True,
