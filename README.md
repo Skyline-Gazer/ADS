@@ -33,6 +33,7 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 - [scenarios/phase-milestone-reconciliation.md](scenarios/phase-milestone-reconciliation.md): Phase closure and drift acceptance protocol (live Project not tested).
 - [scenarios/submodule-update.md](scenarios/submodule-update.md): consumer adoption/update/rollback acceptance protocol (live consumer not tested).
 - [scenarios/environment-first.md](scenarios/environment-first.md): environment-first probe, local reuse and fallback evidence.
+- [scenarios/remote-first-verification.md](scenarios/remote-first-verification.md): hosted CI-first, isolated serverless preview, local-light fallback, evidence labels and remote-verification acceptance cases.
 - [scenarios/v0.3-omp-acceptance.md](scenarios/v0.3-omp-acceptance.md): OMP 18.11.3 v0.3 acceptance archive.
 - [scenarios/v0.3-opencode-acceptance.md](scenarios/v0.3-opencode-acceptance.md): OpenCode v2.0.32 v0.3 acceptance archive.
 - [scenarios/v0.3-codex-acceptance.md](scenarios/v0.3-codex-acceptance.md): historical Codex CLI 0.163.0 first run, PARTIAL due to restored global-config drift.
@@ -43,8 +44,8 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 
 ## Design principles
 
-Goal-driven execution; phase-end GitHub Project milestone convergence; review-gated ADS submodule updates; environment-first reuse of existing host and project capability; minimum sufficient implementation; a single canonical rule source; project-local operational constraints; adaptive multi-agent collaboration; truthful, layered verification; low-risk autonomous delivery; explicit approval for sensitive effects. Provide concise milestone reporting; do not gate on paperwork or per-stage owner confirmation.
+Goal-driven execution; phase-end GitHub Project milestone convergence; review-gated ADS submodule updates; environment-first reuse of existing host and project capability; remote-first verification with local-light execution; minimum sufficient implementation; a single canonical rule source; project-local operational constraints; adaptive multi-agent collaboration; truthful, layered verification; low-risk autonomous delivery; explicit approval for sensitive effects. Provide concise milestone reporting; do not gate on paperwork or per-stage owner confirmation.
 
 ## Migration and publication
 
-The v0.2 release baseline is tag `v0.2` (merged PRs #2 and #5); this branch is an unreleased v0.3 development candidate that adds environment-first guidance without changing v0.2 semantics. Validate in isolated KIRARI and AiringCal trials before any v0.3 release. Those projects do not adopt ADS merely because this repository is updated.
+The v0.2 release baseline is tag `v0.2` (merged PRs #2 and #5); this branch is an unreleased v0.3 development candidate that adds environment-first and remote-first verification guidance without changing v0.2 semantics. Validate in isolated KIRARI and AiringCal trials before any v0.3 release. Those projects do not adopt ADS merely because this repository is updated.

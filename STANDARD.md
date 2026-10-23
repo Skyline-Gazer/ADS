@@ -1,6 +1,6 @@
 # ADS Development Standard
 
-Version: **0.3 candidate**. Not automatically adopted by any project. The v0.2 release remains the tag `v0.2`; this candidate adds environment-first guidance without changing v0.2 semantics.
+Version: **0.3 candidate**. Not automatically adopted by any project. The v0.2 release remains the tag `v0.2`; this candidate adds environment-first and remote-first verification guidance without changing v0.2 semantics.
 
 ## Priority and inheritance
 
@@ -13,6 +13,10 @@ Before choosing how to build, test or integrate, check what the host and the pro
 Keep that scan proportional: one short read-only check for ordinary tasks; deeper investigation only for a first bootstrap, a host migration, an expensive integration or known drift. Reuse the findings for the rest of the session and re-verify stale assumptions rather than maintaining an inventory database or a mandatory discovery phase.
 
 Probe with availability checks, versions, file metadata and repository scripts. Do not print environment variable values, tokens or credential-bearing configuration, and do not change global host settings to make a check pass. Report states distinctly: **installed**, **configured** and actually **verified**. When a capability is absent or unverified, take the smallest documented fallback or report the real blocker; never replace a required live integration with a mock. Disclosing probe commands must not appear in shipped code blocks — including as negative examples or inside comments — because the repository documentation check rejects them; state the prohibition in prose instead.
+
+## Remote-first verification, local-light by default
+
+When an existing hosted CI or target-platform preview can credibly verify the changed behavior, prefer it over creating or maintaining a full local environment for each project. Use the project's existing GitHub Actions first for automated checks, then an isolated Cloudflare Workers/Vercel preview or equivalent only when target-runtime behavior needs live validation. Keep local checks optional and lightweight; reuse already-installed tools rather than provisioning a duplicate local stack. Never use production data or bindings for routine tests, and never claim hosted/runtime verification from a local mock. If remote capability is unavailable, report the blocker and use the smallest useful existing local fallback without silently creating persistent infrastructure. Start CI early and continue independent work while it runs. See [QUALITY.md](QUALITY.md) and [scenarios/remote-first-verification.md](scenarios/remote-first-verification.md).
 
 ## Agent-native goal execution
 
