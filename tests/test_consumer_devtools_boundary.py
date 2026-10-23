@@ -81,6 +81,31 @@ class ConsumerDevtoolsBoundaryTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertIn(".codex/config.toml", result.stderr)
 
+    def test_tool_specific_gitignore_rules_fail_on_main(self):
+        self.write(".gitignore", ".codegraph/\n")
+        result = self.run_guard()
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("tool-specific generated-data ignore rules", result.stderr)
+
+    def test_custom_production_branch_can_be_selected(self):
+        self.write(".ads-devtools.json", '{"version_policy":"latest-stable"}')
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--root",
+                str(self.root),
+                "--target-branch",
+                "production",
+                "--production-branch",
+                "production",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 1)
+
 
 if __name__ == "__main__":
     unittest.main()
