@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Read-only latest-stable preflight for a consumer project's development checkout.
+"""Read-only latest-stable check for a consumer project's development checkout.
 
 Copy this file to the consumer repository's scripts/ directory. It never installs
-or upgrades software and never modifies host configuration.
+or upgrades software and never modifies host configuration. RTK host integration
+still requires a separate smoke test through the active agent.
 """
 from __future__ import annotations
 
@@ -64,12 +65,16 @@ def main() -> int:
     parser.add_argument("--allow-production-checkout", action="store_true")
     args = parser.parse_args()
 
-    branch = subprocess.run(
+    branch_result = subprocess.run(
         ["git", "branch", "--show-current"],
         check=False,
         capture_output=True,
         text=True,
-    ).stdout.strip()
+    )
+    branch = branch_result.stdout.strip()
+    if branch_result.returncode != 0 or not branch:
+        print("BLOCKED: cannot prove this is a development-branch checkout.", file=sys.stderr)
+        return 2
     if branch == args.production_branch and not args.allow_production_checkout:
         print(f"BLOCKED: run consumer tool initialization from a development branch, not {branch}.", file=sys.stderr)
         return 2
@@ -77,20 +82,23 @@ def main() -> int:
     failed = False
     for name, (command, repo) in UPSTREAMS.items():
         try:
-            installed, executable = installed_version(command)
-        except FileNotFoundError as exc:
-            print(f"{name}: MISSING — {exc}. Ask the user before installing.")
-            failed = True
-            continue
-        except (OSError, ValueError, RuntimeError, subprocess.TimeoutExpired) as exc:
-            print(f"{name}: UNVERIFIED — {exc}")
+            latest, release_url = latest_stable(repo)
+        except (OSError, ValueError, urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
+            print(f"{name}: UPSTREAM_UNVERIFIED — official latest stable release unavailable: {exc}")
             failed = True
             continue
 
         try:
-            latest, release_url = latest_stable(repo)
-        except (OSError, ValueError, urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
-            print(f"{name}: UPSTREAM_UNVERIFIED — installed={installed}, executable={executable}, reason={exc}")
+            installed, executable = installed_version(command)
+        except FileNotFoundError:
+            print(
+                f"{name}: MISSING — latest stable={latest}, release={release_url}. "
+                "Ask the user before installing."
+            )
+            failed = True
+            continue
+        except (OSError, ValueError, RuntimeError, subprocess.TimeoutExpired) as exc:
+            print(f"{name}: UNVERIFIED — latest stable={latest}, release={release_url}, reason={exc}")
             failed = True
             continue
 
@@ -101,6 +109,24 @@ def main() -> int:
         )
         if freshness != "LATEST":
             failed = True
+            continue
+
+        if name == "codegraph":
+            status = subprocess.run(
+                [executable, "status"],
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=15,
+            )
+            if status.returncode != 0:
+                print(f"codegraph project index: NEEDS_INIT_OR_SYNC — status exit={status.returncode}")
+                failed = True
+            else:
+                print("codegraph project index: STATUS_COMMAND_PASS — inspect status output before relying on the graph")
+
+        if name == "rtk":
+            print("rtk host integration: REQUIRED_SEPARATE_SMOKE_TEST — this script verifies the binary version only")
 
     return 1 if failed else 0
 
