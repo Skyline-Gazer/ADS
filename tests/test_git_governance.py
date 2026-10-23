@@ -1,4 +1,5 @@
 import unittest
+from pathlib import Path
 
 from scripts.check_git_governance import validate_pull_request
 
@@ -54,6 +55,12 @@ class GitGovernanceTests(unittest.TestCase):
 
     def test_missing_pull_request_payload_is_rejected(self):
         self.assertTrue(validate_pull_request({}))
+
+    def test_consumer_template_checker_matches_canonical_checker(self):
+        root = Path(__file__).resolve().parents[1]
+        canonical = (root / "scripts" / "check_git_governance.py").read_text(encoding="utf-8")
+        template = (root / "templates" / "git-governance" / "check_git_governance.py").read_text(encoding="utf-8")
+        self.assertEqual(template, canonical)
 
 
 if __name__ == "__main__":
