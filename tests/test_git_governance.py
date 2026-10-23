@@ -76,7 +76,7 @@ class GitGovernanceTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         policy = (root / "docs" / "git-governance.md").read_text(encoding="utf-8")
         self.assertIn("scripts/ensure_branch_protection.py", policy)
-        self.assertIn("A `403` means the state could not be inspected", policy)
+        self.assertIn("a `403` means the state could not be inspected", policy)
         self.assertIn("does not create branches or change the default branch", policy)
         for relative in ("skills/adopt/SKILL.md", "skills/bootstrap/SKILL.md", "templates/AGENTS.md", "docs/agent-adoption.md", "templates/git-governance/README.md"):
             content = (root / relative).read_text(encoding="utf-8")
