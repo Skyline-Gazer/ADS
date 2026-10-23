@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "policy": "required",
+  "version_policy": "latest-stable",
+  "production_branch": "main",
+  "development_branches": ["dev", "feat/*", "fix/*", "chore/*"],
+  "tools": {
+    "codegraph": {
+      "required": true,
+      "upstream": "andysom25/codegraph",
+      "version_policy": "latest-stable",
+      "initialize_command": "codegraph init",
+      "after_source_change": ["codegraph sync", "codegraph status"]
+    },
+    "rtk": {
+      "required": true,
+      "edition": "full",
+      "upstream": "rtk-ai/rtk",
+      "version_policy": "latest-stable",
+      "verify_binary": "rtk --version",
+      "verify_host_integration": true
+    }
+  },
+  "dev_only_paths": []
+}
