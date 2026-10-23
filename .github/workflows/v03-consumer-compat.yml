@@ -1,0 +1,105 @@
+name: v0.3 isolated consumer compatibility
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/v03-consumer-compat.yml'
+      - 'docs/releases/v0.3.md'
+      - 'STANDARD.md'
+      - 'SAFETY.md'
+      - 'QUALITY.md'
+      - 'templates/AGENTS.md'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/v03-consumer-compat.yml'
+      - 'docs/releases/v0.3.md'
+      - 'STANDARD.md'
+      - 'SAFETY.md'
+      - 'QUALITY.md'
+      - 'templates/AGENTS.md'
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  isolated-consumer:
+    name: Isolated consumer / ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: KIRARI
+            repository: markd3ng/KIRARI
+            commit: 60691880f04ae8d36ef49f710edea09a89075514
+          - name: AiringCal
+            repository: Skyline-Gazer/AiringCal
+            commit: 72ebdcf422e4f4e50dbb03dc9aef449a2cfcfc48
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Exercise v0.2 → candidate → rollback in an isolated copy
+        shell: bash
+        env:
+          CONSUMER: ${{ matrix.repository }}
+          CONSUMER_SHA: ${{ matrix.commit }}
+          OLD_PIN: ed4a6118254dfa88b7ba957d8ffb4e2b2b3c0b2f
+        run: |
+          set -euo pipefail
+          candidate="$(git rev-parse HEAD)"
+          base="$RUNNER_TEMP/ads-consumer-${{ matrix.name }}"
+          mkdir -p "$base"
+          git clone -q --no-checkout --depth 1 "https://github.com/$CONSUMER.git" "$base/consumer"
+          git -C "$base/consumer" fetch -q --depth 1 origin "$CONSUMER_SHA"
+          git -C "$base/consumer" checkout -q --detach "$CONSUMER_SHA"
+          test "$(git -C "$base/consumer" rev-parse HEAD)" = "$CONSUMER_SHA"
+          test -f "$base/consumer/AGENTS.md"
+          test ! -e "$base/consumer/.ads"
+          test ! -e "$base/consumer/.gitmodules"
+          cp "$base/consumer/AGENTS.md" "$base/original-AGENTS.md"
+
+          # Overlay guidance only in the temporary clone, preserving every
+          # original consumer instruction and never pushing to that repository.
+          {
+            printf '# Isolated ADS compatibility trial\n'
+            printf 'Use pinned .ads/STANDARD.md, SAFETY.md and QUALITY.md.\n'
+            printf 'The original consumer constraints below remain authoritative.\n\n'
+            cat "$base/original-AGENTS.md"
+          } > "$base/consumer/AGENTS.md"
+          size="$(wc -c < "$base/original-AGENTS.md")"
+          tail -c "$size" "$base/consumer/AGENTS.md" | cmp - "$base/original-AGENTS.md"
+
+          git -C "$base/consumer" -c protocol.file.allow=always submodule add -q "$GITHUB_WORKSPACE" .ads
+          git -C "$base/consumer/.ads" checkout -q "$OLD_PIN"
+          git -C "$base/consumer" add .gitmodules .ads AGENTS.md
+          git -C "$base/consumer" -c user.name='ADS CI Fixture' -c user.email='ads-ci@example.invalid' commit -qm 'test: isolated v0.2 adoption'
+          git -c protocol.file.allow=always clone -q --recurse-submodules "$base/consumer" "$base/replay-v02"
+          test "$(git -C "$base/replay-v02" rev-parse HEAD:.ads)" = "$OLD_PIN"
+          test "$(git -C "$base/replay-v02/.ads" rev-parse HEAD)" = "$OLD_PIN"
+
+          git -C "$base/consumer/.ads" checkout -q "$candidate"
+          git -C "$base/consumer" add .ads
+          git -C "$base/consumer" -c user.name='ADS CI Fixture' -c user.email='ads-ci@example.invalid' commit -qm 'test: isolated candidate upgrade'
+          git -c protocol.file.allow=always clone -q "$base/consumer" "$base/replay-candidate"
+          git -C "$base/replay-candidate" -c protocol.file.allow=always submodule update --init
+          test "$(git -C "$base/replay-candidate" rev-parse HEAD:.ads)" = "$candidate"
+          test "$(git -C "$base/replay-candidate/.ads" rev-parse HEAD)" = "$candidate"
+          test -f "$base/replay-candidate/.ads/skills/adopt/SKILL.md"
+          test -f "$base/replay-candidate/.ads/skills/deliver/SKILL.md"
+          test -f "$base/replay-candidate/.ads/scenarios/remote-first-verification.md"
+          test -f "$base/replay-candidate/AGENTS.md"
+          git -C "$base/replay-candidate" status --short
+
+          git -C "$base/consumer/.ads" checkout -q "$OLD_PIN"
+          git -C "$base/consumer" add .ads
+          git -C "$base/consumer" -c user.name='ADS CI Fixture' -c user.email='ads-ci@example.invalid' commit -qm 'test: isolated rollback to v0.2'
+          git -c protocol.file.allow=always clone -q --recurse-submodules "$base/consumer" "$base/replay-rollback"
+          test "$(git -C "$base/replay-rollback" rev-parse HEAD:.ads)" = "$OLD_PIN"
+          test "$(git -C "$base/replay-rollback/.ads" rev-parse HEAD)" = "$OLD_PIN"
+          printf 'PASS consumer=%s source=%s candidate=%s old=%s (local-source isolation only)\n' "$CONSUMER" "$CONSUMER_SHA" "$candidate" "$OLD_PIN"
