@@ -22,6 +22,7 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 - [profiles/](profiles/): optional stack hints, not mandatory architectures.
 - [scenarios/](scenarios/): acceptance scenarios.
 - [docs/how-to-update.md](docs/how-to-update.md): AI-native submodule-first adoption, update triggers, review and rollback.
+- [docs/consumer-devtools.md](docs/consumer-devtools.md): mandatory latest-stable CodeGraph + full RTK policy for **ADS consumer projects only**; development-branch-only integration and production-main exclusion.
 - [docs/native-subagent-safety.md](docs/native-subagent-safety.md): verified child permission ceilings, command/file-system containment and lifecycle preflight; preserves observed host failures.
 - [docs/milestone-reconciliation.md](docs/milestone-reconciliation.md): Phase-end GitHub Project/Issue/PR/CI drift convergence.
 - [docs/agent-adoption.md](docs/agent-adoption.md): practical, pinned adoption and skill discovery.
@@ -31,7 +32,7 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 - [scenarios/v0.3-subagent-model-matrix.md](scenarios/v0.3-subagent-model-matrix.md): controlled host/model/serial-vs-parallel matrix, workload sizing and budgeted independent safety validation (new runs NOT TESTED).
 - [scenarios/subagent-permission-containment.md](scenarios/subagent-permission-containment.md): isolated negative read/write/escape/permission-inheritance test (OpenCode 2.0.32: default/broad UNSAFE; narrow exact-path scoped pass; model matrix NOT RUN).
 - [scenarios/phase-milestone-reconciliation.md](scenarios/phase-milestone-reconciliation.md): Phase closure and drift acceptance protocol (live Project not tested).
-- [scenarios/submodule-update.md](scenarios/submodule-update.md): consumer adoption/update/rollback acceptance protocol (live consumer not tested).
+- [scenarios/submodule-update.md](scenarios/submodule-update.md): consumer adoption/update/rollback acceptance protocol.
 - [scenarios/environment-first.md](scenarios/environment-first.md): environment-first probe, local reuse and fallback evidence.
 - [scenarios/remote-first-verification.md](scenarios/remote-first-verification.md): remote-first verification with autonomous in-scope provisioning, exact user-action escalation, local-light fallback and evidence labels.
 - [scenarios/v0.3-omp-acceptance.md](scenarios/v0.3-omp-acceptance.md): OMP 18.11.3 v0.3 acceptance archive.
@@ -44,8 +45,4 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 
 ## Design principles
 
-Goal-driven execution; phase-end GitHub Project milestone convergence; review-gated ADS submodule updates; environment-first reuse of existing host and project capability; remote-first verification with local-light execution; minimum sufficient implementation; a single canonical rule source; project-local operational constraints; adaptive multi-agent collaboration; truthful, layered verification; low-risk autonomous delivery; explicit approval for sensitive effects. Provide concise milestone reporting; do not gate on paperwork or per-stage owner confirmation.
-
-## Migration and publication
-
-The v0.2 release baseline is tag `v0.2` (merged PRs #2 and #5); v0.3 is in release-candidate closeout. Isolated GitHub Actions KIRARI/AiringCal compatibility and *real private* ADS Submodule consumer CI are separate release gates listed in [the v0.3 release decision](docs/releases/v0.3.md). Those projects do not adopt ADS merely because this repository is updated.
+Goal-driven execution; phase-end GitHub Project milestone convergence; review-gated ADS submodule updates; remote-first verification; least-privilege authorization; and evidence-based acceptance.
