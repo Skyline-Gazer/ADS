@@ -15,11 +15,14 @@ class ConsumerDevToolchainPolicyTests(unittest.TestCase):
         self.assertIn("development branch", policy)
         self.assertIn("production", policy)
 
-    def test_codegraph_sync_and_status_are_mandatory(self):
+    def test_codegraph_lifecycle_prefers_auto_sync_and_checks_freshness(self):
         policy = (ROOT / "docs" / "consumer-dev-toolchain.md").read_text(encoding="utf-8")
         self.assertIn("codegraph sync", policy)
         self.assertIn("codegraph status", policy)
-        self.assertIn("A file watcher is useful but does not replace the ADS checkpoint.", policy)
+        self.assertIn("native file watcher/auto-sync", policy)
+        self.assertIn("Do not run `codegraph sync` after every source edit", policy)
+        self.assertIn("Each independently indexed Git worktree must have its own index.", policy)
+        self.assertIn("full reindexing", policy)
 
     def test_bootstrap_and_adopt_skills_reference_policy(self):
         for relative in ("skills/bootstrap/SKILL.md", "skills/adopt/SKILL.md"):
