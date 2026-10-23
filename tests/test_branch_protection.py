@@ -99,7 +99,7 @@ class BranchProtectionTests(unittest.TestCase):
         with patch("scripts.ensure_branch_protection.api_json", side_effect=[{"name": "dev"}, protection]) as api:
             ensure_branch("owner/repo", "dev", ["branch-policy"])
         self.assertEqual(api.call_count, 2)
-        self.assertFalse(any("PUT" in call.args[0] for call in api.call_args_list))
+        self.assertFalse(any(call.kwargs.get("method") == "PUT" for call in api.call_args_list))
 
     def test_not_found_detection_does_not_treat_forbidden_as_missing(self):
         self.assertTrue(is_not_found_error("gh: Not Found (HTTP 404)"))
