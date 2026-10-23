@@ -54,7 +54,11 @@ def violations(root: Path) -> list[str]:
     if manifest_path.is_file():
         found.append(".ads-devtools.json: consumer developer-tool manifest is forbidden on production")
         try:
-            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            loaded = json.loads(manifest_path.read_text(encoding="utf-8"))
+            if isinstance(loaded, dict):
+                manifest = loaded
+            else:
+                found.append(".ads-devtools.json: manifest root must be a JSON object")
         except (OSError, json.JSONDecodeError) as exc:
             found.append(f".ads-devtools.json: cannot parse dev-only path declarations: {exc}")
 
@@ -74,7 +78,11 @@ def violations(root: Path) -> list[str]:
             if TOOL_MARKER.search(text) and INTEGRATION_MARKER.search(text):
                 found.append(f"{rel_posix}: appears to contain CodeGraph/RTK host integration")
 
-    for declared in manifest.get("dev_only_paths", []):
+    declared_paths = manifest.get("dev_only_paths", [])
+    if not isinstance(declared_paths, list):
+        found.append(".ads-devtools.json: dev_only_paths must be a JSON array")
+        declared_paths = []
+    for declared in declared_paths:
         if not isinstance(declared, str) or not declared:
             found.append(".ads-devtools.json: dev_only_paths must contain non-empty relative paths")
             continue
@@ -90,20 +98,27 @@ def violations(root: Path) -> list[str]:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=Path.cwd())
-    parser.add_argument("--target-branch", required=True, help="production branch or PR base branch")
+    parser.add_argument("--target-branch", required=True, help="PR base branch or push branch")
+    parser.add_argument("--production-branch", default="main")
     args = parser.parse_args()
     root = args.root.resolve()
 
-    if args.target_branch != "main":
-        print(f"PASS/SKIP: {args.target_branch!r} is not the configured production branch 'main'; dev-only integration may remain here.")
+    if args.target_branch != args.production_branch:
+        print(
+            f"PASS/SKIP: target {args.target_branch!r} is not the configured production branch "
+            f"{args.production_branch!r}; development-only integration may remain here."
+        )
         return 0
 
     problems = violations(root)
     if problems:
-        print("FAIL: consumer CodeGraph/RTK configuration or artifacts would enter production main:", file=sys.stderr)
+        print(
+            f"FAIL: consumer CodeGraph/RTK configuration or artifacts would enter production {args.production_branch}:",
+            file=sys.stderr,
+        )
         print("\n".join(f"- {item}" for item in problems), file=sys.stderr)
         return 1
-    print("PASS: no known consumer CodeGraph/RTK integration or generated artifact in production main.")
+    print(f"PASS: no known consumer CodeGraph/RTK integration or generated artifact in production {args.production_branch}.")
     return 0
 
 
