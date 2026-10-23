@@ -1,6 +1,6 @@
 ## Issue
 
-Refs #123
+<!-- Required: replace this comment with a real Issue reference, e.g. `Refs #123` or `Closes #123`. -->
 
 ## Change summary
 
