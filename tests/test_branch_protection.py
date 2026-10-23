@@ -1,8 +1,12 @@
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from scripts.ensure_branch_protection import (
+    GhError,
     build_protection_payload,
+    ensure_branch,
+    get_protection,
     is_compliant,
     is_not_found_error,
 )
@@ -78,6 +82,24 @@ class BranchProtectionTests(unittest.TestCase):
         self.assertFalse(payload["allow_force_pushes"])
         self.assertFalse(payload["allow_deletions"])
         self.assertTrue(payload["required_linear_history"])
+
+    def test_403_is_not_treated_as_missing_protection(self):
+        with patch("scripts.ensure_branch_protection.api_json", side_effect=GhError("HTTP 403: Resource not accessible by integration")):
+            with self.assertRaisesRegex(GhError, "Do not assume the branch is unprotected"):
+                get_protection("owner/repo", "dev")
+
+    def test_compliant_protection_is_idempotent(self):
+        protection = {
+            "required_status_checks": {"strict": True, "contexts": ["branch-policy"]},
+            "enforce_admins": {"enabled": True},
+            "required_pull_request_reviews": {"required_approving_review_count": 0, "dismiss_stale_reviews": True},
+            "allow_force_pushes": {"enabled": False},
+            "allow_deletions": {"enabled": False},
+        }
+        with patch("scripts.ensure_branch_protection.api_json", side_effect=[{"name": "dev"}, protection]) as api:
+            ensure_branch("owner/repo", "dev", ["branch-policy"])
+        self.assertEqual(api.call_count, 2)
+        self.assertFalse(any("PUT" in call.args[0] for call in api.call_args_list))
 
     def test_not_found_detection_does_not_treat_forbidden_as_missing(self):
         self.assertTrue(is_not_found_error("gh: Not Found (HTTP 404)"))
