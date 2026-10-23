@@ -78,7 +78,7 @@ class ConsumerDevtoolsPreflightTests(TestCase):
         ) as latest:
             error = io.StringIO()
             with contextlib.redirect_stderr(error):
-                result = MODULE.main()
+                result = MODULE.main([])
         self.assertEqual(result, 2)
         self.assertIn("development branch", error.getvalue())
         latest.assert_not_called()
