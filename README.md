@@ -1,6 +1,6 @@
 # ADS — Agent Development Standard
 
-**Status:** v0.3 development candidate (not released or adopted). v0.2 is released at tag `v0.2`.
+**Status:** v0.3 release-candidate closeout (not yet released or adopted). v0.2 is released at tag `v0.2`. See [v0.3 release gates and limitations](docs/releases/v0.3.md).
 
 ADS is an agent-native, minimal-ceremony development standard for personal software projects. It reuses the coding agent, GitHub and the host platform rather than introducing a CLI, approval engine, task database, orchestrator or deployment controller.
 
@@ -48,4 +48,4 @@ Goal-driven execution; phase-end GitHub Project milestone convergence; review-ga
 
 ## Migration and publication
 
-The v0.2 release baseline is tag `v0.2` (merged PRs #2 and #5); this branch is an unreleased v0.3 development candidate that adds environment-first and remote-first verification guidance without changing v0.2 semantics. Validate in isolated KIRARI and AiringCal trials before any v0.3 release. Those projects do not adopt ADS merely because this repository is updated.
+The v0.2 release baseline is tag `v0.2` (merged PRs #2 and #5); v0.3 is in release-candidate closeout. Isolated GitHub Actions KIRARI/AiringCal compatibility and *real private* ADS Submodule consumer CI are separate release gates listed in [the v0.3 release decision](docs/releases/v0.3.md). Those projects do not adopt ADS merely because this repository is updated.
