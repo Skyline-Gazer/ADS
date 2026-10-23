@@ -41,8 +41,6 @@ def installed_version(command: str) -> tuple[str, str]:
     executable = shutil.which(command)
     if not executable:
         raise FileNotFoundError(f"{command} is not installed")
-    if command == "rtk" and Path(executable).resolve().name.lower() in {"rtk-oss", "rtk-oss.exe"}:
-        raise ValueError("the resolved executable is rtk-oss; full RTK is required")
     result = subprocess.run(
         [executable, "--version"],
         check=False,
@@ -57,6 +55,28 @@ def installed_version(command: str) -> tuple[str, str]:
     if not match:
         raise ValueError(f"could not parse version from {command} --version output")
     return match.group(1), executable
+
+
+def verify_full_rtk_edition() -> tuple[str, str]:
+    """Use package metadata where possible; both RTK editions share the same binary name."""
+    brew = shutil.which("brew")
+    if brew:
+        full = subprocess.run(
+            [brew, "list", "--versions", "rtk"], capture_output=True, text=True, check=False, timeout=8
+        )
+        oss = subprocess.run(
+            [brew, "list", "--versions", "rtk-oss"], capture_output=True, text=True, check=False, timeout=8
+        )
+        if full.returncode == 0 and oss.returncode != 0:
+            return "VERIFIED", "Homebrew package metadata identifies formula rtk (not rtk-oss)"
+        if oss.returncode == 0:
+            return "FAIL", "Homebrew package metadata identifies rtk-oss; full RTK is required"
+        if full.returncode == 0 and oss.returncode == 0:
+            return "FAIL", "both RTK editions appear installed; the upstream packages conflict"
+    return (
+        "UNVERIFIED",
+        "the full and OSS editions share the binary name; verify package/install provenance or obtain permission to install the full edition",
+    )
 
 
 def main() -> int:
@@ -112,20 +132,29 @@ def main() -> int:
             continue
 
         if name == "codegraph":
-            status = subprocess.run(
-                [executable, "status"],
-                check=False,
-                capture_output=True,
-                text=True,
-                timeout=15,
-            )
-            if status.returncode != 0:
-                print(f"codegraph project index: NEEDS_INIT_OR_SYNC — status exit={status.returncode}")
+            try:
+                status = subprocess.run(
+                    [executable, "status"],
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                    timeout=15,
+                )
+            except (OSError, subprocess.TimeoutExpired) as exc:
+                print(f"codegraph project index: UNVERIFIED — {exc}")
                 failed = True
             else:
-                print("codegraph project index: STATUS_COMMAND_PASS — inspect status output before relying on the graph")
+                if status.returncode != 0:
+                    print(f"codegraph project index: NEEDS_INIT_OR_SYNC — status exit={status.returncode}")
+                    failed = True
+                else:
+                    print("codegraph project index: STATUS_COMMAND_PASS — inspect status output before relying on the graph")
 
         if name == "rtk":
+            edition, reason = verify_full_rtk_edition()
+            print(f"rtk edition: {edition} — {reason}")
+            if edition != "VERIFIED":
+                failed = True
             print("rtk host integration: REQUIRED_SEPARATE_SMOKE_TEST — this script verifies the binary version only")
 
     return 1 if failed else 0
