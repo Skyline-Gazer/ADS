@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/v03-consumer-compat.yml'
       - 'docs/releases/v0.3.md'
+      - '.github/workflows/release-v03.yml'
       - 'STANDARD.md'
       - 'SAFETY.md'
       - 'QUALITY.md'
