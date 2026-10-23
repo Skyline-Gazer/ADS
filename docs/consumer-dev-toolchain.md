@@ -70,6 +70,7 @@ The manifest is intentionally absent from production `main`. A production-bounda
 - Each independently indexed Git worktree must have its own index. Never share one mutable CodeGraph index between distinct worktrees, and verify MCP is bound to the current worktree rather than a stale checkout.
 - Use full reindexing only for initial construction, indexing-configuration changes that require it, corruption recovery, or another documented upstream requirement. Do not schedule or trigger a full rebuild for ordinary source edits.
 - Keep generated index/database/cache files untracked and ignored. CodeGraph's current upstream README documents `.codegraph/` as its per-project generated index directory; use the [development-only ignore snippet](../templates/consumer-devtools/gitignore.append) on the consumer development branch. Verify any additional generated paths against the installed latest version before adding them.
+
 ## Full RTK initialization and verification
 
 - If the `rtk` executable is absent, ask permission before installation. Do not silently install `rtk-oss` as a substitute.
