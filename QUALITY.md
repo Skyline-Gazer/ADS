@@ -10,6 +10,14 @@ Reuse the project's existing runtimes, declared test commands, fixtures and cach
 
 Keep evidence classes distinct and report the one actually performed: local deterministic tests, reuse of an existing test facility, isolated live exercise against real dependencies and production validation are not interchangeable. Reusing a local facility never stands in for an unperformed live integration, and a missing capability is a stated boundary rather than an implicit pass.
 
+## Remote-first execution and verification
+
+For projects with existing hosted CI, make that CI the primary authoritative automated check instead of requiring every agent session to recreate the full test environment locally. Use isolated target-platform preview/staging environments only when the changed behavior depends on the real runtime, bindings or external integration. Keep quick local checks optional; reuse an already-installed facility and do not provision a persistent per-project local stack by default.
+
+Choose checks by changed behavior and cost, not by an assumption that every test must run remotely. A remote CI pass does not prove an unexercised target-platform integration; a preview deployment does not prove production behavior; a local mock does not prove a live dependency. Keep commit SHA, workflow run, deployment revision, test data boundary and cleanup evidence traceable. Use synthetic data and least-privilege credentials, preserve required gates, and never run destructive tests against production by default. If remote access or platform capability is unavailable, state the exact blocker and use only the smallest useful fallback already available; do not invent evidence or silently create long-lived infrastructure. Start CI early and work on independent tasks while it runs to reduce perceived latency.
+
+See [scenarios/remote-first-verification.md](scenarios/remote-first-verification.md) for decision order and acceptance cases.
+
 ## Multi-agent integration and efficiency evidence
 
 A child agent's summary, self-tested branch or reviewer finding is input to the main agent, not final verification. The main agent checks the combined diff, re-runs affected contract/integration checks after merging independent changes and reports skipped or unavailable checks. A delegated security review cannot widen authorization, and an AI-only review is not a substitute for deterministic CI. Before accepting safety claims for native Subagents, verify actual child read/edit/shell permissions, canonical path and absolute-path escape containment, and lifecycle waiting with the [targeted negative oracle](scenarios/subagent-permission-containment.md). Independent passing application tests do not erase an observed forbidden read or write. Worktrees alone do not prove containment; missing tool/OS restrictions are reported as unsafe or unverified.
