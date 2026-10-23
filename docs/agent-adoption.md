@@ -2,6 +2,10 @@
 
 ADS is not a daemon, CLI or centralized policy delivery service. A file existing in ADS does not make the host agent automatically discover it.
 
+## Mandatory Git workflow
+
+Before ordinary work, apply the [mandatory Git governance policy](git-governance.md). The consumer must have a `dev` integration branch; create it through a reviewable migration if absent. Every feature/fix/chore/docs/refactor/test/CI task starts from the latest `dev`, references an Issue, and is delivered by a PR to `dev`. Production changes use a separate release PR; emergency fixes are developed from `dev` and selectively backported as the same reviewed change. Inspect PR checks and server-side branch protection independently; a workflow alone does not prevent direct pushes. Existing consumers are migrated through scoped PRs, not silently rewritten.
+
 ## Pin and make guidance accessible
 
 1. Pick an approved ADS release or immutable full commit SHA.
