@@ -16,7 +16,7 @@ class BranchProtectionTests(unittest.TestCase):
         protection = {
             "required_status_checks": {"strict": True, "checks": [{"context": "branch-policy", "app_id": None}]},
             "enforce_admins": {"enabled": True},
-            "required_pull_request_reviews": {"required_approving_review_count": 0},
+            "required_pull_request_reviews": {"required_approving_review_count": 0, "dismiss_stale_reviews": True},
             "allow_force_pushes": {"enabled": False},
             "allow_deletions": {"enabled": False},
         }
@@ -76,7 +76,7 @@ class BranchProtectionTests(unittest.TestCase):
         self.assertEqual(payload["restrictions"]["users"], ["release-bot"])
         self.assertFalse(payload["allow_force_pushes"])
         self.assertFalse(payload["allow_deletions"])
-        self.assertTrue(payload["required_linear_history"]["enabled"])
+        self.assertTrue(payload["required_linear_history"])
 
     def test_not_found_detection_does_not_treat_forbidden_as_missing(self):
         self.assertTrue(is_not_found_error("gh: Not Found (HTTP 404)"))
