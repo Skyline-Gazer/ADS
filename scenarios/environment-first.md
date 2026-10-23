@@ -2,7 +2,7 @@
 
 **Status:** PARTIALLY RUN on one host (OMP 18.11.3, macOS arm64, 2026-10-17). Proportional probe, fresh isolated reuse task, repeat recheck, missing-capability fallback and probe-disclosure regression were executed. Other hosts and clean-machine bootstrap remain NOT TESTED.
 
-This is the compact optional example for the [STANDARD.md](../STANDARD.md) "Environment first, reuse first" principle and the [QUALITY.md](../QUALITY.md) "Environment and verification reuse" section. It intentionally creates no inventory artifact, CLI, daemon, state store or mandatory phase.
+This is the compact optional example for the [STANDARD.md](../STANDARD.md) "Environment first, reuse first" principle and the [QUALITY.md](../QUALITY.md) "Environment and verification reuse" section. It intentionally creates no inventory artifact, CLI, daemon, state store or mandatory phase. Remote-first selection is specified separately in [remote-first-verification.md](remote-first-verification.md); the local-host evidence below does not claim remote CI or target-platform validation.
 
 ## One proportional probe
 
