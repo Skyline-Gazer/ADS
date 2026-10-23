@@ -33,7 +33,7 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 - [scenarios/phase-milestone-reconciliation.md](scenarios/phase-milestone-reconciliation.md): Phase closure and drift acceptance protocol (live Project not tested).
 - [scenarios/submodule-update.md](scenarios/submodule-update.md): consumer adoption/update/rollback acceptance protocol (live consumer not tested).
 - [scenarios/environment-first.md](scenarios/environment-first.md): environment-first probe, local reuse and fallback evidence.
-- [scenarios/remote-first-verification.md](scenarios/remote-first-verification.md): hosted CI-first, isolated serverless preview, local-light fallback, evidence labels and remote-verification acceptance cases.
+- [scenarios/remote-first-verification.md](scenarios/remote-first-verification.md): remote-first verification with autonomous in-scope provisioning, exact user-action escalation, local-light fallback and evidence labels.
 - [scenarios/v0.3-omp-acceptance.md](scenarios/v0.3-omp-acceptance.md): OMP 18.11.3 v0.3 acceptance archive.
 - [scenarios/v0.3-opencode-acceptance.md](scenarios/v0.3-opencode-acceptance.md): OpenCode v2.0.32 v0.3 acceptance archive.
 - [scenarios/v0.3-codex-acceptance.md](scenarios/v0.3-codex-acceptance.md): historical Codex CLI 0.163.0 first run, PARTIAL due to restored global-config drift.
