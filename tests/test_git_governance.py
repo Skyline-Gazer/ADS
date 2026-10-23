@@ -1,7 +1,10 @@
 import unittest
 from pathlib import Path
+from io import BytesIO
+from unittest.mock import patch
+import urllib.error
 
-from scripts.check_git_governance import validate_pull_request
+from scripts.check_git_governance import referenced_issue_numbers, validate_pull_request, verify_issue_references
 
 
 def event(base, head, body="Refs #123"):
@@ -66,6 +69,31 @@ class GitGovernanceTests(unittest.TestCase):
         canonical = (root / "scripts" / "check_git_governance.py").read_text(encoding="utf-8")
         template = (root / "templates" / "git-governance" / "check_git_governance.py").read_text(encoding="utf-8")
         self.assertEqual(template, canonical)
+
+    def test_issue_numbers_ignore_html_comments_and_deduplicate(self):
+        body = "Refs #45 and Closes #48\n<!-- placeholder: Refs #999 -->\nRefs #45"
+        self.assertEqual(referenced_issue_numbers(body), [45, 48])
+
+    def test_issue_reference_must_resolve_to_a_real_issue(self):
+        payload = b'{"number":48,"title":"Git governance"}'
+        with patch("scripts.check_git_governance.urllib.request.urlopen", return_value=BytesIO(payload)):
+            errors, verified = verify_issue_references("Refs #48", "Skyline-Gazer/ADS", "test-token")
+        self.assertTrue(verified)
+        self.assertEqual(errors, [])
+
+    def test_pull_request_reference_is_not_accepted_as_an_issue(self):
+        payload = b'{"number":49,"title":"PR","pull_request":{"url":"https://api.github.com/..."}}'
+        with patch("scripts.check_git_governance.urllib.request.urlopen", return_value=BytesIO(payload)):
+            errors, verified = verify_issue_references("Refs #49", "Skyline-Gazer/ADS", "test-token")
+        self.assertTrue(verified)
+        self.assertTrue(any("not an Issue" in error for error in errors))
+
+    def test_nonexistent_issue_is_rejected(self):
+        error = urllib.error.HTTPError("https://api.github.com/repos/Skyline-Gazer/ADS/issues/999", 404, "Not Found", {}, None)
+        with patch("scripts.check_git_governance.urllib.request.urlopen", side_effect=error):
+            errors, verified = verify_issue_references("Refs #999", "Skyline-Gazer/ADS", "test-token")
+        self.assertTrue(verified)
+        self.assertTrue(any("does not exist" in error for error in errors))
 
 
 if __name__ == "__main__":
