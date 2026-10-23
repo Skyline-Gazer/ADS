@@ -34,7 +34,7 @@ HOST_CONFIGS = {
 }
 TOOL_MARKER = re.compile(r"(?i)\b(?:codegraph|rtk(?:-oss)?)\b")
 INTEGRATION_MARKER = re.compile(r"(?i)\b(?:command|hooks?|mcp|plugin|executable|binary|wrapper|sync|init)\b")
-GITIGNORE_TOOL_PATTERN = re.compile(r"(?im)^\s*/?(?:\.codegraph|\.rtk|rtk(?:-oss)?)(?:/|\s|$|#)")
+GITIGNORE_TOOL_PATTERN = re.compile(r"(?im)^\s*/?(?:\.codegraph|\.rtk|codegraph(?:-index)?\.(?:db|sqlite3?)|rtk(?:-oss)?(?:\.exe)?)(?:/|\s|$|#)")
 SKIP_DIRS = {".git", ".ads", "node_modules", ".venv", "venv"}
 
 
