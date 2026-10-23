@@ -60,15 +60,16 @@ The template [`.ads-devtools.json.example`](../templates/consumer-devtools/.ads-
 
 The manifest is intentionally absent from production `main`. A production-boundary checker must reject the manifest itself and any existing path listed in `dev_only_paths`. If `.gitignore` is modified to ignore CodeGraph-generated data, that modification is also development-only and must be listed in `dev_only_paths`.
 
-## CodeGraph initialization and synchronization
+## CodeGraph initialization and freshness lifecycle
 
-- If the CodeGraph executable exists but the consumer project is not initialized, initialize it in the development checkout and verify its status. Do not ask the user to perform safe project-local initialization that the agent can do.
-- After each source-changing implementation batch, and after relevant checkout, merge, rebase, reset or branch-switch operations, explicitly run `codegraph sync`.
-- Then run `codegraph status` and confirm that the index is usable before relying on graph results for code review or impact analysis.
-- A file watcher is useful but does not replace the ADS checkpoint.
-- If sync/status fails or the graph is stale, mark graph-assisted analysis unavailable and use direct source inspection as a disclosed fallback; do not claim CodeGraph verification passed.
+- If the CodeGraph executable exists but the consumer project is not initialized, initialize it in the development checkout and verify that its index is usable. Do not ask the user to perform safe project-local initialization that the agent can do.
+- Prefer CodeGraph's native file watcher/auto-sync and connect-time reconciliation. Do not run `codegraph sync` after every source edit or every Git operation when automatic synchronization is healthy.
+- Before relying on graph-based navigation or impact analysis, verify the applicable index state with `codegraph status`, confirm that the monitor/sync path is healthy, and check that the active MCP session points to the correct checkout and index.
+- After a relevant source-changing batch or Git operation, ensure automatic synchronization has caught up before using graph results. If a query reports stale data, wait for reconciliation or read the affected source directly; do not treat stale graph results as authoritative.
+- Run explicit `codegraph sync` and then `codegraph status` when automatic sync is disabled/unhealthy, pending updates persist, a relevant checkout/merge/rebase/reset was not reconciled, or results are demonstrably inconsistent. If recovery fails, disclose that graph-assisted analysis is unavailable and fall back to direct source inspection.
+- Each independently indexed Git worktree must have its own index. Never share one mutable CodeGraph index between distinct worktrees, and verify MCP is bound to the current worktree rather than a stale checkout.
+- Use full reindexing only for initial construction, indexing-configuration changes that require it, corruption recovery, or another documented upstream requirement. Do not schedule or trigger a full rebuild for ordinary source edits.
 - Keep generated index/database/cache files untracked and ignored. CodeGraph's current upstream README documents `.codegraph/` as its per-project generated index directory; use the [development-only ignore snippet](../templates/consumer-devtools/gitignore.append) on the consumer development branch. Verify any additional generated paths against the installed latest version before adding them.
-
 ## Full RTK initialization and verification
 
 - If the `rtk` executable is absent, ask permission before installation. Do not silently install `rtk-oss` as a substitute.
