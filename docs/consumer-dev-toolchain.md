@@ -58,7 +58,7 @@ ADS itself may publish this normative document, Skills, generic templates, and p
 
 The template [`.ads-devtools.json.example`](../templates/consumer-devtools/.ads-devtools.json.example) is a starting point. Copy it to `.ads-devtools.json` **only on the consumer development branch**. It must declare the latest-stable policy rather than a fixed version. Populate `dev_only_paths` with the exact host configuration files that were modified for these tools.
 
-The manifest is intentionally absent from production `main`. A production-boundary checker must reject the manifest itself and any existing path listed in `dev_only_paths`.
+The manifest is intentionally absent from production `main`. A production-boundary checker must reject the manifest itself and any existing path listed in `dev_only_paths`. If `.gitignore` is modified to ignore CodeGraph-generated data, that modification is also development-only and must be listed in `dev_only_paths`.
 
 ## CodeGraph initialization and synchronization
 
@@ -67,7 +67,7 @@ The manifest is intentionally absent from production `main`. A production-bounda
 - Then run `codegraph status` and confirm that the index is usable before relying on graph results for code review or impact analysis.
 - A file watcher is useful but does not replace the ADS checkpoint.
 - If sync/status fails or the graph is stale, mark graph-assisted analysis unavailable and use direct source inspection as a disclosed fallback; do not claim CodeGraph verification passed.
-- Keep generated index/database/cache files untracked and ignored.
+- Keep generated index/database/cache files untracked and ignored. CodeGraph's current upstream README documents `.codegraph/` as its per-project generated index directory; use the [development-only ignore snippet](../templates/consumer-devtools/gitignore.append) on the consumer development branch. Verify any additional generated paths against the installed latest version before adding them.
 
 ## Full RTK initialization and verification
 
@@ -94,7 +94,7 @@ At adoption and before use, query current upstream releases and check local bina
 
 ## Licensing and evidence
 
-CodeGraph's upstream repository currently declares MIT; recheck upstream metadata during validation. Full RTK includes BUSL-1.1 and Apache-2.0 components; follow the current upstream terms and do not silently switch editions. This is implementation guidance, not a legal opinion.
+CodeGraph's upstream repository currently declares MIT; recheck upstream metadata during validation. Full RTK includes BUSL-1.1 and Apache-2.0 components; follow the current upstream terms and do not silently switch editions. The full and OSS editions use the same binary name, so `rtk --version` alone does not prove the edition. Verify package/install provenance (for example, Homebrew formula metadata) or mark the edition UNVERIFIED and request permission to install the full edition from its official source. This is implementation guidance, not a legal opinion.
 
 For each adoption, preserve concise evidence for:
 - upstream latest stable release and URL;
