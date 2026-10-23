@@ -11,4 +11,4 @@ These files help an ADS consumer apply the mandatory policy in [the canonical Gi
 5. Run the checker tests when adapting it, then verify the workflow on a real PR.
 6. Configure GitHub branch protection/Rulesets separately where the repository plan permits. The workflow reports PR policy violations; it does not prevent a user with write access from directly pushing to an unprotected branch.
 
-The check validates the PR's base, head branch type, and an explicit Issue reference in the PR body. It checks reference syntax; it does not claim to verify Issue existence or acceptance completion.
+The check validates the PR's base, head branch type, and an explicit Issue reference in the PR body. In GitHub Actions, the read-only token verifies that each referenced number resolves to an Issue in the same repository and rejects references that resolve to pull requests. Without a token/repository context, local invocation checks syntax only. Neither mode proves that the Issue's acceptance criteria are complete.
