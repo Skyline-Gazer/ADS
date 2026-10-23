@@ -56,19 +56,34 @@ def is_compliant(protection, required_checks):
     admins = protection.get('enforce_admins')
     if not (admins is True or (isinstance(admins, dict) and admins.get('enabled') is True)):
         return False
-    if not isinstance(protection.get('required_pull_request_reviews'), dict):
+    reviews = protection.get('required_pull_request_reviews')
+    if not isinstance(reviews, dict) or reviews.get('dismiss_stale_reviews') is not True:
         return False
     for key in ('allow_force_pushes', 'allow_deletions'):
         flag = protection.get(key)
-        if flag is True or (isinstance(flag, dict) and flag.get('enabled') is True):
+        if not (flag is False or (isinstance(flag, dict) and flag.get('enabled') is False)):
             return False
     return True
 
 
-def _strip_url(value):
+def _names_from_rule(value, key):
+    """Convert GET response objects to the string names accepted by the PUT API."""
+    items = (value or {}).get(key) or [] if isinstance(value, dict) else []
+    names = []
+    for item in items:
+        if isinstance(item, str):
+            names.append(item)
+        elif isinstance(item, dict):
+            name = item.get({'users': 'login', 'teams': 'slug', 'apps': 'slug'}[key])
+            if name:
+                names.append(name)
+    return names
+
+
+def _normalize_rule(value):
     if not isinstance(value, dict):
         return value
-    return {key: item for key, item in value.items() if key != 'url'}
+    return {key: _names_from_rule(value, key) for key in ('users', 'teams', 'apps')}
 
 
 def build_protection_payload(existing, required_checks):
@@ -78,15 +93,15 @@ def build_protection_payload(existing, required_checks):
     check_by_context = {}
     for item in old_status.get('checks') or []:
         if isinstance(item, dict) and item.get('context'):
-            check_by_context[item['context']] = {
-                'context': item['context'],
-                'app_id': item.get('app_id'),
-            }
+            check = {'context': item['context']}
+            if item.get('app_id') is not None:
+                check['app_id'] = item['app_id']
+            check_by_context[item['context']] = check
     contexts = set(old_status.get('contexts') or [])
     contexts.update(check_by_context)
     contexts.update(required_checks)
     for context in contexts:
-        check_by_context.setdefault(context, {'context': context, 'app_id': None})
+        check_by_context.setdefault(context, {'context': context})
 
     old_reviews = existing.get('required_pull_request_reviews') or {}
     reviews = {
@@ -98,9 +113,9 @@ def build_protection_payload(existing, required_checks):
     for key in ('dismissal_restrictions', 'bypass_pull_request_allowances'):
         value = old_reviews.get(key)
         if isinstance(value, dict):
-            reviews[key] = _strip_url(value)
+            reviews[key] = _normalize_rule(value)
 
-    restrictions = _strip_url(existing.get('restrictions')) if existing.get('restrictions') is not None else None
+    restrictions = _normalize_rule(existing.get('restrictions')) if existing.get('restrictions') is not None else None
     payload = {
         'required_status_checks': {
             'strict': True,
@@ -115,7 +130,7 @@ def build_protection_payload(existing, required_checks):
     for key in ('required_linear_history', 'block_creations', 'required_conversation_resolution', 'lock_branch', 'allow_fork_syncing'):
         value = existing.get(key)
         if isinstance(value, dict) and 'enabled' in value:
-            payload[key] = {'enabled': bool(value['enabled'])}
+            payload[key] = bool(value['enabled'])
     return payload
 
 
@@ -150,7 +165,9 @@ def ensure_branch(repo, branch, required_checks, dry_run=False):
     try:
         api_json(branch_endpoint)
     except GhError as exc:
-        raise GhError(f"Required branch {repo}:{branch} does not exist. Establish it through a reviewable migration before enabling protection. Details: {exc}") from exc
+        if is_not_found_error(str(exc)):
+            raise GhError(f"Required branch {repo}:{branch} does not exist. Establish it through a reviewable migration before enabling protection.") from exc
+        raise GhError(f"Cannot verify branch {repo}:{branch}: {exc}. Confirm repository access before changing protection.") from exc
 
     current = get_protection(repo, branch)
     if is_compliant(current, required_checks):
