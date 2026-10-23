@@ -96,6 +96,14 @@ class ConsumerDevtoolsBoundaryTests(unittest.TestCase):
         self.assertIn("codegraph.json", result.stderr)
         self.assertIn("CLAUDE.md", result.stderr)
 
+    def test_devtools_helper_and_release_workflow_fail_on_main(self):
+        self.write("scripts/check-ads-devtools-latest.py", "print('check latest')\\n")
+        self.write(".github/workflows/ads-devtools-latest.yml", "name: latest release check\\n")
+        result = self.run_guard()
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("check-ads-devtools-latest.py", result.stderr)
+        self.assertIn("ads-devtools-latest.yml", result.stderr)
+
     def test_custom_production_branch_can_be_selected(self):
         self.write(".ads-devtools.json", '{"version_policy":"latest-stable"}')
         result = subprocess.run(
