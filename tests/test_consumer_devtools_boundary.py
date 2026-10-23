@@ -87,7 +87,15 @@ class ConsumerDevtoolsBoundaryTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertIn("tool-specific generated-data ignore rules", result.stderr)
 
-    def test_custom_production_branch_can_be_selected(self):
+
+    def test_codegraph_project_config_and_rtk_instructions_fail_on_main(self):
+        self.write("codegraph.json", '{"exclude":["generated/"]}')
+        self.write("CLAUDE.md", "Use RTK for all shell commands.\\n")
+        result = self.run_guard()
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("codegraph.json", result.stderr)
+        self.assertIn("CLAUDE.md", result.stderr)
+\n    def test_custom_production_branch_can_be_selected(self):
         self.write(".ads-devtools.json", '{"version_policy":"latest-stable"}')
         result = subprocess.run(
             [
