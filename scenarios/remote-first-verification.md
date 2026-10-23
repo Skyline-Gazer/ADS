@@ -1,21 +1,23 @@
-# Remote-first verification, local-light execution
+# Remote-first verification and autonomous environment provisioning
 
 **Status:** Proposed ADS v0.3 acceptance scenario. This document defines a default workflow; it is not evidence that every consumer's CI or deployment platform has been exercised.
 
 ## Goal
 
-Prefer existing hosted verification facilities and the actual target runtime over creating and maintaining a full local environment for every project. Keep local execution optional and lightweight where practical. Remote-first is a default selection rule, not a requirement to deploy every change or to send every test to production.
+Prefer remote verification and the actual target runtime over creating and maintaining a full local environment for every project. If no suitable remote environment exists, autonomously create the smallest task-scoped one when the existing authorization, credentials, permissions, quotas and budget permit it. Keep local execution optional and lightweight where practical. Remote-first is not a requirement to deploy every change or to send every test to production.
 
 ## Decision order
 
 Choose the lowest-cost facility that can credibly detect the changed behavior, in this order:
 
 1. **Reuse existing hosted CI.** Inspect repository workflows and required checks. Push the scoped branch/PR and run the relevant existing workflow. Prefer targeted jobs when their coverage is reliable; keep material security, contract and integration gates intact.
-2. **Use an isolated target-platform environment when platform behavior matters.** Examples include a Cloudflare Workers preview/staging deployment, Vercel Preview Deployment, or a temporary service environment created by existing CI. Verify the actual runtime, bindings, routing, authentication, cache and external integration that the change depends on. Use only supported facilities already available to the project; do not assume a preview feature or credential exists.
-3. **Use existing local capabilities for cheap feedback or a remote blocker.** Static inspection, formatting, tiny deterministic checks and an already-installed test command are acceptable. Do not install a second runtime, provision a new local database/container stack, or build a project-specific persistent environment merely to reproduce what hosted CI already runs.
-4. **Production validation is exceptional.** Use it only when authorized and genuinely required. A successful production deployment is not proof of correct application behavior; prefer isolated staging/preview and synthetic data.
+2. **Reuse existing target-platform previews or test environments.** For example, use an already-configured Cloudflare Workers preview, Vercel Preview Deployment, or a task-scoped environment created by existing CI when real runtime, bindings, routing, authentication, cache or external integration matters.
+3. **If the needed remote facility is absent, create it autonomously when authorized.** Add the smallest repo-native hosted CI workflow or configure an ephemeral provider-native preview/test environment using existing authorized credentials and capabilities. Check permissions, quotas, cost, data isolation and cleanup before provisioning. Prefer temporary resources with bounded lifetime; don't build a permanent platform just to satisfy one test. Do not assume credentials or permissions exist—inspect the available capability first.
+4. **Ask only for a genuine authorization or access blocker.** If creation needs an owner-only integration, unavailable secret/permission, new spend or plan upgrade, broader IAM, production access, or another action outside the current grant, give the user exact provider-specific steps and the minimum required permission/setting. Continue independent safe work; do not claim the remote check passed.
+5. **Use existing local capabilities as a bounded fallback.** Static inspection, formatting, tiny deterministic checks and already-installed test commands are acceptable if remote verification is unnecessary or cannot be provisioned within scope. Do not install a second runtime or create a duplicate local stack merely to reproduce existing CI.
+6. **Production validation is exceptional.** Use it only when explicitly authorized and genuinely required. A successful production deployment is not proof of correct application behavior; prefer isolated staging/preview and synthetic data.
 
-This ordering is not blind: if a remote run is unavailable, slow and unnecessary for a low-risk deterministic check, use the smallest already-available local check. Conversely, if the defect depends on the target platform, a local mock or unit test cannot close that evidence gap.
+This ordering is not blind: documentation-only changes may need only hosted documentation CI, not a deployed preview. Conversely, if a defect depends on the target platform, a local mock or unit test cannot close that evidence gap.
 
 ## Isolation and safety requirements
 
@@ -24,7 +26,9 @@ This ordering is not blind: if a remote run is unavailable, slow and unnecessary
 - Use least-privilege credentials only in trusted workflows. Do not expose secrets to untrusted fork PRs, print credentials, embed tokens in URLs, or copy production data into test environments.
 - Avoid provisioning a dedicated always-on environment for each repository unless an explicit, measured need justifies its cost and maintenance. Reuse runner caches and supported shared facilities without sharing mutable test state.
 - Clean up resources created by the task when safe and authorized. If cleanup fails, report the resource and residual cost/risk; do not hide it.
-- If remote access, secrets, quotas or platform features are unavailable, report the exact boundary. Do not silently provision resources or claim that remote verification passed.
+- Provisioning should be autonomous only within the current grant and established budgets/quotas. Do not silently incur new recurring charges, upgrade a plan, broaden IAM, expose secrets, change production, use customer data or create long-lived infrastructure outside scope.
+- If a user action is necessary, specify the provider, exact permission/integration/secret/variable or budget decision, secure setup steps, and the verification that will resume afterward. Never request that the user repeat a step the agent can perform.
+- If remote access, secrets, quotas or platform features remain unavailable after safe provisioning options are checked, report the exact boundary. Do not claim that remote verification passed.
 
 ## Reduce latency without returning to local-heavy workflows
 
@@ -50,12 +54,13 @@ Always tie evidence to a commit SHA and, where applicable, deployment ID/URL, wo
 
 ## Acceptance cases
 
-1. **Existing CI:** Given a project with working GitHub Actions, the agent inspects and reuses the workflow for a code change; it does not create a duplicate local environment just to run the same full suite. The resulting run is tied to the actual PR SHA.
-2. **Serverless behavior:** Given a Worker/edge change whose behavior depends on platform bindings, the agent runs the existing CI checks and uses an isolated preview/staging resource for a synthetic live smoke test. It records the deployed SHA and binding/data isolation, then cleans up if the facility is temporary.
-3. **Remote unavailable:** Given missing CI access, credentials or preview capability, the agent reports the exact missing capability and performs only useful checks using already-installed tools. It neither invents remote evidence nor silently adds persistent local infrastructure.
-4. **Production risk:** Given a test that could mutate customer data or incur material cost, the agent uses an authorized isolated environment or stops for the smallest required owner decision.
-5. **Latency:** Given a long CI run, the agent continues independent work and consumes the run result before delivery rather than repeatedly polling or duplicating the full job without cause.
+1. **Existing CI:** Given a project with working GitHub Actions, the agent reuses the workflow, avoids a duplicate local environment and ties the result to the actual PR SHA.
+2. **No remote environment yet:** Given a remote check is needed but no suitable CI/preview exists, the agent autonomously creates a minimal hosted workflow or ephemeral preview using existing authorized credentials and within the established budget; it verifies the result and cleans up temporary resources.
+3. **User action required:** Given provider setup needs a permission, secret, integration or spend approval outside the current grant, the agent identifies the exact action and secure steps, continues independent safe work, and keeps the affected check BLOCKED until it actually runs.
+4. **Serverless behavior:** Given a Worker/edge change whose behavior depends on platform bindings, the agent uses or provisions an authorized isolated preview/staging resource for a synthetic live smoke test. It records the deployed SHA and binding/data isolation, then cleans up if temporary.
+5. **Production risk:** Given a test that could mutate customer data or incur material cost outside the authorized budget, the agent does not proceed silently; it requests the minimum necessary grant and uses an isolated environment meanwhile if possible.
+6. **Latency:** Given a long CI run, the agent continues independent work and consumes the run result before delivery rather than repeatedly polling or duplicating the full job without cause.
 
 ## Scope and non-goals
 
-This is a verification-selection guideline, not a new CI framework, remote test orchestrator, permanent environment inventory, or mandate to deploy each commit. Existing project architecture, security gates, billing limits and deployment protections remain authoritative. Consumer adoption is opt-in and requires its own relevant validation.
+This is a verification-selection guideline, not a new CI framework, remote test orchestrator, permanent environment inventory, or mandate to deploy each commit. Existing project architecture, security gates, billing limits and deployment protections remain authoritative. Autonomously provision only the minimum remote resources already within the granted scope; no new recurring spend, plan upgrade, privilege expansion or production mutation is implied. Consumer adoption is opt-in and requires its own relevant validation.
