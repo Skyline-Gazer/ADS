@@ -64,16 +64,16 @@ class BranchProtectionTests(unittest.TestCase):
         payload = build_protection_payload(existing, ["branch-policy"])
         status = payload["required_status_checks"]
         self.assertTrue(status["strict"])
-        by_name = {item["context"]: item["app_id"] for item in status["checks"]}
-        self.assertEqual(by_name["security"], 15368)
-        self.assertIsNone(by_name["lint"])
-        self.assertIsNone(by_name["branch-policy"])
+        by_name = {item["context"]: item for item in status["checks"]}
+        self.assertEqual(by_name["security"]["app_id"], 15368)
+        self.assertNotIn("app_id", by_name["lint"])
+        self.assertNotIn("app_id", by_name["branch-policy"])
         self.assertTrue(payload["enforce_admins"])
         self.assertEqual(payload["required_pull_request_reviews"]["required_approving_review_count"], 2)
         self.assertTrue(payload["required_pull_request_reviews"]["require_code_owner_reviews"])
         self.assertTrue(payload["required_pull_request_reviews"]["dismiss_stale_reviews"])
         self.assertTrue(payload["required_pull_request_reviews"]["require_last_push_approval"])
-        self.assertEqual(payload["restrictions"]["users"], [{"login": "release-bot"}])
+        self.assertEqual(payload["restrictions"]["users"], ["release-bot"])
         self.assertFalse(payload["allow_force_pushes"])
         self.assertFalse(payload["allow_deletions"])
         self.assertTrue(payload["required_linear_history"]["enabled"])
