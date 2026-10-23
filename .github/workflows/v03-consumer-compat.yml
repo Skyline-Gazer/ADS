@@ -19,6 +19,7 @@ on:
       - 'QUALITY.md'
       - 'templates/AGENTS.md'
   workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read
