@@ -72,6 +72,17 @@ class GitGovernanceTests(unittest.TestCase):
         for relative in ("STANDARD.md", "QUALITY.md", "AGENTS.md", "templates/AGENTS.md", "skills/adopt/SKILL.md", "skills/bootstrap/SKILL.md", "skills/deliver/SKILL.md", "skills/recover/SKILL.md", "docs/agent-adoption.md"):
             self.assertIn("git-governance.md", (root / relative).read_text(encoding="utf-8"), relative)
 
+    def test_adoption_and_bootstrap_enable_branch_protection_with_gh(self):
+        root = Path(__file__).resolve().parents[1]
+        policy = (root / "docs" / "git-governance.md").read_text(encoding="utf-8")
+        self.assertIn("scripts/ensure_branch_protection.py", policy)
+        self.assertIn("A `403` means the state could not be inspected", policy)
+        self.assertIn("does not create branches or change the default branch", policy)
+        for relative in ("skills/adopt/SKILL.md", "skills/bootstrap/SKILL.md", "templates/AGENTS.md", "docs/agent-adoption.md", "templates/git-governance/README.md"):
+            content = (root / relative).read_text(encoding="utf-8")
+            self.assertIn("gh", content, relative)
+            self.assertIn("branch-protection", content, relative)
+
     def test_delivery_skill_does_not_allow_direct_commits_to_integration_branches(self):
         root = Path(__file__).resolve().parents[1]
         delivery = (root / "skills" / "deliver" / "SKILL.md").read_text(encoding="utf-8")
