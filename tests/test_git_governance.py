@@ -81,7 +81,7 @@ class GitGovernanceTests(unittest.TestCase):
         for relative in ("skills/adopt/SKILL.md", "skills/bootstrap/SKILL.md", "templates/AGENTS.md", "docs/agent-adoption.md", "templates/git-governance/README.md"):
             content = (root / relative).read_text(encoding="utf-8")
             self.assertIn("gh", content, relative)
-            self.assertIn("branch-protection", content, relative)
+            self.assertIn("ensure-ads-branch-protection.py", content, relative)
 
     def test_delivery_skill_does_not_allow_direct_commits_to_integration_branches(self):
         root = Path(__file__).resolve().parents[1]
