@@ -1,6 +1,6 @@
 # Git governance templates
 
-These files help an ADS consumer apply the mandatory policy in [the canonical Git governance standard](../../docs/git-governance.md). They do not create server-side branch protection by themselves.
+These files help an ADS consumer apply the mandatory policy in [the canonical Git governance standard](../../docs/git-governance.md). The workflow alone does not create server-side branch protection; the included `gh` helper does so when run with sufficient repository-admin permission and plan support.
 
 ## Install
 
