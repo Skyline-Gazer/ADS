@@ -4,7 +4,7 @@ These files help an ADS consumer apply the mandatory policy in [the canonical Gi
 
 ## Install
 
-1. Copy `check_git_governance.py` into the consumer repository as `scripts/check-ads-git-governance.py`.
+1. Copy `check_git_governance.py` into the consumer repository as `scripts/check-ads-git-governance.py`, and copy `ensure-ads-branch-protection.py` as `scripts/ensure-ads-branch-protection.py`.
 2. Copy `git-governance.yml` into `.github/workflows/ads-git-governance.yml` and keep its development branch set to `dev`. If the production branch is not `main`, update `ADS_PRODUCTION_BRANCH` and the workflow's PR branch filter.
 3. Optionally copy `pull_request_template.md` into `.github/pull_request_template.md`.
 4. Ensure the repository has `dev`, and inspect actual deployment triggers before changing branch setup. Existing consumers need a reviewable migration rather than a silent rewrite.
