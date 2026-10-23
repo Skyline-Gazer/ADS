@@ -27,15 +27,7 @@ FORBIDDEN_NAMES = {
     "rtk.exe",
 }
 FORBIDDEN_DIRS = {".ads-devtools", ".codegraph", ".rtk"}
-HOST_CONFIGS = {
-    ".claude/settings.json",
-    ".claude/settings.local.json",
-    ".codex/config.toml",
-    ".omp/oh-my-openagent.json",
-    ".opencode/opencode.json",
-    ".cursor/mcp.json",
-    ".agents/settings.json",
-}
+HOST_CONFIG_ROOTS = {".claude", ".codex", ".omp", ".opencode", ".cursor", ".agents"}
 AGENT_INSTRUCTIONS = {"CLAUDE.md", "GEMINI.md", "CODEX.md", ".github/copilot-instructions.md"}
 AGENT_TOOL_INSTRUCTION = re.compile(
     r"(?i)(?:\buse\s+rtk\s+(?:instead|for|to)\b|\brtk\s+(?:git|grep|find|ls|read|test|cargo|npm|pnpm|init)\b|"
@@ -80,14 +72,15 @@ def violations(root: Path) -> list[str]:
             found.append(f"{rel_posix}: forbidden tool configuration/artifact directory")
         if rel.name.lower() in {"rtk", "rtk.exe"}:
             found.append(f"{rel_posix}: RTK executable must not enter production")
-        if rel_posix in HOST_CONFIGS or rel_posix in AGENT_INSTRUCTIONS or rel_posix == ".gitignore":
+        in_host_config = bool(rel.parts) and rel.parts[0] in HOST_CONFIG_ROOTS
+        if in_host_config or rel_posix in AGENT_INSTRUCTIONS or rel_posix == ".gitignore":
             try:
                 text = path.read_text(encoding="utf-8")
             except (OSError, UnicodeDecodeError):
                 continue
             if rel_posix == ".gitignore" and GITIGNORE_TOOL_PATTERN.search(text):
                 found.append(".gitignore: tool-specific generated-data ignore rules must remain development-only")
-            if rel_posix in HOST_CONFIGS and TOOL_MARKER.search(text) and INTEGRATION_MARKER.search(text):
+            if in_host_config and TOOL_MARKER.search(text) and INTEGRATION_MARKER.search(text):
                 found.append(f"{rel_posix}: appears to contain CodeGraph/RTK host integration")
             if rel_posix in AGENT_INSTRUCTIONS and AGENT_TOOL_INSTRUCTION.search(text):
                 found.append(f"{rel_posix}: appears to contain generated CodeGraph/RTK integration instructions")
