@@ -64,6 +64,7 @@ class BranchProtectionTests(unittest.TestCase):
         payload = build_protection_payload(existing, ["branch-policy"])
         status = payload["required_status_checks"]
         self.assertTrue(status["strict"])
+        self.assertEqual(status["contexts"], ["branch-policy", "lint", "security"])
         by_name = {item["context"]: item for item in status["checks"]}
         self.assertEqual(by_name["security"]["app_id"], 15368)
         self.assertNotIn("app_id", by_name["lint"])
