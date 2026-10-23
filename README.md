@@ -1,6 +1,6 @@
 # ADS — Agent Development Standard
 
-**Status:** v0.3 release-candidate closeout (not yet released or adopted). v0.2 is released at tag `v0.2`. See [v0.3 release gates and limitations](docs/releases/v0.3.md).
+**Status:** ADS v0.3 is released at tag `v0.3`, pointing to `1e07d6c4bbd296b7d37dcd31934cfc70426f73ac`. See [release notes](docs/releases/v0.3-notes.md) and [release decision](docs/releases/v0.3.md).
 
 ADS is an agent-native, minimal-ceremony development standard for personal software projects. It reuses the coding agent, GitHub and the host platform rather than introducing a CLI, approval engine, task database, orchestrator or deployment controller.
 
