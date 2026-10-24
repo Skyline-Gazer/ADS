@@ -25,6 +25,20 @@ VERSION_RE = re.compile(r"(?<![0-9A-Za-z])v?(\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)
 
 
 def latest_stable(repo: str, timeout: float = 8.0) -> tuple[str, str]:
+    if repo == "andysom25/codegraph":
+        # Use the official npm dist-tag: this CodeGraph upstream has no GitHub Releases API entry.
+        url = "https://registry.npmjs.org/@andysom25%2Fcodegraph/latest"
+        request = urllib.request.Request(
+            url,
+            headers={"Accept": "application/json", "User-Agent": "ADS-consumer-devtools-check"},
+        )
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            package = json.load(response)
+        version = package.get("version")
+        if not isinstance(version, str) or not re.fullmatch(r"\d+\.\d+\.\d+", version):
+            raise ValueError("npm dist-tag did not return a stable CodeGraph semver version")
+        return version, "https://www.npmjs.com/package/@andysom25/codegraph"
+
     url = f"https://api.github.com/repos/{repo}/releases/latest"
     request = urllib.request.Request(
         url,
@@ -35,7 +49,6 @@ def latest_stable(repo: str, timeout: float = 8.0) -> tuple[str, str]:
     if release.get("draft") or release.get("prerelease") or not release.get("tag_name"):
         raise ValueError("upstream did not return a latest stable release")
     return release["tag_name"].lstrip("v"), release.get("html_url", url)
-
 
 def installed_version(command: str) -> tuple[str, str]:
     executable = shutil.which(command)
