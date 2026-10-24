@@ -17,7 +17,6 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 - [STANDARD.md](STANDARD.md): autonomous execution, scope and delivery.
 - [SAFETY.md](SAFETY.md): scoped operational authorization and risk.
 - [QUALITY.md](QUALITY.md): adaptive testing, review and evidence.
-- [docs/git-governance.md](docs/git-governance.md): mandatory Issue/branch/PR/CI/release governance for ADS itself and all adopting projects.
 - [AGENTS.md](AGENTS.md): instructions for working **in ADS itself**.
 - [skills/](skills/): opt-in agent-native capabilities.
 - [profiles/](profiles/): optional stack hints, not mandatory architectures.
@@ -26,6 +25,8 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 - [docs/native-subagent-safety.md](docs/native-subagent-safety.md): verified child permission ceilings, command/file-system containment and lifecycle preflight; preserves observed host failures.
 - [docs/milestone-reconciliation.md](docs/milestone-reconciliation.md): Phase-end GitHub Project/Issue/PR/CI drift convergence.
 - [docs/agent-adoption.md](docs/agent-adoption.md): practical, pinned adoption and skill discovery.
+- [docs/git-governance.md](docs/git-governance.md): mandatory Issue/branch/PR/CI/release governance for ADS itself and all adopting projects.
+- [docs/consumer-dev-toolchain.md](docs/consumer-dev-toolchain.md): mandatory latest-stable CodeGraph + full RTK for consumer projects, development-branch-only integration and production-boundary guard.
 - [docs/code-review-options.md](docs/code-review-options.md): v0.3 review-option decision and the native review trial evidence.
 - [scenarios/migration-recon.md](scenarios/migration-recon.md): read-only findings for KIRARI and AiringCal (not a passed migration).
 - [scenarios/v0.3-multi-agent-acceptance.md](scenarios/v0.3-multi-agent-acceptance.md): v0.3 native Multi-Agent protocol; Codex PARTIAL and Claude FAIL archived, not a blanket compatibility PASS.
