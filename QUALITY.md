@@ -44,6 +44,11 @@ At Phase closure compare actual GitHub Project item fields and linked Issues aga
 
 A consumer ADS submodule upgrade requires validating the old and new recorded gitlink commits, the upstream guideline diff, local AGENTS.md and native Skill discoverability, plus tests relevant to behavioral/safety changes. A passing ADS source repository CI cannot by itself prove that the consumer's upgraded project works. See [docs/milestone-reconciliation.md](docs/milestone-reconciliation.md) and [docs/how-to-update.md](docs/how-to-update.md).
 
+## Git governance and delivery evidence
+
+Follow the mandatory [Git development governance policy](docs/git-governance.md) in ADS itself and every adopting project. Normal task branches originate from the latest `dev` and PRs target `dev`; production promotion uses a separate release PR. Validate PR base/branch type and explicit Issue references where deterministic, run checks against the actual candidate SHA, and verify the merged target SHA after integration. Issue closure, PR merge, deployment and production validation are distinct evidence states. A workflow run is not server-side branch protection: verify required-check and protection settings separately, and disclose when the host/plan cannot enforce them.
+
+
 ## CI and review
 
 Keep relevant required checks and material safety regressions blocking. Don't disable failing checks merely to turn CI green. Advisory AI reviews and irrelevant external review-service outages are not automatic blockers. Increase review rigor with change risk; routine low-risk code need not have two independent reviewers. Choose review tooling only after inspecting existing host capability; the v0.3 decision record is [docs/code-review-options.md](docs/code-review-options.md) and no third-party review service is required. Resolve concrete blocking findings, accurately report known limitations, then deliver under STANDARD.md and SAFETY.md.
