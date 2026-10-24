@@ -17,6 +17,7 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 - [STANDARD.md](STANDARD.md): autonomous execution, scope and delivery.
 - [SAFETY.md](SAFETY.md): scoped operational authorization and risk.
 - [QUALITY.md](QUALITY.md): adaptive testing, review and evidence.
+- [docs/git-governance.md](docs/git-governance.md): mandatory Issue/branch/PR/CI/release governance for ADS itself and all adopting projects.
 - [AGENTS.md](AGENTS.md): instructions for working **in ADS itself**.
 - [skills/](skills/): opt-in agent-native capabilities.
 - [profiles/](profiles/): optional stack hints, not mandatory architectures.

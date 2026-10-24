@@ -2,6 +2,10 @@
 
 ADS is not a daemon, CLI or centralized policy delivery service. A file existing in ADS does not make the host agent automatically discover it.
 
+## Mandatory Git workflow
+
+Before ordinary work, apply the [mandatory Git governance policy](git-governance.md). The consumer must have a `dev` integration branch; create it through a reviewable migration if absent. Every feature/fix/chore/docs/refactor/test/CI task starts from the latest `dev`, references an Issue, and is delivered by a PR to `dev`. Production changes use a separate release PR; emergency fixes are developed from `dev` and selectively backported as the same reviewed change. During adoption, copy `templates/git-governance/ensure-ads-branch-protection.py` from the pinned ADS revision into the consumer repository as `scripts/ensure-ads-branch-protection.py` through a reviewable change. Inspect actual CI check names and branch protection with authenticated `gh`; if classic protection is absent/incomplete, run the copied helper with exact `--required-check` names, then verify the API result. A `403` is an access/plan blocker, not evidence that protection is absent. Existing consumers are migrated through scoped PRs, not silently rewritten.
+
 ## Pin and make guidance accessible
 
 1. Pick an approved ADS release or immutable full commit SHA.
