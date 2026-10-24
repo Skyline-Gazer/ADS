@@ -29,6 +29,19 @@ class ConsumerDevtoolsPreflightTests(TestCase):
         self.assertIn("releases/tag/v1.2.3", url)
         self.assertIn("/repos/example/tool/releases/latest", opened.call_args.args[0].full_url)
 
+    def test_codegraph_latest_uses_official_npm_dist_tag(self):
+        payload = b'{"version":"1.1.1","dist":{"tarball":"https://registry.npmjs.org/@andysom25/codegraph/-/codegraph-1.1.1.tgz"}}'
+        with patch.object(MODULE.urllib.request, "urlopen", return_value=BytesIO(payload)) as opened:
+            version, url = MODULE.latest_stable("andysom25/codegraph")
+        self.assertEqual(version, "1.1.1")
+        self.assertIn("npmjs.org/@andysom25%2Fcodegraph/latest", opened.call_args.args[0].full_url)
+        self.assertIn("npmjs.com/package/@andysom25/codegraph", url)
+
+    def test_codegraph_npm_latest_rejects_prerelease_tag(self):
+        payload = b'{"version":"1.2.0-rc.1"}'
+        with patch.object(MODULE.urllib.request, "urlopen", return_value=BytesIO(payload)):
+            with self.assertRaises(ValueError):
+                MODULE.latest_stable("andysom25/codegraph")
     def test_latest_stable_rejects_prerelease(self):
         response = BytesIO(b'{"tag_name":"v2.0.0-rc.1","draft":false,"prerelease":true}')
         with patch.object(MODULE.urllib.request, "urlopen", return_value=response):

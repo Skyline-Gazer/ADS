@@ -25,6 +25,7 @@ For each tool, distinguish **installed**, **latest stable**, **project initializ
 
 Official sources:
 - CodeGraph: https://github.com/andysom25/codegraph
+- CodeGraph latest-stable package version: the official npm `latest` dist-tag at https://registry.npmjs.org/@andysom25%2Fcodegraph/latest. The GitHub Releases API currently returns 404 for this upstream, so do not use its `releases/latest` endpoint as the version source.
 - Full RTK: https://github.com/rtk-ai/rtk
 - RTK edition/licensing details: https://github.com/rtk-ai/rtk/blob/develop/docs/guide/resources/editions.md
 
