@@ -12,6 +12,26 @@ UPSTREAMS = ("andysom25/codegraph", "rtk-ai/rtk")
 
 
 def latest_stable(repo: str, timeout: float = 8.0) -> dict:
+    if repo == "andysom25/codegraph":
+        # Use the official npm dist-tag; this CodeGraph upstream has no GitHub Releases API entry.
+        url = "https://registry.npmjs.org/@andysom25%2Fcodegraph/latest"
+        request = urllib.request.Request(
+            url,
+            headers={"Accept": "application/json", "User-Agent": "ADS-consumer-devtools-release-check"},
+        )
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            package = json.load(response)
+        version = package.get("version")
+        import re
+        if not isinstance(version, str) or not re.fullmatch(r"\d+\.\d+\.\d+", version):
+            raise ValueError("npm dist-tag did not return a stable CodeGraph semver version")
+        return {
+            "repository": repo,
+            "version": version,
+            "release_url": "https://www.npmjs.com/package/@andysom25/codegraph",
+            "published_at": package.get("time", {}).get(version),
+        }
+
     url = f"https://api.github.com/repos/{repo}/releases/latest"
     request = urllib.request.Request(
         url,
@@ -27,7 +47,6 @@ def latest_stable(repo: str, timeout: float = 8.0) -> dict:
         "release_url": release.get("html_url", url),
         "published_at": release.get("published_at"),
     }
-
 
 def main() -> int:
     results = []
