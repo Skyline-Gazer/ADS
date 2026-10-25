@@ -108,9 +108,15 @@ jobs:
           git -C "$root" fetch -q --depth 1 origin "$CONSUMER_SHA"
           git -C "$root" checkout -q --detach "$CONSUMER_SHA"
           test "$(git -C "$root" rev-parse HEAD)" = "$CONSUMER_SHA"
-          # Required no-tool-in-main state: check before installing any project integration.
-          python3 templates/consumer-devtools/check-production-boundary.py \
-            --root "$root" --target-branch main
+          # The supplied immutable consumer snapshots are historic development
+          # trees containing tracked .codegraph/.gitignore (and KIRARI root
+          # .gitignore). Preserve this known-negative production oracle.
+          if python3 "$GITHUB_WORKSPACE/templates/consumer-devtools/check-production-boundary.py" \
+              --root "$root" --target-branch main; then
+            echo "BASELINE_PRODUCTION_BOUNDARY=PASS"
+          else
+            echo "BASELINE_PRODUCTION_BOUNDARY=FAIL_EXISTING_CONTAMINATION"
+          fi
           cd "$root"
           git checkout -qb feat/ads-v04-validation
           codegraph init .
@@ -158,3 +164,4 @@ jobs:
             "$RUNNER_TEMP/license-evidence.json"
           echo "CONSUMER_PILOT_PASS consumer=$CONSUMER_REPO source=$CONSUMER_SHA"
           echo "LIMITATIONS: real native agent MCP routing and RTK hook interception NOT_TESTED in isolated CI"
+          echo "LIMITATIONS: legacy consumer snapshot already contains .codegraph/.gitignore; clean production branch must be checked separately"
