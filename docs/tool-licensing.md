@@ -35,3 +35,7 @@ ADS itself is licensed MIT (see [root LICENSE](../LICENSE)). This does not chang
 ## v0.4 release acceptance
 
 Repository tests and isolated consumer CI cover policy and negative fixtures. They are **not** a substitute for a real consumer installing, initializing and using the full toolchain. Keep #45 open until that bounded pilot records exact versions, host invocation/compression, CodeGraph freshness/worktree binding, negative production boundary tests, correctness and regressions. Do not claim universal host coverage.
+
+## Owner-approved CodeGraph source fallback
+
+If official stable npm and Releases distribution are both confirmed absent, an explicitly approved, immutable upstream source SHA may replace **only CodeGraph's distribution channel**. The source's actual versioned `LICENSE` must match MIT, the build must be reproduced from that SHA, and evidence must record `source_sha`, `source_fallback_approved: true`, `source_fallback_verified: true`, and `latest_stable_verified: false`. Record a `distribution_url` of `https://github.com/andysom25/codegraph/commit/<exact-sha>`. This source channel is not an upstream tagged stable release. The offline checker still only verifies the operator-supplied evidence; actual source/binary hashes, grant change, review and local host integration are separate required proofs.

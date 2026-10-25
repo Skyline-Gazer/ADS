@@ -32,9 +32,11 @@ def versioned_origin(tool: str, value: str, version: str) -> bool:
     host = (parsed.hostname or "").lower()
     path = unquote(parsed.path)
     if tool == "codegraph":
-        return host == "registry.npmjs.org" and (
-            path == f"/@andysom25/codegraph/-/codegraph-{version}.tgz"
-        )
+        if host == "registry.npmjs.org" and path == f"/@andysom25/codegraph/-/codegraph-{version}.tgz":
+            return True
+        return host == "github.com" and re.fullmatch(
+            r"/andysom25/codegraph/commit/[a-f0-9]{40}", path
+        ) is not None
     return (
         host == "github.com"
         and path.startswith(f"/rtk-ai/rtk/releases/download/v{version}/rtk-")
@@ -109,7 +111,18 @@ def inspect(evidence: dict, evidence_dir: Path) -> dict:
         # the active executable was installed from the named distribution.
         if item.get("installed_distribution_verified") is not True:
             errors.append(f"{tool}: installed binary/package provenance unverified")
-        if item.get("latest_stable_verified") is not True:
+        source_mode = tool == "codegraph" and item.get("source_sha") is not None
+        if source_mode:
+            sha = item.get("source_sha")
+            if not isinstance(sha, str) or not re.fullmatch(r"[a-f0-9]{40}", sha):
+                errors.append("codegraph: invalid source SHA")
+            elif origin != f"https://github.com/andysom25/codegraph/commit/{sha}":
+                errors.append("codegraph: source URL differs from approved SHA")
+            if item.get("latest_stable_verified") is True:
+                errors.append("codegraph: source fallback may not claim latest-stable")
+            if item.get("source_fallback_approved") is not True or item.get("source_fallback_verified") is not True:
+                errors.append("codegraph: official upstream absence/approval or source provenance unverified")
+        elif item.get("latest_stable_verified") is not True:
             errors.append(f"{tool}: latest-stable comparison not verified")
         edition = item.get("edition")
         if edition != ("full" if tool == "rtk" else "cli"):
