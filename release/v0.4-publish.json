@@ -1,0 +1,16 @@
+{
+  "version": "v0.4",
+  "release_approved": true,
+  "release_target_sha": "2af17d9e1d816844c49835ae91b784405765ad46",
+  "private_consumer_ci": {
+    "result": "success",
+    "workflow": "Private ADS Submodule Acceptance",
+    "repository": "Skyline-Gazer/ADS-Acceptance-Sandbox",
+    "run_id": 40177192426,
+    "run_url": "https://github.com/Skyline-Gazer/ADS-Acceptance-Sandbox/actions/runs/40177192426",
+    "pull_request_number": 17,
+    "head_sha": "f780436808a9ab2d35a2d27feb91fcb170989b08",
+    "tested_ads_sha": "2af17d9e1d816844c49835ae91b784405765ad46",
+    "verification": "operator-verified-successful-run-and-job-logs"
+  }
+}
