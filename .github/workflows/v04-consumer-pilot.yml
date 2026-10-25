@@ -145,3 +145,38 @@ jobs:
             --root "$scratch" --target-branch dev
           printf 'pilot=%s pinned_consumer_sha=%s elapsed_seconds=%s CI=PASS host_native_agent_integration=NOT_TESTED auto_sync_watch=NOT_TESTED\n' \
             "$CONSUMER_REPO" "$CONSUMER_SHA" "$((SECONDS-t0))"
+
+  codegraph-source-feasibility:
+    name: CodeGraph official source-build feasibility (non-release)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build CodeGraph from observed official Git commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Official main SHA observed 2026-10-25, diagnostic only.
+          # This is NOT an official latest stable release.
+          upstream_sha="bb11bc1226db30233ac9e66a2670c4b16dfa85fa"
+          git clone -q --no-checkout https://github.com/andysom25/codegraph.git "$RUNNER_TEMP/codegraph-src"
+          git -C "$RUNNER_TEMP/codegraph-src" checkout -q --detach "$upstream_sha"
+          test "$(git -C "$RUNNER_TEMP/codegraph-src" rev-parse HEAD)" = "$upstream_sha"
+          cd "$RUNNER_TEMP/codegraph-src"
+          node -e 'const p=require("./package.json"); if (p.name !== "@andysom25/codegraph" || p.license !== "MIT") process.exit(1); console.log("SOURCE_VERSION", p.version)'
+          test -f LICENSE
+          npm ci --ignore-scripts
+          npm run build
+          node dist/bin/codegraph.js --version
+          mkdir -p "$RUNNER_TEMP/codegraph-fixture"
+          cd "$RUNNER_TEMP/codegraph-fixture"
+          git init -q
+          printf 'export function add(a: number, b: number) { return a + b; }\n' > sample.ts
+          node "$RUNNER_TEMP/codegraph-src/dist/bin/codegraph.js" init .
+          node "$RUNNER_TEMP/codegraph-src/dist/bin/codegraph.js" status
+          echo "SOURCE_BUILD_PROBE=PASS release_provenance=UNVERIFIED stable_channel=BLOCKED"
