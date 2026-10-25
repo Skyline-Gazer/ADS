@@ -97,6 +97,9 @@ At adoption and before use, query current upstream releases and check local bina
 
 ## Licensing and evidence
 
+Read [the mandatory tool-license policy](tool-licensing.md) and verify edition, actual distributed-version license files, install provenance, usage classification, and license/grant changes *before* upgrading or claiming tool readiness. The [offline evidence checker](../templates/consumer-devtools/check-license-compliance.py) blocks incomplete or incompatible attestations; it does not establish legal authorization or binary authenticity by itself.
+
+
 CodeGraph's upstream repository currently declares MIT; recheck upstream metadata during validation. Full RTK includes BUSL-1.1 and Apache-2.0 components; follow the current upstream terms and do not silently switch editions. The full and OSS editions use the same binary name, so `rtk --version` alone does not prove the edition. Verify package/install provenance (for example, Homebrew formula metadata) or mark the edition UNVERIFIED and request permission to install the full edition from its official source. This is implementation guidance, not a legal opinion.
 
 For each adoption, preserve concise evidence for:
