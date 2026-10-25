@@ -25,9 +25,19 @@ For each tool, distinguish **installed**, **latest stable**, **project initializ
 
 Official sources:
 - CodeGraph: https://github.com/andysom25/codegraph
-- CodeGraph latest-stable package version: the official npm `latest` dist-tag at https://registry.npmjs.org/@andysom25%2Fcodegraph/latest. The GitHub Releases API currently returns 404 for this upstream, so do not use its `releases/latest` endpoint as the version source.
+- CodeGraph stable package version: official npm `latest` dist-tag at https://registry.npmjs.org/@andysom25%2Fcodegraph/latest **when published**. In its verified absence, use the explicitly approved source SHA fallback instead of pretending that npm 404 is a stable release.
 - Full RTK: https://github.com/rtk-ai/rtk
 - RTK edition/licensing details: https://github.com/rtk-ai/rtk/blob/develop/docs/guide/resources/editions.md
+
+## Controlled official CodeGraph source fallback (owner-approved for v0.4)
+
+**Default remains latest official stable distribution.** When official CodeGraph npm `latest` returns a genuine HTTP 404 *and* its official GitHub Releases collection is empty, an explicitly authorized, reviewed immutable SHA of `andysom25/codegraph` may be used as `SOURCE_FALLBACK`. This channel is **not** a published stable release; never print `LATEST` or `latest_stable_verified=true` for it.
+
+- Use `check-codegraph-channel.py` to observe official npm, release list, exact upstream SHA and versioned `package.json`/MIT metadata; network failures, suspicious metadata and release-channel presence must fail closed.
+- Install/build from a detached, verified full SHA using Node 22 and `npm ci --ignore-scripts && npm run build`; verify actual executable, included assets and license. Do not run unreviewed upstream install scripts; never treat `package.json` version alone as the stable channel.
+- Before installing or changing global settings, obtain explicit user approval. Record the approved commit SHA, build output, source license, version, chosen host installation path, and independent hash/provenance attestation; untracked evidence stays off production.
+- If official stable distribution returns, prioritize it during the next authorized upgrade and retire source fallback. If upstream SHA changes, **do not silently upgrade**: require review of actual diff, new SHA and license, then revalidate the project and host integration. Do not weaken full RTK requirements.
+- For consumers using this fallback, include `check-codegraph-channel.py` beside `check-consumer-devtools.py` and `check-latest-releases.py`, and use `--codegraph-source-sha <approved-full-sha>` for a read-only preflight. An observed version match is not full provenance or agent-MCP verification.
 
 ## Latest stable is a moving requirement
 

@@ -8,6 +8,7 @@ still requires a separate smoke test through the active agent.
 from __future__ import annotations
 
 import argparse
+from importlib.util import module_from_spec, spec_from_file_location
 import json
 import re
 import shutil
@@ -96,6 +97,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--production-branch", default="main")
     parser.add_argument("--allow-production-checkout", action="store_true")
+    parser.add_argument("--codegraph-source-sha", default=None,
+                        help="Reviewed 40-hex official CodeGraph source pin; fallback still requires proof npm 404 and no GitHub releases")
     args = parser.parse_args(argv)
 
     branch_result = subprocess.run(
@@ -117,9 +120,29 @@ def main(argv: list[str] | None = None) -> int:
         try:
             latest, release_url = latest_stable(repo)
         except (OSError, ValueError, urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
-            print(f"{name}: UPSTREAM_UNVERIFIED — official latest stable release unavailable: {exc}")
-            failed = True
-            continue
+            if name != "codegraph" or not args.codegraph_source_sha:
+                print(f"{name}: UPSTREAM_UNVERIFIED — official latest stable release unavailable: {exc}")
+                failed = True
+                continue
+            spec = spec_from_file_location("codegraph_channel", Path(__file__).with_name("check-codegraph-channel.py"))
+            if spec is None or spec.loader is None:
+                print("codegraph: BLOCKED — fallback policy module missing")
+                failed = True
+                continue
+            channel = module_from_spec(spec)
+            spec.loader.exec_module(channel)
+            try:
+                observed = channel.observe_channel()
+                permitted, reason = channel.evaluate_source_pin(observed, args.codegraph_source_sha)
+            except (OSError, ValueError, urllib.error.URLError, TimeoutError, json.JSONDecodeError) as fallback_exc:
+                permitted, reason = False, str(fallback_exc)
+            if not permitted:
+                print(f"codegraph: SOURCE_FALLBACK_BLOCKED — {reason}")
+                failed = True
+                continue
+            print(f"codegraph: SOURCE_FALLBACK_APPROVED — sha={args.codegraph_source_sha},"
+                  " provenance must be independently verified; not a latest stable release")
+            latest, release_url = observed["version"], observed["url"]
 
         try:
             installed, executable = installed_version(command)
@@ -135,12 +158,14 @@ def main(argv: list[str] | None = None) -> int:
             failed = True
             continue
 
-        freshness = "LATEST" if installed == latest else "OUTDATED"
+        freshness = ("SOURCE_FALLBACK_VERSION_MATCH" if name == "codegraph" and
+                     args.codegraph_source_sha and release_url.endswith(args.codegraph_source_sha)
+                     and installed == latest else ("LATEST" if installed == latest else "OUTDATED"))
         print(
             f"{name}: {freshness} — installed={installed}, latest={latest}, "
             f"executable={executable}, release={release_url}"
         )
-        if freshness != "LATEST":
+        if freshness not in {"LATEST", "SOURCE_FALLBACK_VERSION_MATCH"}:
             failed = True
             continue
 

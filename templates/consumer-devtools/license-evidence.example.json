@@ -9,7 +9,10 @@
       "distribution_url": "",
       "installed_distribution_verified": false,
       "latest_stable_verified": false,
-      "license_file": "path/to/extracted/codegraph/LICENSE"
+      "license_file": "path/to/extracted/codegraph/LICENSE",
+      "source_sha": null,
+      "source_fallback_approved": false,
+      "source_fallback_verified": false
     },
     "rtk": {
       "version": "0.0.0",

@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 import json
+from importlib.util import module_from_spec, spec_from_file_location
+from pathlib import Path
 import sys
 import urllib.error
 import urllib.request
@@ -13,6 +15,18 @@ UPSTREAMS = ("andysom25/codegraph", "rtk-ai/rtk")
 
 def latest_stable(repo: str, timeout: float = 8.0) -> dict:
     if repo == "andysom25/codegraph":
+        # Stable is preferred. Only a verified npm 404 + empty official releases
+        # allows reporting SOURCE_FALLBACK; it does NOT report latest-stable PASS.
+        spec = spec_from_file_location("codegraph_channel", Path(__file__).with_name("check-codegraph-channel.py"))
+        if spec is not None and spec.loader is not None:
+            mod = module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            observation = mod.observe_channel()
+            if observation["channel"] == "SOURCE_FALLBACK":
+                return {"repository":repo, "version":observation["version"],
+                        "release_url":observation["url"],"source_sha":observation["source_sha"],
+                        "channel":"SOURCE_FALLBACK","stable_verified":False}
+
         # Use the official npm dist-tag; this CodeGraph upstream has no GitHub Releases API entry.
         url = "https://registry.npmjs.org/@andysom25%2Fcodegraph/latest"
         request = urllib.request.Request(
@@ -42,6 +56,7 @@ def latest_stable(repo: str, timeout: float = 8.0) -> dict:
     if release.get("draft") or release.get("prerelease") or not release.get("tag_name"):
         raise ValueError("upstream did not return a latest stable release")
     return {
+        "channel":"STABLE","stable_verified":True,
         "repository": repo,
         "version": release["tag_name"].lstrip("v"),
         "release_url": release.get("html_url", url),
@@ -59,7 +74,7 @@ def main() -> int:
 
     print(json.dumps({
         "checked_at": datetime.now(timezone.utc).isoformat(),
-        "policy": "latest-stable",
+        "policy": "latest-stable-preferred; source fallback is not stable",
         "results": results,
         "failures": failures,
     }, indent=2))
