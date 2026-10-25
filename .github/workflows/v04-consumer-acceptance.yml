@@ -170,7 +170,7 @@ jobs:
         env:
           CODEGRAPH_NO_DAEMON: '1'
           CODEGRAPH_TELEMETRY: '0'
-          CODEGRAPH_MCP_TOOLS: 'explore,status'
+          CODEGRAPH_MCP_TOOLS: 'explore'
         shell: bash
         run: |
           set -euo pipefail
@@ -214,9 +214,8 @@ jobs:
               tools=wait_for(2)["tools"]
               names={t["name"] for t in tools}
               assert "codegraph_explore" in names,names
-              assert "codegraph_status" in names,names
               send({"jsonrpc":"2.0","id":3,"method":"tools/call",
-                  "params":{"name":"codegraph_status","arguments":{}}})
+                  "params":{"name":"codegraph_explore","arguments":{"query":"adsAcceptanceFixture"}}})
               result=wait_for(3)
               assert not result.get("isError",False),result
               assert result.get("content"),result
