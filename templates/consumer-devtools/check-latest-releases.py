@@ -15,35 +15,21 @@ UPSTREAMS = ("andysom25/codegraph", "rtk-ai/rtk")
 
 def latest_stable(repo: str, timeout: float = 8.0) -> dict:
     if repo == "andysom25/codegraph":
-        # Stable is preferred. Only a verified npm 404 + empty official releases
-        # allows reporting SOURCE_FALLBACK; it does NOT report latest-stable PASS.
         spec = spec_from_file_location("codegraph_channel", Path(__file__).with_name("check-codegraph-channel.py"))
-        if spec is not None and spec.loader is not None:
-            mod = module_from_spec(spec)
-            spec.loader.exec_module(mod)
-            observation = mod.observe_channel()
-            if observation["channel"] == "SOURCE_FALLBACK":
-                return {"repository":repo, "version":observation["version"],
-                        "release_url":observation["url"],"source_sha":observation["source_sha"],
-                        "channel":"SOURCE_FALLBACK","stable_verified":False}
-
-        # Use the official npm dist-tag; this CodeGraph upstream has no GitHub Releases API entry.
-        url = "https://registry.npmjs.org/@andysom25%2Fcodegraph/latest"
-        request = urllib.request.Request(
-            url,
-            headers={"Accept": "application/json", "User-Agent": "ADS-consumer-devtools-release-check"},
-        )
-        with urllib.request.urlopen(request, timeout=timeout) as response:
-            package = json.load(response)
-        version = package.get("version")
-        import re
-        if not isinstance(version, str) or not re.fullmatch(r"\d+\.\d+\.\d+", version):
-            raise ValueError("npm dist-tag did not return a stable CodeGraph semver version")
+        if spec is None or spec.loader is None:
+            raise ValueError("CodeGraph source policy missing")
+        module = module_from_spec(spec)
+        spec.loader.exec_module(module)
+        observed = module.observe_channel()
         return {
-            "repository": repo,
-            "version": version,
-            "release_url": "https://www.npmjs.com/package/@andysom25/codegraph",
-            "published_at": package.get("time", {}).get(version),
+            "repository": repo, "version": observed["version"],
+            "release_url": (
+                "https://www.npmjs.com/package/@andysom25/codegraph"
+                if observed["channel"] == "STABLE" else observed["url"]
+            ),
+            "channel": observed["channel"],
+            "stable_verified": observed["stable_verified"],
+            "source_sha": observed["source_sha"],
         }
 
     url = f"https://api.github.com/repos/{repo}/releases/latest"
