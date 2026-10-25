@@ -10,7 +10,7 @@
       "upstream": "andysom25/codegraph",
       "version_policy": "latest-stable",
       "initialize_command": "codegraph init",
-      "after_source_change": ["codegraph sync", "codegraph status"]
+      "sync_policy": "native-auto-sync-with-status-preflight-and-manual-recovery-only"
     },
     "rtk": {
       "required": true,
@@ -18,7 +18,8 @@
       "upstream": "rtk-ai/rtk",
       "version_policy": "latest-stable",
       "verify_binary": "rtk --version",
-      "verify_host_integration": true
+      "verify_host_integration": true,
+      "license_policy": "Apache-2.0+BUSL-1.1-full-only"
     }
   },
   "dev_only_paths": []

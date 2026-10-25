@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "usage": "internal-development",
+  "osi_only": false,
+  "tools": {
+    "codegraph": {
+      "version": "0.0.0",
+      "edition": "cli",
+      "distribution_url": "",
+      "installed_distribution_verified": false,
+      "latest_stable_verified": false,
+      "license_file": "path/to/extracted/codegraph/LICENSE"
+    },
+    "rtk": {
+      "version": "0.0.0",
+      "edition": "full",
+      "distribution_url": "",
+      "installed_distribution_verified": false,
+      "latest_stable_verified": false,
+      "license_file": "path/to/extracted/rtk/LICENSE",
+      "engine_license_file": "path/to/extracted/rtk/LICENSE-ENGINE"
+    }
+  }
+}
