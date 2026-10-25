@@ -1,6 +1,6 @@
 # ADS — Agent Development Standard
 
-**Status:** ADS v0.3 is the current published release; v0.4 is the independently validated release candidate pending a reviewed publication manifest. See [v0.4 release decision](docs/releases/v0.4.md).
+**Status:** **ADS v0.4 is released**, with immutable tag `v0.4` pointing to `2af17d9e1d816844c49835ae91b784405765ad46`. See [GitHub Release](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.4) and [release decision](docs/releases/v0.4.md).
 
 ADS is an agent-native, minimal-ceremony development standard for personal software projects. It reuses the coding agent, GitHub and the host platform rather than introducing a CLI, approval engine, task database, orchestrator or deployment controller.
 
@@ -53,4 +53,4 @@ Goal-driven execution; phase-end GitHub Project milestone convergence; review-ga
 
 ## Migration and publication
 
-The v0.2 baseline is tag `v0.2`; v0.3 is formally released. v0.4 remains under acceptance until a separate release PR and verified tag/Release. Isolated GitHub Actions KIRARI/AiringCal compatibility and *real private* ADS Submodule consumer CI are separate release gates listed in [the v0.3 release decision](docs/releases/v0.3.md). Those projects do not adopt ADS merely because this repository is updated.
+The v0.2 and v0.3 baselines remain archived; v0.4 is officially published via a reviewed release manifest. Consumer updates are separate pinned-Submodule PRs and do not occur automatically. Isolated GitHub Actions KIRARI/AiringCal compatibility and *real private* ADS Submodule consumer CI are separate release gates listed in [the v0.3 release decision](docs/releases/v0.3.md). Those projects do not adopt ADS merely because this repository is updated.
