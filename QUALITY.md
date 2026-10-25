@@ -20,6 +20,10 @@ When a needed remote environment is absent, do not stop at reporting the gap: pr
 
 See [scenarios/remote-first-verification.md](scenarios/remote-first-verification.md) for decision order and acceptance cases.
 
+## Consumer developer-toolchain and production-boundary checks
+
+For every project adopting ADS, validate CodeGraph and the full RTK edition as required development capabilities. Check the official latest stable releases dynamically; do not treat an old pinned version as current. The consumer project must initialize the tools on a development branch and prove the active host integration works. Prefer CodeGraph native auto-sync, verify index freshness before graph-dependent analysis, and use explicit sync/status for recovery or when automatic reconciliation is unhealthy. A deterministic guard must reject consumer tool configuration, generated indexes/caches and binaries from the production branch and release artifacts. The generic guard itself may remain on production main because it does not configure either tool. These requirements apply to ADS consumers, not to the ADS standards repository. See [consumer-dev-toolchain.md](docs/consumer-dev-toolchain.md).
+
 ## Multi-agent integration and efficiency evidence
 
 A child agent's summary, self-tested branch or reviewer finding is input to the main agent, not final verification. The main agent checks the combined diff, re-runs affected contract/integration checks after merging independent changes and reports skipped or unavailable checks. A delegated security review cannot widen authorization, and an AI-only review is not a substitute for deterministic CI. Before accepting safety claims for native Subagents, verify actual child read/edit/shell permissions, canonical path and absolute-path escape containment, and lifecycle waiting with the [targeted negative oracle](scenarios/subagent-permission-containment.md). Independent passing application tests do not erase an observed forbidden read or write. Worktrees alone do not prove containment; missing tool/OS restrictions are reported as unsafe or unverified.
@@ -39,6 +43,11 @@ Report each layer actually performed; a mocked test never proves live integratio
 At Phase closure compare actual GitHub Project item fields and linked Issues against PR/CI, target commit and relevant contract/security evidence. Correct Project status drift only on verified facts, and distinguish historical acceptance FAIL/PARTIAL from evidence archived successfully. If the Project cannot be queried, record PROJECT_UNVERIFIED rather than silently declaring alignment.
 
 A consumer ADS submodule upgrade requires validating the old and new recorded gitlink commits, the upstream guideline diff, local AGENTS.md and native Skill discoverability, plus tests relevant to behavioral/safety changes. A passing ADS source repository CI cannot by itself prove that the consumer's upgraded project works. See [docs/milestone-reconciliation.md](docs/milestone-reconciliation.md) and [docs/how-to-update.md](docs/how-to-update.md).
+
+## Git governance and delivery evidence
+
+Follow the mandatory [Git development governance policy](docs/git-governance.md) in ADS itself and every adopting project. Normal task branches originate from the latest `dev` and PRs target `dev`; production promotion uses a separate release PR. Validate PR base/branch type and explicit Issue references where deterministic, run checks against the actual candidate SHA, and verify the merged target SHA after integration. Issue closure, PR merge, deployment and production validation are distinct evidence states. A workflow run is not server-side branch protection: verify required-check and protection settings separately, and disclose when the host/plan cannot enforce them.
+
 
 ## CI and review
 

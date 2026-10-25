@@ -1,0 +1,6 @@
+# ADS consumer development-only generated data.
+# Keep this ignore rule on the consumer development branch; do not merge it into production main.
+.codegraph/
+
+# Add RTK project-local cache paths only after verifying the active RTK version/host.
+# Do not guess global cache paths or commit generated tool data.

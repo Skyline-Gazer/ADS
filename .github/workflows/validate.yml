@@ -1,11 +1,13 @@
 name: Validate ADS
 on:
   push:
-    branches: [main, "draft/**", "feat/**"]
+    branches: [main, dev, "draft/**", "feat/**", "feature/**", "fix/**", "bugfix/**", "chore/**", "docs/**", "refactor/**", "test/**", "ci/**", "build/**", "perf/**", "style/**", "deps/**", "release/**", "hotfix/**"]
   pull_request:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
   workflow_dispatch:
 permissions:
   contents: read
+  issues: read
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -14,6 +16,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - name: Validate Git governance on pull requests
+        if: github.event_name == 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: python3 scripts/check_git_governance.py
       - name: Test ADS checker
         run: python3 -m unittest discover -s tests -v
       - name: Validate documentation and skills

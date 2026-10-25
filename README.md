@@ -1,8 +1,10 @@
 # ADS — Agent Development Standard
 
-**Status:** ADS v0.3 is released at tag `v0.3`, pointing to `1e07d6c4bbd296b7d37dcd31934cfc70426f73ac`. See [release notes](docs/releases/v0.3-notes.md) and [release decision](docs/releases/v0.3.md).
+**Status:** ADS v0.3 is the current published release; v0.4 is the independently validated release candidate pending a reviewed publication manifest. See [v0.4 release decision](docs/releases/v0.4.md).
 
 ADS is an agent-native, minimal-ceremony development standard for personal software projects. It reuses the coding agent, GitHub and the host platform rather than introducing a CLI, approval engine, task database, orchestrator or deployment controller.
+
+**License:** [MIT](LICENSE) for ADS's own standard, Skills and templates; third-party developer tools retain their independent licenses (see [tool-license policy](docs/tool-licensing.md)).
 
 ## Start here
 
@@ -25,6 +27,9 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 - [docs/native-subagent-safety.md](docs/native-subagent-safety.md): verified child permission ceilings, command/file-system containment and lifecycle preflight; preserves observed host failures.
 - [docs/milestone-reconciliation.md](docs/milestone-reconciliation.md): Phase-end GitHub Project/Issue/PR/CI drift convergence.
 - [docs/agent-adoption.md](docs/agent-adoption.md): practical, pinned adoption and skill discovery.
+- [docs/git-governance.md](docs/git-governance.md): mandatory Issue/branch/PR/CI/release governance for ADS itself and all adopting projects.
+- [docs/consumer-dev-toolchain.md](docs/consumer-dev-toolchain.md): mandatory latest-stable CodeGraph + full RTK for consumer projects, development-branch-only integration and production-boundary guard.
+- [docs/tool-licensing.md](docs/tool-licensing.md): CodeGraph/RTK editions, actual distributed licenses, usage classification and fail-closed evidence checks.
 - [docs/code-review-options.md](docs/code-review-options.md): v0.3 review-option decision and the native review trial evidence.
 - [scenarios/migration-recon.md](scenarios/migration-recon.md): read-only findings for KIRARI and AiringCal (not a passed migration).
 - [scenarios/v0.3-multi-agent-acceptance.md](scenarios/v0.3-multi-agent-acceptance.md): v0.3 native Multi-Agent protocol; Codex PARTIAL and Claude FAIL archived, not a blanket compatibility PASS.
@@ -48,4 +53,4 @@ Goal-driven execution; phase-end GitHub Project milestone convergence; review-ga
 
 ## Migration and publication
 
-The v0.2 release baseline is tag `v0.2` (merged PRs #2 and #5); v0.3 is in release-candidate closeout. Isolated GitHub Actions KIRARI/AiringCal compatibility and *real private* ADS Submodule consumer CI are separate release gates listed in [the v0.3 release decision](docs/releases/v0.3.md). Those projects do not adopt ADS merely because this repository is updated.
+The v0.2 baseline is tag `v0.2`; v0.3 is formally released. v0.4 remains under acceptance until a separate release PR and verified tag/Release. Isolated GitHub Actions KIRARI/AiringCal compatibility and *real private* ADS Submodule consumer CI are separate release gates listed in [the v0.3 release decision](docs/releases/v0.3.md). Those projects do not adopt ADS merely because this repository is updated.
