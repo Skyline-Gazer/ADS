@@ -1,0 +1,160 @@
+name: ADS v0.4 consumer toolchain acceptance
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/v04-consumer-acceptance.yml'
+      - 'templates/consumer-devtools/**'
+      - 'docs/consumer-dev-toolchain.md'
+      - 'docs/tool-licensing.md'
+  push:
+    branches: [dev]
+    paths:
+      - '.github/workflows/v04-consumer-acceptance.yml'
+      - 'templates/consumer-devtools/**'
+      - 'docs/consumer-dev-toolchain.md'
+      - 'docs/tool-licensing.md'
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  consumer-acceptance:
+    name: v0.4 consumer / ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: KIRARI
+            repository: markd3ng/KIRARI
+            commit: 60691880f04ae8d36ef49f710edea09a89075514
+          - name: AiringCal
+            repository: Skyline-Gazer/AiringCal
+            commit: 72ebdcf422e4f4e50dbb03dc9aef449a2cfcfc48
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Official-source fallback authorization and build
+        env:
+          CODEGRAPH_TELEMETRY: '0'
+          APPROVED_SHA: bb11bc1226db30233ac9e66a2670c4b16dfa85fa
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 templates/consumer-devtools/check-codegraph-channel.py > "$RUNNER_TEMP/codegraph-channel.json"
+          python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          x=json.loads((Path(os.environ['RUNNER_TEMP'])/'codegraph-channel.json').read_text())
+          assert x["channel"]=="SOURCE_FALLBACK",x
+          assert x["source_sha"]==os.environ["APPROVED_SHA"],x
+          assert x["stable_verified"] is False,x
+          print("SOURCE_FALLBACK_CONFIRMED sha="+x["source_sha"])
+          PY
+          git clone -q --no-checkout https://github.com/andysom25/codegraph.git "$RUNNER_TEMP/codegraph-src"
+          git -C "$RUNNER_TEMP/codegraph-src" checkout -q --detach "$APPROVED_SHA"
+          test "$(git -C "$RUNNER_TEMP/codegraph-src" rev-parse HEAD)" = "$APPROVED_SHA"
+          test -f "$RUNNER_TEMP/codegraph-src/LICENSE"
+          (cd "$RUNNER_TEMP/codegraph-src" && npm ci --ignore-scripts && npm run build)
+          mkdir -p "$RUNNER_TEMP/bin"
+          ln -s "$RUNNER_TEMP/codegraph-src/dist/bin/codegraph.js" "$RUNNER_TEMP/bin/codegraph"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/bin/codegraph" --version
+
+      - name: Full RTK latest official binary, hash, edition and licenses
+        env:
+          CODEGRAPH_TELEMETRY: '0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          latest="$(curl -fsSL https://api.github.com/repos/rtk-ai/rtk/releases/latest)"
+          version="$(printf '%s' "$latest" | python3 -c 'import json,sys; x=json.load(sys.stdin); assert not x["draft"] and not x["prerelease"]; print(x["tag_name"])')"
+          [[ "$version" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          mkdir -p "$RUNNER_TEMP/rtk-dist"
+          cd "$RUNNER_TEMP/rtk-dist"
+          asset="rtk-x86_64-unknown-linux-musl.tar.gz"
+          curl -fsSL "https://github.com/rtk-ai/rtk/releases/download/$version/$asset" -o "$asset"
+          curl -fsSL "https://github.com/rtk-ai/rtk/releases/download/$version/checksums.txt" -o checksums.txt
+          grep -F "  $asset" checksums.txt | sha256sum -c -
+          mkdir unpack
+          tar -xzf "$asset" -C unpack
+          test -f unpack/LICENSE
+          test -f unpack/LICENSE-ENGINE
+          test -x unpack/rtk
+          cp unpack/rtk "$RUNNER_TEMP/bin/rtk"
+          "$RUNNER_TEMP/bin/rtk" --version
+          echo "RTK_SHA256_VERIFIED edition=full version=$version"
+
+      - name: Real consumer index, RTK integration and license evidence
+        env:
+          CONSUMER_REPO: ${{ matrix.repository }}
+          CONSUMER_SHA: ${{ matrix.commit }}
+          CODEGRAPH_TELEMETRY: '0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$RUNNER_TEMP/bin:$PATH"
+          root="$RUNNER_TEMP/consumer"
+          git clone -q --no-checkout --depth 1 "https://github.com/$CONSUMER_REPO.git" "$root"
+          git -C "$root" fetch -q --depth 1 origin "$CONSUMER_SHA"
+          git -C "$root" checkout -q --detach "$CONSUMER_SHA"
+          test "$(git -C "$root" rev-parse HEAD)" = "$CONSUMER_SHA"
+          # Required no-tool-in-main state: check before installing any project integration.
+          python3 templates/consumer-devtools/check-production-boundary.py \
+            --root "$root" --target-branch main
+          cd "$root"
+          git checkout -qb feat/ads-v04-validation
+          codegraph init .
+          codegraph status
+          rtk init
+          rtk git status
+          rtk gain
+          printf 'export const adsAcceptanceFixture = 1;\n' > ads-v04-smoke-fixture.ts
+          codegraph sync
+          codegraph status
+          python3 "$GITHUB_WORKSPACE/templates/consumer-devtools/check-production-boundary.py" \
+            --root "$root" --target-branch dev
+          if python3 "$GITHUB_WORKSPACE/templates/consumer-devtools/check-production-boundary.py" \
+            --root "$root" --target-branch main; then
+            echo "::error::Developer-only tool integration did not trigger production boundary failure"
+            exit 1
+          fi
+          # Verify SHA-bound source license and checksum-verified full RTK package.
+          export SOURCE_SHA=bb11bc1226db30233ac9e66a2670c4b16dfa85fa
+          export RTK_VERSION="$(rtk --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+          export CG_VERSION="$(codegraph --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+          python3 - <<'PY'
+          import os,json
+          from pathlib import Path
+          tmp=Path(os.environ["RUNNER_TEMP"])
+          tools={
+            "codegraph":{
+              "version":os.environ["CG_VERSION"], "edition":"cli",
+              "distribution_url":f'https://github.com/andysom25/codegraph/commit/{os.environ["SOURCE_SHA"]}',
+              "source_sha":os.environ["SOURCE_SHA"],"source_fallback_approved":True,
+              "source_fallback_verified":True,"installed_distribution_verified":True,
+              "latest_stable_verified":False,"license_file":str(tmp/"codegraph-src"/"LICENSE")
+            },
+            "rtk":{
+              "version":os.environ["RTK_VERSION"],"edition":"full",
+              "distribution_url":f'https://github.com/rtk-ai/rtk/releases/download/v{os.environ["RTK_VERSION"]}/rtk-x86_64-unknown-linux-musl.tar.gz',
+              "installed_distribution_verified":True,"latest_stable_verified":True,
+              "license_file":str(tmp/"rtk-dist"/"unpack"/"LICENSE"),
+              "engine_license_file":str(tmp/"rtk-dist"/"unpack"/"LICENSE-ENGINE")
+            }
+          }
+          (tmp/"license-evidence.json").write_text(json.dumps({"schema_version":1,"usage":"internal-development","osi_only":False,"tools":tools},indent=2))
+          PY
+          python3 "$GITHUB_WORKSPACE/templates/consumer-devtools/check-license-compliance.py" \
+            "$RUNNER_TEMP/license-evidence.json"
+          echo "CONSUMER_PILOT_PASS consumer=$CONSUMER_REPO source=$CONSUMER_SHA"
+          echo "LIMITATIONS: real native agent MCP routing and RTK hook interception NOT_TESTED in isolated CI"
