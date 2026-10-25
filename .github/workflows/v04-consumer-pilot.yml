@@ -78,7 +78,7 @@ jobs:
           cglicense="$(find "$RUNNER_TEMP/license-files/cg/package" -maxdepth 2 -iname 'LICENSE*' -type f | head -1)"
           test -n "$cglicense" && test -f "$cglicense"
           cgdist="https://registry.npmjs.org/@andysom25/codegraph/-/codegraph-$cgver.tgz"
-          rtkdist="https://github.com/rtk-ai/rtk/releases/download/v$rtkver/rtk-x86_64-unknown-linux-gnu.tar.gz"
+          rtkdist="https://github.com/rtk-ai/rtk/releases/download/v$rtkver/rtk-x86_64-unknown-linux-musl.tar.gz"
           curl -fsSL "$rtkdist" -o "$RUNNER_TEMP/license-files/rtk/release.tar.gz"
           tar -xzf "$RUNNER_TEMP/license-files/rtk/release.tar.gz" -C "$RUNNER_TEMP/license-files/rtk"
           test -f "$RUNNER_TEMP/license-files/rtk/LICENSE"
@@ -201,9 +201,9 @@ jobs:
           mkdir -p "$RUNNER_TEMP/rtk-pilot"
           cd "$RUNNER_TEMP/rtk-pilot"
           curl -fsSL "https://github.com/rtk-ai/rtk/releases/download/$tag/checksums.txt" -o checksums.txt
-          curl -fsSL "https://github.com/rtk-ai/rtk/releases/download/$tag/rtk-x86_64-unknown-linux-gnu.tar.gz" -o full.tar.gz
-          grep '  rtk-x86_64-unknown-linux-gnu.tar.gz$' checksums.txt | \
-            sed 's/rtk-x86_64-unknown-linux-gnu.tar.gz/full.tar.gz/' | sha256sum -c -
+          curl -fsSL "https://github.com/rtk-ai/rtk/releases/download/$tag/rtk-x86_64-unknown-linux-musl.tar.gz" -o full.tar.gz
+          grep '  rtk-x86_64-unknown-linux-musl.tar.gz$' checksums.txt | \
+            sed 's/rtk-x86_64-unknown-linux-musl.tar.gz/full.tar.gz/' | sha256sum -c -
           mkdir extracted
           tar -xzf full.tar.gz -C extracted
           find extracted -maxdepth 2 -type f -printf '%P\n'
@@ -213,7 +213,7 @@ jobs:
           chmod +x extracted/rtk
           extracted/rtk --version
           printf 'RTK_FULL_ARCHIVE=%s release=%s\n' \
-            "https://github.com/rtk-ai/rtk/releases/download/$tag/rtk-x86_64-unknown-linux-gnu.tar.gz" "$tag"
+            "https://github.com/rtk-ai/rtk/releases/download/$tag/rtk-x86_64-unknown-linux-musl.tar.gz" "$tag"
           git init -q "$RUNNER_TEMP/rtk-fixture"
           cd "$RUNNER_TEMP/rtk-fixture"
           echo hello > sample.txt
