@@ -1,6 +1,6 @@
 {
   "version": "v0.4.1",
-  "release_approved": false,
+  "release_approved": true,
   "release_target_sha": "3abf6025657a5d716476029cc8cbf5239543210b",
   "previous_main_sha": "132b4c425b8fd91fa4297b4fb029eb2caac3fa2d",
   "source_pull_request": 69,
