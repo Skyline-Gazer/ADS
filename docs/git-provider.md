@@ -29,3 +29,8 @@ Record DETECTED / CONFIGURED / VERIFIED / BLOCKED independently for native branc
 For practical CNB automatic review, the deterministic current-SHA gate, security boundaries, and on-demand NPC behavior see [CNB review](cnb-review.md). This is a separate consumer template, not an automatic modification of the ADS standards repository itself.
 
 Read [CNB safe release synchronization](cnb-sync.md) before enabling any mirror. It is deliberately manifest-driven rather than automatically pushing every main update; owner approval, exact ref validation and protection against unknown auto-deploy triggers are required.
+
+
+## Proposed dual-platform release gate — not a supported mirror mode
+
+The [CNB Development + GitHub Release Gate pilot](cnb-github-release-gate-pilot.md) is a separate, unaccepted extension under Issue #63. It makes GitHub main authoritative for releases, so the existing CNB-to-GitHub main mirror and schema MUST NOT be repurposed for it. Current validators must continue rejecting that unsupported mode until an independently reviewed implementation and real isolated-platform acceptance exist. No consumer cutover is authorized by this document.

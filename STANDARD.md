@@ -1,6 +1,6 @@
 # ADS Development Standard
 
-Version: **0.3 candidate**. Not automatically adopted by any project. The v0.2 release remains the tag `v0.2`; this candidate adds environment-first and remote-first verification guidance without changing v0.2 semantics.
+Version: **development after v0.4**. The immutable `v0.4` release remains commit `2af17d9e1d816844c49835ae91b784405765ad46`. Development extensions are not part of that release and are not automatically adopted by consumers.
 
 ## Priority and inheritance
 
