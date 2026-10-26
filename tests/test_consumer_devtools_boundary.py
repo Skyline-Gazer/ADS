@@ -40,6 +40,33 @@ class ConsumerDevtoolsBoundaryTests(unittest.TestCase):
             check=False,
         )
 
+    def test_artifact_does_not_skip_dependency_directories(self):
+        self.write("build/node_modules/.codegraph/index.sqlite")
+        result = subprocess.run([sys.executable, str(SCRIPT), "--root", str(self.root),
+            "--target-branch", "dev", "--artifact-root", str(self.root / "build")], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("artifact", result.stderr)
+
+    def test_missing_output_fails_closed(self):
+        result = subprocess.run([sys.executable, str(SCRIPT), "--root", str(self.root),
+            "--target-branch", "dev", "--artifact-root", str(self.root / "absent")], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 1)
+
+    def test_external_development_policy_survives_manifest_removal(self):
+        self.write("production/custom-adapter.ini")
+        manifest = self.write("policy.json", '{"dev_only_paths":["custom-adapter.ini"]}')
+        result = subprocess.run([sys.executable, str(SCRIPT), "--root", str(self.root / "production"),
+            "--target-branch", "main", "--dev-only-manifest", str(manifest)], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("custom-adapter.ini", result.stderr)
+
+    def test_rtk_adapter_generated_instructions_rejected(self):
+        self.write("AGENTS.md", "Use rtk git log -5")
+        self.write("RTK.md", "adapter integration")
+        result = self.run_guard()
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("RTK.md", result.stderr)
+
     def test_clean_production_tree_passes(self):
         self.write("src/app.py", "def main(): return 1\n")
         result = self.run_guard()

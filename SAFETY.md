@@ -35,3 +35,5 @@ Delegation does not transfer authority to grant new permissions. A child must op
 
 
 Evaluate applicability and exploitability, preserve material blocking checks and never hide a failed test. An advisory review/model outage alone is not a source-code defect. Do not assert that an unavailable environment was verified.
+
+Consumer tool initialization is project-local on development branches only. Validate worktree ownership and escaping symlinks before adapter writes; reject ambiguous edition or substituted PATH executables. Global install/update, global hooks, paid services and provider cutover retain their explicit authorization boundaries. Development merge authorization does not authorize production main, tags or Release publication.

@@ -50,7 +50,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 templates/consumer-devtools/check-codegraph-channel.py > "$RUNNER_TEMP/codegraph-channel.json"
+          python3 templates/consumer-devtools/check-codegraph-channel.py --source-sha "$APPROVED_SHA" > "$RUNNER_TEMP/codegraph-channel.json"
           python3 - <<'PY'
           import json,os
           from pathlib import Path
@@ -121,7 +121,7 @@ jobs:
           git checkout -qb feat/ads-v04-validation
           codegraph init .
           codegraph status
-          rtk init
+          rtk init --codex
           rtk git status
           rtk gain
           printf 'export const adsAcceptanceFixture = 1;\n' > ads-v04-smoke-fixture.ts
