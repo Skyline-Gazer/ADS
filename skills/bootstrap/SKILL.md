@@ -15,3 +15,7 @@ description: Initialize a new software project with only the structure, tests, C
 9. Validate remotely by default when it materially improves evidence: reuse hosted CI and target-platform preview first. If none exists, create the smallest repo-native hosted workflow or ephemeral preview/test environment autonomously when current authorization, existing credentials, permissions, quotas and budget allow it. Do not incur new recurring spend, upgrade plans, broaden IAM or create long-lived infrastructure without the required grant. If owner action is required, give exact secure setup steps and continue independent safe work; use local fallback only when remote is unnecessary or blocked. Avoid deploying or creating cloud resources outside authorization.
 
 Output: code-ready project and a concise summary. Do not turn bootstrapping into a multi-stage approval workflow.
+
+## Provider decision gate
+
+Read [provider selection](../../docs/git-provider.md) before following GitHub-specific gh protection instructions. Check actual remotes, dev, main, CI, deploy hooks and .ads-project.json. When missing, ask once which provider mode to use; existing project providers remain unchanged by default. CNB Primary requires CNB-native PR/branch protection rather than gh. Record the choice via a reviewable task PR without importing repos, changing remotes or enabling mirrors.

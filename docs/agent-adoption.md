@@ -35,3 +35,7 @@ Before ordinary work, apply the [mandatory Git governance policy](git-governance
 - `actions/checkout` of a private consumer does not itself guarantee access to a different private ADS repository; provide only authorized checkout credentials in existing secure CI configuration.
 - Phase closure and GitHub Project status alignment follow [milestone-reconciliation.md](milestone-reconciliation.md); unqueried Project fields never count as verified alignment.
 - A repository's CI/security hooks can override behavior until separately migrated. Never claim adoption was successful without checking executable restrictions.
+
+## Provider-specific bootstrap
+
+Before executing the GitHub-specific gh / classic-protection steps above, read [provider selection](git-provider.md) and verify the consumer-root .ads-project.json, if present. In CNB Primary mode use CNB-native protection and PR/CI, and do not require a duplicate GitHub PR. Preserve existing GitHub Issues/Projects unless a separate migration is authorized.
