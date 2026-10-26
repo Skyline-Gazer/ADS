@@ -1,5 +1,7 @@
 # CNB to GitHub safe release mirror
 
+**Validation status:** CONFIGURED / EXPERIMENTAL / NOT_LIVE_VERIFIED. Local Git fixtures cover safe ref transport; real CNB protection, credentials and push-triggered deployment still require a specifically authorized pilot. No mirror runs by default.
+
 **Opt-in only; never installed as a default ADS pipeline.** The consumer's CNB dev and PR process is authoritative. Its GitHub mirror accepts only production main and an exact, approved release tag. No dev, feature, PR, or unapproved tag refs are pushed.
 
 ## Release manifest and preflight

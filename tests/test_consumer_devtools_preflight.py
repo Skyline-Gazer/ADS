@@ -24,22 +24,24 @@ class PreflightTests(TestCase):
     def test_project_initializes_once_and_queries(self):
         with TemporaryDirectory() as tmp:
             root = Path(tmp).resolve()
-            with patch.object(MODULE, 'project_status', side_effect=[status(root, False), status(root)]), patch.object(MODULE, 'run', return_value='[{"name":"symbol"}]') as run:
+            (root / "app.ts").write_text("source")
+            with patch.object(MODULE, 'project_status', side_effect=[status(root, False), status(root)]), patch.object(MODULE, 'run', return_value='[{"node":{"name":"symbol","filePath":"app.ts"}}]' ) as run:
                 MODULE.initialize_codegraph('cg', root, 'symbol', True)
             self.assertEqual(run.call_args_list[0].args[0], ['cg', 'init', str(root)])
-            with patch.object(MODULE, 'project_status', return_value=status(root)), patch.object(MODULE, 'run', return_value='[{"name":"symbol"}]') as run:
+            with patch.object(MODULE, 'project_status', return_value=status(root)), patch.object(MODULE, 'run', return_value='[{"node":{"name":"symbol","filePath":"app.ts"}}]' ) as run:
                 MODULE.initialize_codegraph('cg', root, 'symbol', True)
             self.assertEqual(run.call_count, 1)
             self.assertEqual(run.call_args.args[0][1], 'query')
 
     def test_stale_index_requires_explicit_recovery(self):
         with TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            root = Path(tmp).resolve()
+            (root / "app.ts").write_text("source")
             with patch.object(MODULE, 'project_status', return_value=status(root, pending=1)), patch.object(MODULE, 'run') as run:
                 with self.assertRaisesRegex(ValueError, 'unhealthy'):
                     MODULE.initialize_codegraph('cg', root, 'symbol')
                 run.assert_not_called()
-            with patch.object(MODULE, 'project_status', side_effect=[status(root, pending=1), status(root)]), patch.object(MODULE, 'run', return_value='[{"name":"symbol"}]') as run:
+            with patch.object(MODULE, 'project_status', side_effect=[status(root, pending=1), status(root)]), patch.object(MODULE, 'run', return_value='[{"node":{"name":"symbol","filePath":"app.ts"}}]' ) as run:
                 MODULE.initialize_codegraph('cg', root, 'symbol', recover=True)
                 self.assertEqual(run.call_args_list[0].args[0][1], 'sync')
 
@@ -60,6 +62,21 @@ class PreflightTests(TestCase):
         with patch.object(MODULE, 'project_status', return_value=status(root)), patch.object(MODULE, 'run', return_value='[]'):
             with self.assertRaisesRegex(ValueError, 'query'):
                 MODULE.initialize_codegraph('cg', root, 'symbol')
+
+    def test_uninitialized_status_rejects_actual_external_index(self):
+        root = Path('/tmp/consumer').resolve()
+        value = status(root, False)
+        value['indexPath'] = '/outside/custom-index'
+        with patch.object(MODULE, 'run', return_value=json.dumps(value)):
+            with self.assertRaisesRegex(ValueError, 'mismatch'):
+                MODULE.project_status('cg', root)
+
+    def test_error_json_is_not_a_source_query_result(self):
+        root = Path('/tmp').resolve()
+        for result in [{'error': 'symbol lookup failed'}, [{'node': {'name': 'other'}, 'query': 'symbol'}]]:
+            with patch.object(MODULE, 'project_status', return_value=status(root)), patch.object(MODULE, 'run', return_value=json.dumps(result)):
+                with self.assertRaisesRegex(ValueError, 'query'):
+                    MODULE.initialize_codegraph('cg', root, 'symbol')
 
     def test_attestation_binds_active_executable(self):
         with TemporaryDirectory() as tmp:
@@ -105,7 +122,7 @@ class PreflightTests(TestCase):
             installed.assert_not_called()
 
     def test_missing_tools_require_consent_without_install(self):
-        with patch.object(MODULE, 'run', return_value='feat/task'), patch.object(MODULE, 'installed_version', side_effect=FileNotFoundError):
+        with patch.object(MODULE, 'run', return_value='feat/task'), patch.object(MODULE.shutil, 'which', return_value=None):
             self.assertEqual(MODULE.main([]), 1)
 
 

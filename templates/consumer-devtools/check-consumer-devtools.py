@@ -102,12 +102,13 @@ def project_status(executable, root):
     value = json.loads(run([executable, "status", "--json", str(root)], root))
     if not isinstance(value, dict) or not isinstance(value.get("initialized"), bool):
         raise ValueError("CodeGraph status schema unverified")
-    if value["initialized"]:
-        if Path(value.get("projectPath", "")).resolve() != root:
-            raise ValueError("CodeGraph index belongs to another worktree")
-        index_path = Path(value.get("indexPath", "")).resolve()
-        if not index_path.is_relative_to(root) or value.get("worktreeMismatch"):
-            raise ValueError("CodeGraph index/worktree mismatch")
+    if not isinstance(value.get("projectPath"), str) or Path(value["projectPath"]).resolve() != root:
+        raise ValueError("CodeGraph index belongs to another worktree")
+    if not isinstance(value.get("indexPath"), str):
+        raise ValueError("CodeGraph actual index path unverified")
+    index_path = Path(value["indexPath"]).resolve()
+    if index_path == root or not index_path.is_relative_to(root) or value.get("worktreeMismatch"):
+        raise ValueError("CodeGraph index/worktree mismatch")
     return value
 
 
@@ -139,7 +140,11 @@ def initialize_codegraph(executable, root, query, initialize=False, recover=Fals
         if not healthy(status):
             raise ValueError("CodeGraph recovery failed; do not trust or mechanically rebuild index")
     result = json.loads(run([executable, "query", query, "--path", str(root), "--limit", "1", "--json"], root))
-    if not result or query.lower() not in json.dumps(result).lower():
+    if not isinstance(result, list) or not any(
+        isinstance(hit, dict) and isinstance(hit.get("node"), dict) and
+        hit["node"].get("name") == query and isinstance(hit["node"].get("filePath"), str) and
+        (root / hit["node"]["filePath"]).resolve().is_relative_to(root) and
+        (root / hit["node"]["filePath"]).is_file() for hit in result):
         raise ValueError("CodeGraph query did not return the requested source symbol")
     print("codegraph: INITIALIZED_HEALTHY_QUERY_PASS worktree=" + str(root))
 
@@ -194,7 +199,10 @@ def main(argv: list[str] | None = None) -> int:
         installed = {}
         for tool in UPSTREAMS:
             try:
-                installed[tool] = installed_version(tool)
+                executable = shutil.which(tool)
+                if not executable:
+                    raise FileNotFoundError(tool)
+                installed[tool] = executable
             except FileNotFoundError:
                 print(f"{tool}: MISSING — Ask the user before installing. No global changes performed.")
         if len(installed) != 2:
@@ -206,12 +214,17 @@ def main(argv: list[str] | None = None) -> int:
         license_result = load_policy_module("check-license-compliance").inspect(evidence, evidence_path.parent)
         if license_result["errors"]:
             raise ValueError("; ".join(license_result["errors"]))
+        for tool, executable in installed.items():
+            verify_executable(evidence["tools"][tool], executable)
         channel_module = load_policy_module("check-codegraph-channel")
         channel = channel_module.observe_channel(args.codegraph_source_sha)
         tools = evidence["tools"]
-        for tool, (version, executable) in installed.items():
+        for tool, executable in list(installed.items()):
+            version, active = installed_version(tool)
+            if Path(active).resolve() != Path(executable).resolve():
+                raise ValueError(f"{tool}: PATH changed during preflight")
+            installed[tool] = (version, executable)
             item = tools[tool]
-            verify_executable(item, executable)
             if version != item["version"]:
                 raise ValueError(f"{tool}: active version differs from provenance evidence")
         if channel["channel"] == "SOURCE_FALLBACK":
