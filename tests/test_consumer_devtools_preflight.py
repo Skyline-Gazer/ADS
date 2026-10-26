@@ -78,6 +78,21 @@ class PreflightTests(TestCase):
                 with self.assertRaisesRegex(ValueError, 'query'):
                     MODULE.initialize_codegraph('cg', root, 'symbol')
 
+    def test_provenance_is_checked_before_binary_execution(self):
+        with TemporaryDirectory() as tmp:
+            evidence = Path(tmp) / 'evidence.json'
+            evidence.write_text('{"tools":{"codegraph":{},"rtk":{}}}')
+            policy = type('Policy', (), {'inspect': lambda *args: {'errors': []}})()
+            with patch.object(MODULE, 'run', return_value='feat/task'), patch.object(MODULE.shutil, 'which', return_value='/untrusted/tool'), patch.object(MODULE, 'load_policy_module', return_value=policy), patch.object(MODULE, 'verify_executable', side_effect=ValueError('hash mismatch')), patch.object(MODULE, 'installed_version') as version:
+                self.assertEqual(MODULE.main(['--evidence', str(evidence), '--query', 'symbol']), 1)
+                version.assert_not_called()
+
+    def test_external_codegraph_directory_is_rejected_before_status(self):
+        with patch.dict(MODULE.os.environ, {'CODEGRAPH_DIR': '/outside/index'}), patch.object(MODULE, 'run') as run:
+            with self.assertRaisesRegex(ValueError, 'escapes'):
+                MODULE.project_status('cg', Path('/tmp/consumer').resolve())
+            run.assert_not_called()
+
     def test_attestation_binds_active_executable(self):
         with TemporaryDirectory() as tmp:
             binary = Path(tmp) / 'tool'

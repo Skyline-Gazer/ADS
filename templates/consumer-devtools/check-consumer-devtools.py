@@ -102,6 +102,9 @@ def verify_executable(item, executable):
 
 
 def project_status(executable, root):
+    configured = Path(os.environ.get("CODEGRAPH_DIR", ".codegraph"))
+    if not (root / configured).resolve().is_relative_to(root):
+        raise ValueError("configured CodeGraph index escapes worktree")
     value = json.loads(run([executable, "status", "--json", str(root)], root))
     if not isinstance(value, dict) or not isinstance(value.get("initialized"), bool):
         raise ValueError("CodeGraph status schema unverified")
