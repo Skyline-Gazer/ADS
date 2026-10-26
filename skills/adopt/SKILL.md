@@ -23,3 +23,5 @@ Never silently rewrite production configs, rotate credentials or merge a high-ri
 Read [provider selection](../../docs/git-provider.md) before running any GitHub-specific gh helper. Preserve existing providers by default; only an explicit decision enables CNB Primary. Validate .ads-project.json, existing Issues/Projects, native protection and CI. Do not create duplicate GitHub PRs or execute live mirror migration as a preflight side effect.
 
 During CNB adoption follow [CNB review](../../docs/cnb-review.md) and compare the current PR source SHA, review JSON and actual CI. If code-review or NPC access is unavailable, report BLOCKED rather than disabling the review gate or silently merging.
+
+Before enabling a CNB Primary mirror read [CNB safe synchronization](../../docs/cnb-sync.md), inspect GitHub auto-deploy effects, target main and tag state, least-privilege credentials and CNB branch protection. Adoption never automatically synchronizes production.
