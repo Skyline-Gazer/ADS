@@ -46,6 +46,7 @@ def pin_roundtrip(source, candidate, scratch, baseline=STABLE):
     for revision in (baseline, candidate):
         if not re.fullmatch(r"[a-f0-9]{40}", revision):
             raise ValueError("baseline and candidate must be immutable full commit SHAs")
+    for revision in (baseline, candidate):
         if git(source, "rev-parse", "--verify", revision + "^{commit}") != revision:
             raise ValueError("revision did not resolve to the exact approved commit")
     consumer = scratch / "pin-consumer"

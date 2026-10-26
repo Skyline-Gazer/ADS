@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 from importlib.util import module_from_spec, spec_from_file_location
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -63,6 +64,7 @@ def installed_version(command: str) -> tuple[str, str]:
         capture_output=True,
         text=True,
         timeout=8,
+        env={**os.environ, "CODEGRAPH_NO_DOWNLOAD": "1"},
     )
     output = (result.stdout + "\n" + result.stderr).strip()
     if result.returncode != 0:
@@ -83,7 +85,8 @@ def load_policy_module(filename):
 
 
 def run(command, root):
-    result = subprocess.run(command, cwd=root, capture_output=True, text=True, timeout=120)
+    result = subprocess.run(command, cwd=root, capture_output=True, text=True, timeout=120,
+                            env={**os.environ, "CODEGRAPH_NO_DOWNLOAD": "1"})
     if result.returncode:
         raise ValueError(f"{Path(command[0]).name} {command[1]} failed ({result.returncode}): {result.stderr[-1000:]}")
     return result.stdout
@@ -219,6 +222,22 @@ def main(argv: list[str] | None = None) -> int:
         channel_module = load_policy_module("check-codegraph-channel")
         channel = channel_module.observe_channel(args.codegraph_source_sha)
         tools = evidence["tools"]
+        if channel["channel"] == "SOURCE_FALLBACK":
+            permitted, reason = channel_module.evaluate_source_pin(channel, args.codegraph_source_sha)
+            if not permitted or tools["codegraph"].get("source_sha") != args.codegraph_source_sha:
+                raise ValueError("CodeGraph source fallback unauthorized: " + reason)
+            print("codegraph: SOURCE_FALLBACK_APPROVED — immutable reviewed source; not latest stable")
+        elif tools["codegraph"].get("source_sha"):
+            raise ValueError("official stable channel exists; review source fallback migration")
+        # The supported source recipe executes its direct built CLI, never a downloading shim.
+        if channel["channel"] == "SOURCE_FALLBACK":
+            entry = Path(installed["codegraph"]).resolve()
+            if entry.parts[-3:] != ("dist", "bin", "codegraph.js"):
+                raise ValueError("source fallback requires direct dist/bin/codegraph.js; npm shims/wrappers unsupported")
+            source_root = entry.parents[2]
+            package = json.loads((source_root / "package.json").read_text())
+            if package.get("name") != "@andysom25/codegraph" or run(["git", "rev-parse", "HEAD"], source_root).strip() != args.codegraph_source_sha:
+                raise ValueError("source CLI checkout identity differs from reviewed pin")
         for tool, executable in list(installed.items()):
             version, active = installed_version(tool)
             if Path(active).resolve() != Path(executable).resolve():
@@ -227,13 +246,6 @@ def main(argv: list[str] | None = None) -> int:
             item = tools[tool]
             if version != item["version"]:
                 raise ValueError(f"{tool}: active version differs from provenance evidence")
-        if channel["channel"] == "SOURCE_FALLBACK":
-            permitted, reason = channel_module.evaluate_source_pin(channel, args.codegraph_source_sha)
-            if not permitted or tools["codegraph"].get("source_sha") != args.codegraph_source_sha:
-                raise ValueError("CodeGraph source fallback unauthorized: " + reason)
-            print("codegraph: SOURCE_FALLBACK_APPROVED — immutable reviewed source; not latest stable")
-        elif tools["codegraph"].get("source_sha"):
-            raise ValueError("official stable channel exists; review source fallback migration")
         if installed["codegraph"][0] != channel["version"]:
             raise ValueError("CodeGraph version differs from verified official channel")
         latest, _ = latest_stable(UPSTREAMS["rtk"][1])
