@@ -19,3 +19,5 @@ Output: code-ready project and a concise summary. Do not turn bootstrapping into
 ## Provider decision gate
 
 Read [provider selection](../../docs/git-provider.md) before following GitHub-specific gh protection instructions. Check actual remotes, dev, main, CI, deploy hooks and .ads-project.json. When missing, ask once which provider mode to use; existing project providers remain unchanged by default. CNB Primary requires CNB-native PR/branch protection rather than gh. Record the choice via a reviewable task PR without importing repos, changing remotes or enabling mirrors.
+
+For a CNB Primary consumer initialize the review adapter from [CNB review](../../docs/cnb-review.md) on a task branch, preserving existing .cnb.yml behavior. Require a real CI run before labeling the review as VERIFIED.
