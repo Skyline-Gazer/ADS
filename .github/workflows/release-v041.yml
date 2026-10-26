@@ -1,0 +1,62 @@
+name: Publish ADS v0.4.1
+
+# A separately Owner-approved manifest on main is the sole publish trigger.
+# Adding this workflow or merging development fixes does not publish anything.
+on:
+  push:
+    branches: [main]
+    paths: ['release/v0.4.1-publish.json']
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+concurrency:
+  group: ads-v0.4.1-publish
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python3 -m unittest discover -s tests -v
+      - run: python3 scripts/check-ads.py
+      - name: Validate exact frozen target and release receipts without writing
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_MAIN_SHA: ${{ github.sha }}
+        run: python3 scripts/release-v041.py --expected-main-sha "$EXPECTED_MAIN_SHA"
+
+  publish:
+    needs: [validate]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      actions: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Revalidate and publish or resume the exact immutable release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_MAIN_SHA: ${{ github.sha }}
+        run: python3 scripts/release-v041.py --expected-main-sha "$EXPECTED_MAIN_SHA" --publish

@@ -1,5 +1,7 @@
 # CNB automatic review and on-demand NPC
 
+**Validation status:** CONFIGURED / EXPERIMENTAL / NOT_LIVE_VERIFIED. Unit fixtures exercise the current-SHA and credential policy; no real CNB/NPC consumer pilot is claimed by v0.4.1. GitHub Primary remains the default.
+
 This is a consumer-level adapter, not an ADS standards repository integration. Copy [the review template](../templates/cnb-review/review.cnb.yml.example) to the consumer .cnb.yml on its CNB dev branch using a reviewable PR; integrate rather than overwrite any pre-existing pipeline. Copy [the deterministic gate](../scripts/check_cnb_review.py) into the consumer as scripts/check-ads-cnb-review.py. The consumer needs Python 3 in its gate stage. The example is for PRs from the same CNB repository; forks require a trusted CNB API lookup of live source HEAD instead of the origin branch lookup.
 
 The official plugin supports pull_request events, including creation/reopen/source push, and writes a JSON result with status and issues. It can exit zero even when a critical review issue exists. The gate checks current remote HEAD against CNB_PULL_REQUEST_SHA **after** review completion and then examines the full structured JSON. If the remote source advances during the run, the old result is blocked. This is still one snapshot: CNB merge protection must require the latest successful check for the actual candidate; a race after the gate requires a new source push or live protection checks.

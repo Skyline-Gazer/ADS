@@ -15,7 +15,7 @@ def missing():
 
 class SourceFallbackTests(TestCase):
     def test_stable_preferred(self):
-        with patch.object(M,"request_json",return_value={"version":"2.1.0"}) as req:
+        with patch.object(M,"request_json",return_value={"name":"@andysom25/codegraph","version":"2.1.0","dist":{"tarball":"https://registry.npmjs.org/@andysom25/codegraph/-/codegraph-2.1.0.tgz"}}) as req:
             o=M.observe_channel()
         self.assertEqual(o["channel"],"STABLE")
         self.assertTrue(o["stable_verified"])
@@ -42,4 +42,20 @@ class SourceFallbackTests(TestCase):
         for val in [{"object":{"sha":"notsha"}},{"object":{"sha":"a"*40}}]:
             with patch.object(M,"request_json",side_effect=[HTTPError(M.NPM,404,"missing",None,None),[],val,
                  {"name":"evil","version":"1.1.1","license":"MIT"}]):
+                with self.assertRaises(ValueError):M.observe_channel()
+
+    def test_source_pin_does_not_follow_moving_head(self):
+        head = "c"*40
+        with patch.object(M,"request_json",side_effect=[HTTPError(M.NPM,404,"missing",None,None),[],{"object":{"sha":head}},
+             {"name":"@andysom25/codegraph","license":"MIT","version":"1.1.1"}]) as req:
+            result=M.observe_channel(SHA)
+        self.assertEqual(result["source_sha"],SHA)
+        self.assertEqual(result["observed_head_sha"],head)
+        self.assertIn(SHA,req.call_args.args[0])
+        self.assertTrue(M.evaluate_source_pin(result,SHA)[0])
+
+    def test_other_publisher_or_tarball_is_rejected(self):
+        for package in [{"name":"@other/codegraph","version":"1.1.1"},
+                        {"name":"@andysom25/codegraph","version":"1.1.1","dist":{"tarball":"https://evil.test/tool.tgz"}}]:
+            with patch.object(M,"request_json",return_value=package):
                 with self.assertRaises(ValueError):M.observe_channel()

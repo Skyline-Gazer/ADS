@@ -1,6 +1,6 @@
 # ADS Quality and Layered Verification
 
-Version: **development after v0.4**. Released v0.4 remains immutable; unreleased extensions require separate consumer review.
+Version: **v0.4.1 candidate**. Released v0.4 remains immutable; unreleased extensions require separate consumer review.
 
 Choose checks from changed behavior, impact and consumers—not a mandatory test count. Docs: meaningful formatting/links. Ordinary code: impacted tests, types/lint/build as relevant. API/refactor: contract and integration tests. Sensitive changes: negative/security and recovery tests. Don't mask transitive impact with path filters.
 
@@ -52,3 +52,5 @@ Follow the mandatory [Git development governance policy](docs/git-governance.md)
 ## CI and review
 
 Keep relevant required checks and material safety regressions blocking. Don't disable failing checks merely to turn CI green. Advisory AI reviews and irrelevant external review-service outages are not automatic blockers. Increase review rigor with change risk; routine low-risk code need not have two independent reviewers. Choose review tooling only after inspecting existing host capability; the v0.3 decision record is [docs/code-review-options.md](docs/code-review-options.md) and no third-party review service is required. Resolve concrete blocking findings, accurately report known limitations, then deliver under STANDARD.md and SAFETY.md.
+
+Consumer toolchain acceptance must cover missing tools without installation, uninitialized and healthy repeat sessions, controlled stale-index recovery, wrong edition/provenance, wrong worktree, source-channel failure, and clean/contaminated production trees and actual outputs. Fixed historical consumer snapshots test compatibility only; latest official releases are observed dynamically. Never label CI stdio MCP as native Agent Host verification.
