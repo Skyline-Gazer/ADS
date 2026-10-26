@@ -20,3 +20,5 @@ No compulsory per-stage approval, duplicate evidence archive or always-on mainte
 ## Primary provider dispatch
 
 Read [provider selection](../../docs/git-provider.md) and validated .ads-project.json. Submit the Issue-linked PR targeting dev to the configured primary provider. In CNB Primary use current-SHA CNB review and deterministic CI, process feedback and re-review within a capped loop; NPC stays read/comment only unless separately authorized. Do not create a parallel GitHub PR. Production promotion, mirror and tags require separate authority and ref verification.
+
+For an approved CNB Primary production release, use [CNB safe synchronization](../../docs/cnb-sync.md) only after the existing reviewable dev-to-main promotion, production-boundary checks and explicit deployment authorization. Dry-run by default, verify both live refs and reject all non-fast-forward or unapproved tags. Do not let PR/NPC jobs access mirror credentials.

@@ -1,0 +1,7 @@
+{
+  "release_approved": false,
+  "github_push_effects_approved": false,
+  "main_sha": "REPLACE_WITH_VERIFIED_40_CHARACTER_SHA",
+  "tag_name": "v0.5.0",
+  "tag_target_sha": "REPLACE_WITH_APPROVED_TAG_TARGET_SHA"
+}
