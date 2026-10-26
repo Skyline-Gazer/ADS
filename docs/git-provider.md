@@ -25,3 +25,5 @@ Mirror is one-way CNB to GitHub, restricted to main and individually approved re
 ## Acceptance
 
 Record DETECTED / CONFIGURED / VERIFIED / BLOCKED independently for native branch protection, review/CI fresh SHA, mirror refs, explicit release approval, and deployment. Pilot must exercise CNB PR review→Agent fix→re-review, production boundary, forward-only mirror, exact tag, protected credentials, crash/retry and drift detection against an **isolated** GitHub target before touching production. See [Issue #63](https://github.com/Skyline-Gazer/ADS/issues/63).
+
+For practical CNB automatic review, the deterministic current-SHA gate, security boundaries, and on-demand NPC behavior see [CNB review](cnb-review.md). This is a separate consumer template, not an automatic modification of the ADS standards repository itself.
