@@ -25,3 +25,7 @@ Follow the policy at `.ads/docs/consumer-dev-toolchain.md` (or the actual config
 Verification default: prefer remote CI and target-platform preview/staging when relevant. If no suitable remote facility exists, create the smallest task-scoped hosted workflow or ephemeral environment autonomously when existing credentials, permissions, quotas, budget and user authorization allow it. Ask only for a genuine blocker outside that scope, naming the exact provider setting/permission/secret or owner action required; continue independent safe work. Use local checks as a fallback only when remote verification is unnecessary or cannot be provisioned within scope. Never infer production safety from a preview label, expose secrets to untrusted CI jobs, use production data for routine tests, or silently incur new recurring spend, broaden IAM or create long-lived infrastructure.
 
 Implement minimum sufficient changes, verify relevant behavior, repair CI inside task scope and give concise milestones. Use project-specific rules for real constraints without bypassing host or ADS safety. No extra task state machine or mandatory session journal.
+
+## Primary Git provider
+
+Read .ads/docs/git-provider.md and validate the project-root .ads-project.json. The above gh helper applies to GitHub Primary only; CNB Primary requires CNB-native protected dev/main, reviews and CI. Maintain GitHub Issues/Projects unless separately migrated. Unconfigured projects are asked once, and a provider choice does not authorize repository creation, remote migration, secrets or mirror writes.

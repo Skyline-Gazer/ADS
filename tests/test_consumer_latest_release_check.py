@@ -32,7 +32,7 @@ class ConsumerLatestReleaseCheckTests(TestCase):
         self.assertIn("/repos/example/tool/releases/latest", opened.call_args.args[0].full_url)
 
     def test_codegraph_latest_uses_official_npm_dist_tag(self):
-        payload = json.dumps({"version": "1.1.1", "time": {"1.1.1": "2026-10-20T10:00:00Z"}}).encode()
+        payload = json.dumps({"name":"@andysom25/codegraph","dist":{"tarball":"https://registry.npmjs.org/@andysom25/codegraph/-/codegraph-1.1.1.tgz"},"version": "1.1.1", "time": {"1.1.1": "2026-10-20T10:00:00Z"}}).encode()
         with patch.object(MODULE.urllib.request, "urlopen", return_value=BytesIO(payload)) as opened:
             result = MODULE.latest_stable("andysom25/codegraph")
         self.assertEqual(result["version"], "1.1.1")

@@ -36,8 +36,8 @@ Official sources:
 - Use `check-codegraph-channel.py` to observe official npm, release list, exact upstream SHA and versioned `package.json`/MIT metadata; network failures, suspicious metadata and release-channel presence must fail closed.
 - Install/build from a detached, verified full SHA using Node 22 and `npm ci --ignore-scripts && npm run build`; verify actual executable, included assets and license. Do not run unreviewed upstream install scripts; never treat `package.json` version alone as the stable channel.
 - Before installing or changing global settings, obtain explicit user approval. Record the approved commit SHA, build output, source license, version, chosen host installation path, and independent hash/provenance attestation; untracked evidence stays off production.
-- If official stable distribution returns, prioritize it during the next authorized upgrade and retire source fallback. If upstream SHA changes, **do not silently upgrade**: require review of actual diff, new SHA and license, then revalidate the project and host integration. Do not weaken full RTK requirements.
-- For consumers using this fallback, include `check-codegraph-channel.py` beside `check-consumer-devtools.py` and `check-latest-releases.py`, and use `--codegraph-source-sha <approved-full-sha>` for a read-only preflight. An observed version match is not full provenance or agent-MCP verification.
+- If official stable distribution returns, prioritize it during the next authorized upgrade and retire source fallback. If upstream HEAD changes, keep the previously reviewed immutable pin; **do not silently upgrade**: require review of actual diff, new SHA and license, then revalidate the project and host integration. Do not weaken full RTK requirements.
+- For consumers using this fallback, include `check-codegraph-channel.py` beside `check-consumer-devtools.py` and `check-latest-releases.py`, and use `--codegraph-source-sha <approved-full-sha>` to select the previously reviewed immutable pin during preflight. An observed version match is not full provenance or agent-MCP verification.
 
 ## Latest stable is a moving requirement
 
@@ -110,7 +110,7 @@ At adoption and before use, query current upstream releases and check local bina
 Read [the mandatory tool-license policy](tool-licensing.md) and verify edition, actual distributed-version license files, install provenance, usage classification, and license/grant changes *before* upgrading or claiming tool readiness. The [offline evidence checker](../templates/consumer-devtools/check-license-compliance.py) blocks incomplete or incompatible attestations; it does not establish legal authorization or binary authenticity by itself.
 
 
-CodeGraph's upstream repository currently declares MIT; recheck upstream metadata during validation. Full RTK includes BUSL-1.1 and Apache-2.0 components; follow the current upstream terms and do not silently switch editions. The full and OSS editions use the same binary name, so `rtk --version` alone does not prove the edition. Verify package/install provenance (for example, Homebrew formula metadata) or mark the edition UNVERIFIED and request permission to install the full edition from its official source. This is implementation guidance, not a legal opinion.
+CodeGraph's upstream repository currently declares MIT; recheck upstream metadata during validation. Full RTK includes BUSL-1.1 and Apache-2.0 components; follow the current upstream terms and do not silently switch editions. The full and OSS editions use the same binary name, so `rtk --version` alone does not prove the edition. Verify package/install provenance (for example, a checksum-verified official full archive plus its Apache and engine licenses, bound to the actual PATH executable) or mark the edition UNVERIFIED and request permission to install the full edition from its official source. This is implementation guidance, not a legal opinion.
 
 For each adoption, preserve concise evidence for:
 - upstream latest stable release and URL;
@@ -121,3 +121,33 @@ For each adoption, preserve concise evidence for:
 - checks actually run, failures, fallbacks and unverified areas.
 
 Do not report PASS just because the tools are installed.
+
+## Executable adoption and session preflight (v0.4.1)
+
+Keep the existing helpers together on the consumer development branch: `check-consumer-devtools.py`, `check-codegraph-channel.py`, and `check-license-compliance.py`. Fill the existing [license evidence template](../templates/consumer-devtools/license-evidence.example.json) using independently observed distribution/checkout/checksum evidence. Each tool now needs its actual resolved `executable` and `executable_sha256`; matching version strings or a Homebrew formula elsewhere on PATH cannot establish provenance. These hashes bind a reviewed installation record to the active file; operator attestations still do not cryptographically establish source-to-binary correspondence.
+
+For an already installed, authorized toolchain, run from the consumer development checkout with a known source symbol:
+
+```sh
+python3 scripts/check-consumer-devtools.py --root . --evidence /path/to/installation-evidence.json --query KnownSourceSymbol --initialize --rtk-host codex
+```
+
+Only an explicitly reviewed CodeGraph source fallback adds `--codegraph-source-sha FULL_REVIEWED_SHA`. The helper rechecks official-channel absence and reads metadata at that immutable SHA; new upstream HEAD does not upgrade it. A stable package must match the official package name and exact tarball origin. Missing tools stop with an installation consent requirement; no command installs or upgrades global binaries. The currently supported source-fallback recipe requires the direct `dist/bin/codegraph.js` entry in the reviewed official checkout, with its hash attested before execution; npm shims/wrappers are rejected. Child CodeGraph commands set the official `CODEGRAPH_NO_DOWNLOAD=1` guard. This does not attest every dependency or arbitrary bundled distributions.
+
+`--initialize` initializes an absent current-worktree CodeGraph index and, for the explicit Codex adapter, runs project-local `rtk init --codex`. It rejects escaping symlinks and refuses to overwrite an existing unreviewed `RTK.md`. There is no implicit bare `rtk init` host guess. Other hosts must use their own documented project-local integration and record its exact verification; this helper reports unsupported adapters rather than claiming cross-host readiness. Global adapters retain their separate authorization boundary.
+
+CodeGraph uses JSON status, validates checkout and index ownership, rejects pending/reindex states, and queries the requested source symbol. Healthy sessions never reinitialize or mechanically sync. After native reconciliation fails, explicitly add `--recover` for one bounded sync/status retry. Check native MCP binding after worktree creation/switch and reconnect it to that checkout; never copy or share indexes between worktrees. Remove temporary indexes with their disposable worktree, without deleting another checkout's index.
+
+Exit `1` means BLOCKED; exit `3` means `CLI_PASS_HOST_UNVERIFIED`, not overall PASS. The script proves project status/query, full-edition evidence, representative compression and failure exit/diagnostic preservation. It cannot prove native Agent Host interception. Before declaring adoption verified, use the active host's CodeGraph tool to find the same symbol in this checkout and execute a representative command through its RTK hook, recording actual host, worktree, tool route and results. CI stdio MCP probes prove protocol behavior only. Do not use fixture attestations to turn this state into a real user Host PASS.
+
+## Release preparation and build-output checks
+
+Keep reproducible developer configuration continuously on `dev`. Cut an independent release-preparation branch from an approved dev SHA and remove developer configuration only there. Reconcile release ancestry back into dev while preserving its pre-merge developer files in the merge result; never delete from dev and restore in a later commit. Generated databases/caches remain untracked everywhere; `.git/info/exclude` can avoid tracked production ignore-rule contamination.
+
+A stripped production tree no longer carries `.ads-devtools.json`, so supply the trusted development manifest from outside that tree to retain custom-path policy. Invoke the same guard after the consumer's real build, using its actual extracted output directory:
+
+```sh
+python3 scripts/check-ads-devtools-boundary.py --root /path/to/release-candidate --target-branch main --dev-only-manifest /path/to/trusted-dev-manifest.json --artifact-root /path/to/built-output
+```
+
+Missing output directories fail closed. Artifact scans include dependency/cache directories, reject unverified symlinks, and run even when the source branch is dev. An archive must first be safely extracted by the consumer's build process. Wire this command into the existing build job after output creation; the generic source guard alone cannot certify a build artifact. Run clean and deliberately contaminated tree/output fixtures. ADS's own normative templates are publishable standards, not installed consumer integration.

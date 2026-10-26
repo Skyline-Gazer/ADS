@@ -1,6 +1,6 @@
 # ADS Development Standard
 
-Version: **0.3 candidate**. Not automatically adopted by any project. The v0.2 release remains the tag `v0.2`; this candidate adds environment-first and remote-first verification guidance without changing v0.2 semantics.
+Version: **v0.4.1 candidate**. The immutable `v0.4` release remains commit `2af17d9e1d816844c49835ae91b784405765ad46`. Development extensions are not part of that release and are not automatically adopted by consumers.
 
 ## Priority and inheritance
 
@@ -16,7 +16,7 @@ Probe with availability checks, versions, file metadata and repository scripts. 
 
 ## Mandatory consumer developer-tool baseline
 
-This requirement applies to **projects adopting ADS**, not to the ADS standards repository itself. Every consumer bootstrap/adoption must require CodeGraph and the full RTK edition, check the latest stable upstream versions, and verify project initialization and active-host integration. Missing binaries require user consent before installation; already-installed tools that lack project setup should be initialized autonomously within the consumer project's development branch. Keep consumer integration/configuration off its production `main`; prefer CodeGraph native auto-sync, verify index freshness before graph-dependent analysis, and use explicit sync/status for recovery or when automatic reconciliation is not healthy. Never treat installation alone as verification. Follow [consumer-dev-toolchain.md](docs/consumer-dev-toolchain.md) and its templates.
+This requirement applies to **projects adopting ADS**, not to the ADS standards repository itself. Every consumer bootstrap/adoption must require CodeGraph and the full RTK edition, check the latest stable upstream versions, and verify project initialization and active-host integration. Missing binaries require user consent before installation; already-installed tools that lack project setup should be initialized autonomously within the consumer project's development branch. Keep consumer integration/configuration off its production `main`; prefer CodeGraph native auto-sync, verify index freshness before graph-dependent analysis, and use explicit sync/status for recovery or when automatic reconciliation is not healthy. Never treat installation alone as verification. Use the executable preflight in [consumer-dev-toolchain.md](docs/consumer-dev-toolchain.md) with active-executable provenance, a real source query and explicit project host adapter. Keep CLI and native Host verification separate; CLI exit 3 is not full adoption PASS.
 
 ## Remote-first verification, local-light by default
 
@@ -72,3 +72,7 @@ On test/CI failure, inspect and diagnose, fix only related issues and rerun appr
 ## Existing frameworks
 
 Trellis, Comet, OpenSpec and hooks may be useful, but fixed mandatory stages and repeated consents are not ADS requirements. Migration must inspect executable hooks/CI as well as Markdown. Do not remove legitimate release or security controls to make a workflow seem simpler.
+
+## Optional Git provider
+
+For consumer adoption read [provider selection](docs/git-provider.md). A configured CNB Primary consumer uses CNB-native Issue-linked dev PRs, AI Review and release checks; GitHub receives only approved main and release tags. Existing GitHub Primary consumers retain their prior behavior. Provider choice does not relax dev-first development, release authorization or CodeGraph/RTK production boundary.

@@ -21,7 +21,7 @@ For the consumer repository being adopted, complete the required CodeGraph + ful
 - Check the latest stable upstream release, installed binary version, project initialization and actual host integration separately.
 - Ask before installing a missing tool or changing global configuration. If the binaries already exist, initialize the consumer project's integration on a development branch without asking the user to repeat safe project-local work.
 - Keep the consumer manifest, host integration and tool-specific configuration off the consumer's production `main`; install the generic branch-boundary guard before enabling the development-only integration.
-- Explicitly sync and verify CodeGraph after source changes before using graph output for impact analysis.
+- Prefer native CodeGraph reconciliation; verify freshness and worktree binding before graph-dependent analysis. Use explicit sync/status only for observed unhealthy or stale state.
 
 ## Mandatory Git workflow
 
@@ -35,3 +35,9 @@ Before ordinary work, apply the [mandatory Git governance policy](git-governance
 - `actions/checkout` of a private consumer does not itself guarantee access to a different private ADS repository; provide only authorized checkout credentials in existing secure CI configuration.
 - Phase closure and GitHub Project status alignment follow [milestone-reconciliation.md](milestone-reconciliation.md); unqueried Project fields never count as verified alignment.
 - A repository's CI/security hooks can override behavior until separately migrated. Never claim adoption was successful without checking executable restrictions.
+
+## Provider-specific bootstrap
+
+Before executing the GitHub-specific gh / classic-protection steps above, read [provider selection](git-provider.md) and verify the consumer-root .ads-project.json, if present. In CNB Primary mode use CNB-native protection and PR/CI, and do not require a duplicate GitHub PR. Preserve existing GitHub Issues/Projects unless a separate migration is authorized.
+
+The executable v0.4.1 preflight in [consumer-dev-toolchain.md](consumer-dev-toolchain.md) requires versioned license/provenance evidence bound to active executable hashes, a real source query, and an explicit project-local RTK host adapter. Exit 3 records CLI success with live Host verification pending; bootstrap/adoption must complete the separate native MCP/hook smoke tests before declaring VERIFIED.

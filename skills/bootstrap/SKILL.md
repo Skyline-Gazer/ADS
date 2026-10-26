@@ -15,3 +15,15 @@ description: Initialize a new software project with only the structure, tests, C
 9. Validate remotely by default when it materially improves evidence: reuse hosted CI and target-platform preview first. If none exists, create the smallest repo-native hosted workflow or ephemeral preview/test environment autonomously when current authorization, existing credentials, permissions, quotas and budget allow it. Do not incur new recurring spend, upgrade plans, broaden IAM or create long-lived infrastructure without the required grant. If owner action is required, give exact secure setup steps and continue independent safe work; use local fallback only when remote is unnecessary or blocked. Avoid deploying or creating cloud resources outside authorization.
 
 Output: code-ready project and a concise summary. Do not turn bootstrapping into a multi-stage approval workflow.
+
+## Provider decision gate
+
+Read [provider selection](../../docs/git-provider.md) before following GitHub-specific gh protection instructions. Check actual remotes, dev, main, CI, deploy hooks and .ads-project.json. When missing, ask once which provider mode to use; existing project providers remain unchanged by default. CNB Primary requires CNB-native PR/branch protection rather than gh. Record the choice via a reviewable task PR without importing repos, changing remotes or enabling mirrors.
+
+For a CNB Primary consumer initialize the review adapter from [CNB review](../../docs/cnb-review.md) on a task branch, preserving existing .cnb.yml behavior. Require a real CI run before labeling the review as VERIFIED.
+
+## Consumer execution closure
+
+For consumer work (not ADS itself), use the executable [toolchain preflight](../../docs/consumer-dev-toolchain.md#executable-adoption-and-session-preflight-v041) at adoption/session recovery and before graph-dependent work. Bind official version/license/source evidence to the actual executable path and SHA-256. Initialize missing project setup autonomously on the development branch with `--initialize` and an explicit supported host adapter; never install/update global tools without authorization. Validate current-worktree JSON status and a real source-symbol query. Prefer native synchronization; only an observed unhealthy index permits controlled `--recover`. CLI exit 3 requires a separate native-host MCP and RTK interception test, not a VERIFIED claim.
+
+Before production promotion, create a separate clean release-preparation branch while dev retains its integration. Run the generic boundary guard on the exact production tree and actual build output, with the trusted development manifest supplied externally after stripping it. Never treat a source-tree-only check as artifact verification.

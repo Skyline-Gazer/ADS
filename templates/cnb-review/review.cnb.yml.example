@@ -1,0 +1,35 @@
+# TEMPLATE ONLY: copy to consumer .cnb.yml through a dev-targeting PR.
+# Review image v1.22.2 is an official upstream tag observed 2026-10-26.
+# Verify/pin immutable image provenance at adoption; do not assume tag immutability.
+# This pipeline is designed for same-repo PRs (fork PRs require a CNB API
+# current-head lookup, not a guess from origin). Use a protected CI rule.
+"**":
+  pull_request:
+    - docker:
+        image: python:3.12-slim
+      stages:
+        - name: clear-old-review-result
+          script: |
+            rm -f ./code_review.json
+            test -n "$CNB_PULL_REQUEST_SHA"
+        - name: automatic-code-review
+          image: cnbcool/code-review:v1.22.2
+          settings:
+            output: ./code_review.json
+            comment: true
+            max_comments: 10
+            min_confidence: medium
+            exclude_categories: "style,nit"
+            review_event: auto
+            timeout_minutes: 20
+            max_turns: 30
+        - name: current-sha-review-gate
+          script: |
+            set -eu
+            test -n "$CNB_PULL_REQUEST_BRANCH"
+            live_head="$(git ls-remote origin "refs/heads/$CNB_PULL_REQUEST_BRANCH" | cut -f1)"
+            test -n "$live_head"
+            python3 scripts/check-ads-cnb-review.py \
+              --result ./code_review.json \
+              --review-head "$CNB_PULL_REQUEST_SHA" \
+              --current-head "$live_head"

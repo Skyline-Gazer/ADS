@@ -67,3 +67,11 @@
 - Missing Issue references and unsupported target branches fail the policy check.
 - CI runs on `dev` pushes and PRs; server-side protection state is separately verified and reported.
 - ADS itself and consumer templates, Skills and bootstrap/adoption guidance all describe the same mandatory policy.
+
+## Provider-aware interpretation (Issue #63)
+
+The mandatory branch / Issue-linked PR / review / release invariants apply on the primary Git provider. Existing references to GitHub Issue, GitHub PR and gh protection describe the GitHub Primary adapter only. CNB Primary needs CNB-native PR and branch protection checks; do not create a duplicate GitHub PR just to satisfy GitHub tooling. Existing Issues and Projects may stay on GitHub with canonical cross-provider issue URLs. See [provider selection](git-provider.md). The baseline remains unchanged for existing consumers.
+
+## Consumer release-preparation lifecycle
+
+Consumer dev continuously retains reproducible developer integration. Strip it only on an independent release-preparation branch cut from the approved dev SHA. Supply the development manifest externally to the production guard so custom paths remain checked after removal, and scan actual build outputs. Reconcile published-release ancestry through a reviewed merge whose result preserves pre-merge dev-only files; do not delete from dev and restore in a later commit. Use merge commits where ancestry-preserving release transport requires them; no force-push or published-history rewrite.

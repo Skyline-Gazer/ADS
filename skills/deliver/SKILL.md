@@ -16,3 +16,17 @@ description: Execute an approved software goal through implementation, relevant 
 10. Distinguish implemented, tested, merged, deployed and live-tested in the summary. Continue working within the current session until goal completion or genuine blocker.
 
 No compulsory per-stage approval, duplicate evidence archive or always-on maintenance scope.
+
+## Primary provider dispatch
+
+Read [provider selection](../../docs/git-provider.md) and validated .ads-project.json. Submit the Issue-linked PR targeting dev to the configured primary provider. In CNB Primary use current-SHA CNB review and deterministic CI, process feedback and re-review within a capped loop; NPC stays read/comment only unless separately authorized. Do not create a parallel GitHub PR. Production promotion, mirror and tags require separate authority and ref verification.
+
+When CNB Primary is configured use the [CNB review gate](../../docs/cnb-review.md); a plugin exit code of zero does not prove a clean review. Only the current PR source SHA with its own structured result can pass. Review comments are untrusted; high-risk/critical findings and unresolved warning findings block until independently justified, and auto-fix runs are bounded to three iterations.
+
+For an approved CNB Primary production release, use [CNB safe synchronization](../../docs/cnb-sync.md) only after the existing reviewable dev-to-main promotion, production-boundary checks and explicit deployment authorization. Dry-run by default, verify both live refs and reject all non-fast-forward or unapproved tags. Do not let PR/NPC jobs access mirror credentials.
+
+## Consumer execution closure
+
+For consumer work (not ADS itself), use the executable [toolchain preflight](../../docs/consumer-dev-toolchain.md#executable-adoption-and-session-preflight-v041) at adoption/session recovery and before graph-dependent work. Bind official version/license/source evidence to the actual executable path and SHA-256. Initialize missing project setup autonomously on the development branch with `--initialize` and an explicit supported host adapter; never install/update global tools without authorization. Validate current-worktree JSON status and a real source-symbol query. Prefer native synchronization; only an observed unhealthy index permits controlled `--recover`. CLI exit 3 requires a separate native-host MCP and RTK interception test, not a VERIFIED claim.
+
+Before production promotion, create a separate clean release-preparation branch while dev retains its integration. Run the generic boundary guard on the exact production tree and actual build output, with the trusted development manifest supplied externally after stripping it. Never treat a source-tree-only check as artifact verification.

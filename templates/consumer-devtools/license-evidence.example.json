@@ -12,7 +12,9 @@
       "license_file": "path/to/extracted/codegraph/LICENSE",
       "source_sha": null,
       "source_fallback_approved": false,
-      "source_fallback_verified": false
+      "source_fallback_verified": false,
+      "executable": "/absolute/path/to/verified/executable",
+      "executable_sha256": ""
     },
     "rtk": {
       "version": "0.0.0",
@@ -21,7 +23,9 @@
       "installed_distribution_verified": false,
       "latest_stable_verified": false,
       "license_file": "path/to/extracted/rtk/LICENSE",
-      "engine_license_file": "path/to/extracted/rtk/LICENSE-ENGINE"
+      "engine_license_file": "path/to/extracted/rtk/LICENSE-ENGINE",
+      "executable": "/absolute/path/to/verified/executable",
+      "executable_sha256": ""
     }
   }
 }

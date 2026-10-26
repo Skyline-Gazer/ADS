@@ -1,101 +1,154 @@
-"""Tests for the consumer latest-stable tool preflight template."""
+"""Consumer initialization must fail closed before project mutations."""
 from importlib.util import module_from_spec, spec_from_file_location
-from io import BytesIO
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest import TestCase, main
-from unittest.mock import Mock, patch
-import contextlib
-import io
+from unittest.mock import patch
+import hashlib
+import json
 import subprocess
 
-SCRIPT = (
-    Path(__file__).resolve().parents[1]
-    / "templates"
-    / "consumer-devtools"
-    / "check-consumer-devtools.py"
-)
-SPEC = spec_from_file_location("consumer_devtools_check", SCRIPT)
+SCRIPT = Path(__file__).resolve().parents[1] / 'templates/consumer-devtools/check-consumer-devtools.py'
+SPEC = spec_from_file_location('preflight', SCRIPT)
 MODULE = module_from_spec(SPEC)
 SPEC.loader.exec_module(MODULE)
 
 
-class ConsumerDevtoolsPreflightTests(TestCase):
-    def test_latest_stable_reads_github_release_metadata(self):
-        payload = b'{"tag_name":"v1.2.3","draft":false,"prerelease":false,"html_url":"https://github.com/example/tool/releases/tag/v1.2.3"}'
-        response = BytesIO(payload)
-        with patch.object(MODULE.urllib.request, "urlopen", return_value=response) as opened:
-            version, url = MODULE.latest_stable("example/tool")
-        self.assertEqual(version, "1.2.3")
-        self.assertIn("releases/tag/v1.2.3", url)
-        self.assertIn("/repos/example/tool/releases/latest", opened.call_args.args[0].full_url)
-
-    def test_codegraph_latest_uses_official_npm_dist_tag(self):
-        payload = b'{"version":"1.1.1","dist":{"tarball":"https://registry.npmjs.org/@andysom25/codegraph/-/codegraph-1.1.1.tgz"}}'
-        with patch.object(MODULE.urllib.request, "urlopen", return_value=BytesIO(payload)) as opened:
-            version, url = MODULE.latest_stable("andysom25/codegraph")
-        self.assertEqual(version, "1.1.1")
-        self.assertIn("npmjs.org/@andysom25%2Fcodegraph/latest", opened.call_args.args[0].full_url)
-        self.assertIn("npmjs.com/package/@andysom25/codegraph", url)
-
-    def test_codegraph_npm_latest_rejects_prerelease_tag(self):
-        payload = b'{"version":"1.2.0-rc.1"}'
-        with patch.object(MODULE.urllib.request, "urlopen", return_value=BytesIO(payload)):
-            with self.assertRaises(ValueError):
-                MODULE.latest_stable("andysom25/codegraph")
-    def test_latest_stable_rejects_prerelease(self):
-        response = BytesIO(b'{"tag_name":"v2.0.0-rc.1","draft":false,"prerelease":true}')
-        with patch.object(MODULE.urllib.request, "urlopen", return_value=response):
-            with self.assertRaises(ValueError):
-                MODULE.latest_stable("example/tool")
-
-    def test_full_rtk_edition_uses_homebrew_package_metadata(self):
-        brew_results = [
-            subprocess.CompletedProcess([], 0, stdout="rtk 1.2.3", stderr=""),
-            subprocess.CompletedProcess([], 1, stdout="", stderr="Error: No such keg: rtk-oss"),
-        ]
-        with patch.object(MODULE.shutil, "which", return_value="/opt/homebrew/bin/brew"), patch.object(
-            MODULE.subprocess, "run", side_effect=brew_results
-        ):
-            state, evidence = MODULE.verify_full_rtk_edition()
-        self.assertEqual(state, "VERIFIED")
-        self.assertIn("formula rtk", evidence)
-
-    def test_full_rtk_edition_is_unverified_without_package_provenance(self):
-        with patch.object(MODULE.shutil, "which", return_value=None):
-            state, evidence = MODULE.verify_full_rtk_edition()
-        self.assertEqual(state, "UNVERIFIED")
-        self.assertIn("share the binary name", evidence)
-
-    def test_missing_tools_report_latest_version_and_request_consent(self):
-        git_branch = subprocess.CompletedProcess([], 0, stdout="feat/task\n", stderr="")
-        with (
-            patch.object(MODULE.subprocess, "run", return_value=git_branch),
-            patch.object(MODULE, "latest_stable", side_effect=[
-                ("1.2.3", "https://example/codegraph/releases/latest"),
-                ("4.5.6", "https://example/rtk/releases/latest"),
-            ]),
-            patch.object(MODULE.shutil, "which", return_value=None),
-        ):
-            output = io.StringIO()
-            with contextlib.redirect_stdout(output):
-                result = MODULE.main([])
-        self.assertEqual(result, 1)
-        self.assertIn("latest stable=1.2.3", output.getvalue())
-        self.assertIn("latest stable=4.5.6", output.getvalue())
-        self.assertEqual(output.getvalue().count("Ask the user before installing."), 2)
-
-    def test_production_checkout_is_blocked_before_version_checks(self):
-        branch = subprocess.CompletedProcess([], 0, stdout="main\n", stderr="")
-        with patch.object(MODULE.subprocess, "run", return_value=branch), patch.object(
-            MODULE, "latest_stable"
-        ) as latest:
-            error = io.StringIO()
-            with contextlib.redirect_stderr(error):
-                result = MODULE.main([])
-        self.assertEqual(result, 2)
-        self.assertIn("development branch", error.getvalue())
-        latest.assert_not_called()
+def status(root, initialized=True, pending=0):
+    return {'initialized': initialized, 'projectPath': str(root), 'indexPath': str(root / '.codegraph'),
+            'worktreeMismatch': None, 'pendingChanges': {'added': pending, 'modified': 0, 'removed': 0},
+            'index': {'reindexRecommended': False}}
 
 
-if __name__ == "__main__":
+class PreflightTests(TestCase):
+    def test_project_initializes_once_and_queries(self):
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp).resolve()
+            (root / "app.ts").write_text("source")
+            with patch.object(MODULE, 'project_status', side_effect=[status(root, False), status(root)]), patch.object(MODULE, 'run', return_value='[{"node":{"name":"symbol","filePath":"app.ts"}}]' ) as run:
+                MODULE.initialize_codegraph('cg', root, 'symbol', True)
+            self.assertEqual(run.call_args_list[0].args[0], ['cg', 'init', str(root)])
+            with patch.object(MODULE, 'project_status', return_value=status(root)), patch.object(MODULE, 'run', return_value='[{"node":{"name":"symbol","filePath":"app.ts"}}]' ) as run:
+                MODULE.initialize_codegraph('cg', root, 'symbol', True)
+            self.assertEqual(run.call_count, 1)
+            self.assertEqual(run.call_args.args[0][1], 'query')
+
+    def test_stale_index_requires_explicit_recovery(self):
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp).resolve()
+            (root / "app.ts").write_text("source")
+            with patch.object(MODULE, 'project_status', return_value=status(root, pending=1)), patch.object(MODULE, 'run') as run:
+                with self.assertRaisesRegex(ValueError, 'unhealthy'):
+                    MODULE.initialize_codegraph('cg', root, 'symbol')
+                run.assert_not_called()
+            with patch.object(MODULE, 'project_status', side_effect=[status(root, pending=1), status(root)]), patch.object(MODULE, 'run', return_value='[{"node":{"name":"symbol","filePath":"app.ts"}}]' ) as run:
+                MODULE.initialize_codegraph('cg', root, 'symbol', recover=True)
+                self.assertEqual(run.call_args_list[0].args[0][1], 'sync')
+
+    def test_status_rejects_shared_index_and_wrong_worktree(self):
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp).resolve()
+            (root / '.codegraph').mkdir()
+            (root / '.codegraph/codegraph.db').write_text('fixture')
+            for key, value in [('projectPath', '/another'), ('indexPath', '/shared/index'), ('worktreeMismatch', True)]:
+                payload = status(root)
+                payload[key] = value
+                with patch.object(MODULE, 'run', return_value=json.dumps(payload)):
+                    with self.assertRaises(ValueError):
+                        MODULE.project_status('cg', root)
+
+    def test_no_local_database_does_not_probe_parent_index(self):
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp).resolve()
+            with patch.object(MODULE, 'run') as run:
+                self.assertFalse(MODULE.project_status('cg', root)['initialized'])
+                run.assert_not_called()
+
+    def test_database_symlink_rejected_before_status(self):
+        with TemporaryDirectory() as tmp, TemporaryDirectory() as outside:
+            root = Path(tmp).resolve()
+            (root / '.codegraph').mkdir()
+            (root / '.codegraph/codegraph.db').symlink_to(Path(outside) / 'codegraph.db')
+            with patch.object(MODULE, 'run') as run:
+                with self.assertRaisesRegex(ValueError, 'symlink'):
+                    MODULE.project_status('cg', root)
+                run.assert_not_called()
+
+    def test_empty_query_and_malformed_status_fail_closed(self):
+        root = Path('/tmp')
+        with patch.object(MODULE, 'project_status', return_value=status(root)), patch.object(MODULE, 'run', return_value='[]'):
+            with self.assertRaisesRegex(ValueError, 'query'):
+                MODULE.initialize_codegraph('cg', root, 'symbol')
+
+    def test_error_json_is_not_a_source_query_result(self):
+        root = Path('/tmp').resolve()
+        for result in [{'error': 'symbol lookup failed'}, [{'node': {'name': 'other'}, 'query': 'symbol'}]]:
+            with patch.object(MODULE, 'project_status', return_value=status(root)), patch.object(MODULE, 'run', return_value=json.dumps(result)):
+                with self.assertRaisesRegex(ValueError, 'query'):
+                    MODULE.initialize_codegraph('cg', root, 'symbol')
+
+    def test_provenance_is_checked_before_binary_execution(self):
+        with TemporaryDirectory() as tmp:
+            evidence = Path(tmp) / 'evidence.json'
+            evidence.write_text('{"tools":{"codegraph":{},"rtk":{}}}')
+            policy = type('Policy', (), {'inspect': lambda *args: {'errors': []}})()
+            with patch.object(MODULE, 'run', return_value='feat/task'), patch.object(MODULE.shutil, 'which', return_value='/untrusted/tool'), patch.object(MODULE, 'load_policy_module', return_value=policy), patch.object(MODULE, 'verify_executable', side_effect=ValueError('hash mismatch')), patch.object(MODULE, 'installed_version') as version:
+                self.assertEqual(MODULE.main(['--evidence', str(evidence), '--query', 'symbol']), 1)
+                version.assert_not_called()
+
+    def test_external_codegraph_directory_is_rejected_before_status(self):
+        with patch.dict(MODULE.os.environ, {'CODEGRAPH_DIR': '/outside/index'}), patch.object(MODULE, 'run') as run:
+            with self.assertRaisesRegex(ValueError, 'escapes'):
+                MODULE.project_status('cg', Path('/tmp/consumer').resolve())
+            run.assert_not_called()
+
+    def test_attestation_binds_active_executable(self):
+        with TemporaryDirectory() as tmp:
+            binary = Path(tmp) / 'tool'
+            binary.write_text('official distribution')
+            item = {'executable': str(binary), 'executable_sha256': hashlib.sha256(binary.read_bytes()).hexdigest()}
+            MODULE.verify_executable(item, str(binary))
+            binary.write_text('substituted')
+            with self.assertRaisesRegex(ValueError, 'hash'):
+                MODULE.verify_executable(item, str(binary))
+
+    def test_project_adapter_rejects_global_symlink_and_unknown_host(self):
+        with TemporaryDirectory() as tmp, TemporaryDirectory() as outside:
+            root = Path(tmp).resolve()
+            (root / 'AGENTS.md').symlink_to(Path(outside) / 'AGENTS.md')
+            with patch.object(MODULE, 'run') as run:
+                with self.assertRaisesRegex(ValueError, 'escapes'):
+                    MODULE.initialize_rtk('rtk', root, 'codex', True)
+                run.assert_not_called()
+                with self.assertRaisesRegex(ValueError, 'explicit supported'):
+                    MODULE.initialize_rtk('rtk', root, None, True)
+
+    def test_rtk_uses_explicit_project_adapter_and_preserves_failure(self):
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp).resolve()
+            def command(argv, cwd):
+                if argv[1:3] == ['init', '--codex']:
+                    (root / '.codex').mkdir()
+                    (root / '.codex/hooks.json').write_text('{"hook":"rtk"}')
+                return 'long raw git output' if argv[0] == 'git' else 'short'
+            failure = subprocess.CompletedProcess([], 7, stdout='ADS_FAILURE_SENTINEL', stderr='')
+            with patch.object(MODULE, 'run', side_effect=command) as run, patch.object(MODULE.subprocess, 'run', return_value=failure):
+                MODULE.initialize_rtk('rtk', root, 'codex', True)
+                self.assertEqual(run.call_args_list[0].args[0], ['rtk', 'init', '--codex'])
+            failure.returncode = 0
+            with patch.object(MODULE, 'run', side_effect=command), patch.object(MODULE.subprocess, 'run', return_value=failure):
+                with self.assertRaisesRegex(ValueError, 'preserve failure'):
+                    MODULE.initialize_rtk('rtk', root, 'codex')
+
+    def test_production_blocks_before_tool_checks(self):
+        with patch.object(MODULE, 'run', return_value='main'), patch.object(MODULE, 'installed_version') as installed:
+            self.assertEqual(MODULE.main([]), 1)
+            installed.assert_not_called()
+
+    def test_missing_tools_require_consent_without_install(self):
+        with patch.object(MODULE, 'run', return_value='feat/task'), patch.object(MODULE.shutil, 'which', return_value=None):
+            self.assertEqual(MODULE.main([]), 1)
+
+
+if __name__ == '__main__':
     main()

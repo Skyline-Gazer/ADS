@@ -1,0 +1,133 @@
+name: ADS v0.4.1 consumer lifecycle acceptance
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/v041-consumer-acceptance.yml'
+      - 'scripts/test-v041-consumer.py'
+      - 'tests/test_v041_consumer_acceptance.py'
+      - 'templates/consumer-devtools/**'
+      - 'skills/**'
+      - 'docs/consumer-dev-toolchain.md'
+      - 'docs/tool-licensing.md'
+  push:
+    branches: [dev]
+    paths:
+      - '.github/workflows/v041-consumer-acceptance.yml'
+      - 'scripts/test-v041-consumer.py'
+      - 'templates/consumer-devtools/**'
+      - 'skills/**'
+      - 'docs/consumer-dev-toolchain.md'
+      - 'docs/tool-licensing.md'
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  consumer-lifecycle:
+    name: v0.4.1 real tools and submodule lifecycle
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      CODEGRAPH_TELEMETRY: '0'
+      CODEGRAPH_NO_DAEMON: '1'
+      APPROVED_CODEGRAPH_SHA: bb11bc1226db30233ac9e66a2670c4b16dfa85fa
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build reviewed immutable official CodeGraph source fallback
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 templates/consumer-devtools/check-codegraph-channel.py \
+            --source-sha "$APPROVED_CODEGRAPH_SHA" > "$RUNNER_TEMP/v041-codegraph-channel.json"
+          python3 - "$RUNNER_TEMP/v041-codegraph-channel.json" "$APPROVED_CODEGRAPH_SHA" <<'PY'
+          import json,sys
+          from pathlib import Path
+          observed=json.loads(Path(sys.argv[1]).read_text())
+          assert observed["channel"]=="SOURCE_FALLBACK",observed
+          assert observed["source_sha"]==sys.argv[2],observed
+          assert observed["stable_verified"] is False,observed
+          print("SOURCE_FALLBACK_VERIFIED: reviewed immutable source; not latest stable")
+          PY
+          git clone -q --no-checkout https://github.com/andysom25/codegraph.git "$RUNNER_TEMP/v041-codegraph-src"
+          git -C "$RUNNER_TEMP/v041-codegraph-src" checkout -q --detach "$APPROVED_CODEGRAPH_SHA"
+          test "$(git -C "$RUNNER_TEMP/v041-codegraph-src" rev-parse HEAD)" = "$APPROVED_CODEGRAPH_SHA"
+          (
+            cd "$RUNNER_TEMP/v041-codegraph-src"
+            npm ci --ignore-scripts --cache "$RUNNER_TEMP/v041-npm-cache"
+            npm --cache "$RUNNER_TEMP/v041-npm-cache" run build
+          )
+          mkdir -p "$RUNNER_TEMP/v041-bin"
+          ln -s "$RUNNER_TEMP/v041-codegraph-src/dist/bin/codegraph.js" "$RUNNER_TEMP/v041-bin/codegraph"
+          echo "$RUNNER_TEMP/v041-bin" >> "$GITHUB_PATH"
+      - name: Verify latest official Full RTK archive and distributed licenses
+        shell: bash
+        run: |
+          set -euo pipefail
+          release_metadata="$(curl -fsSL https://api.github.com/repos/rtk-ai/rtk/releases/latest)"
+          release_version="$(printf '%s' "$release_metadata" | python3 -c 'import json,sys; r=json.load(sys.stdin); assert not r["draft"] and not r["prerelease"]; print(r["tag_name"])')"
+          [[ "$release_version" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          mkdir -p "$RUNNER_TEMP/v041-rtk/unpack"
+          cd "$RUNNER_TEMP/v041-rtk"
+          archive="rtk-x86_64-unknown-linux-musl.tar.gz"
+          curl -fsSL "https://github.com/rtk-ai/rtk/releases/download/$release_version/$archive" -o "$archive"
+          curl -fsSL "https://github.com/rtk-ai/rtk/releases/download/$release_version/checksums.txt" -o checksums.txt
+          grep -F "  $archive" checksums.txt | sha256sum -c -
+          tar -xzf "$archive" -C unpack
+          test -f unpack/LICENSE
+          test -f unpack/LICENSE-ENGINE
+          test -x unpack/rtk
+          cp unpack/rtk "$RUNNER_TEMP/v041-bin/rtk"
+          "$RUNNER_TEMP/v041-bin/rtk" --version
+      - name: Bind observed tool executables to versioned license evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - "$RUNNER_TEMP" "$APPROVED_CODEGRAPH_SHA" <<'PY'
+          import hashlib,json,shutil,subprocess,sys
+          from pathlib import Path
+          temporary=Path(sys.argv[1]); source_sha=sys.argv[2]
+          def installed(name):
+              executable=Path(shutil.which(name)).resolve()
+              version=subprocess.check_output([str(executable),"--version"],text=True).strip().split()[-1]
+              return {"executable":str(executable),"executable_sha256":hashlib.sha256(executable.read_bytes()).hexdigest(),
+                      "version":version,"installed_distribution_verified":True}
+          codegraph=installed("codegraph")
+          codegraph.update(edition="cli",source_sha=source_sha,source_fallback_approved=True,
+              source_fallback_verified=True,latest_stable_verified=False,
+              distribution_url=f"https://github.com/andysom25/codegraph/commit/{source_sha}",
+              license_file=str(temporary/"v041-codegraph-src/LICENSE"))
+          rtk=installed("rtk")
+          rtk.update(edition="full",latest_stable_verified=True,
+              distribution_url=f"https://github.com/rtk-ai/rtk/releases/download/v{rtk['version']}/rtk-x86_64-unknown-linux-musl.tar.gz",
+              license_file=str(temporary/"v041-rtk/unpack/LICENSE"),
+              engine_license_file=str(temporary/"v041-rtk/unpack/LICENSE-ENGINE"))
+          (temporary/"v041-tool-evidence.json").write_text(json.dumps({"schema_version":1,
+              "usage":"internal-development","osi_only":False,"tools":{"codegraph":codegraph,"rtk":rtk}},indent=2))
+          PY
+      - name: Exercise submodule upgrade rollback and real CLI lifecycle
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/test-v041-consumer.py --candidate "$GITHUB_SHA" \
+            --workspace "$RUNNER_TEMP" --evidence "$RUNNER_TEMP/v041-tool-evidence.json" \
+            --codegraph-source-sha "$APPROVED_CODEGRAPH_SHA" \
+            --output "$RUNNER_TEMP/v041-consumer-report.json"
+          echo "CLI_LIFECYCLE=PASS; NATIVE_AGENT_HOST=UNVERIFIED"
+          echo "PRIVATE_REMOTE_SUBMODULE_ACCESS=NOT_TESTED; local real-Git pin lifecycle exercised"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ads-v041-consumer-evidence
+          path: |
+            ${{ runner.temp }}/v041-codegraph-channel.json
+            ${{ runner.temp }}/v041-tool-evidence.json
+            ${{ runner.temp }}/v041-consumer-report.json

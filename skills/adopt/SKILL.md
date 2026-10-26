@@ -17,3 +17,17 @@ description: Adopt ADS in an existing codebase or simplify legacy Trellis, Comet
 11. Validate with one small real task or an isolated rehearsal. Prefer remote CI and target-platform preview when relevant; if missing, provision a minimal task-scoped hosted workflow or ephemeral environment when current authorization and existing capabilities allow it. Request exact user action only for a genuine access/permission/secret/budget boundary, continue independent safe work, and keep unrun checks explicitly blocked. Avoid creating duplicate persistent infrastructure; report remaining workflow conflicts and each verification layer not exercised.
 
 Never silently rewrite production configs, rotate credentials or merge a high-risk migration without scoped authorization.
+
+## Provider decision gate
+
+Read [provider selection](../../docs/git-provider.md) before running any GitHub-specific gh helper. Preserve existing providers by default; only an explicit decision enables CNB Primary. Validate .ads-project.json, existing Issues/Projects, native protection and CI. Do not create duplicate GitHub PRs or execute live mirror migration as a preflight side effect.
+
+During CNB adoption follow [CNB review](../../docs/cnb-review.md) and compare the current PR source SHA, review JSON and actual CI. If code-review or NPC access is unavailable, report BLOCKED rather than disabling the review gate or silently merging.
+
+Before enabling a CNB Primary mirror read [CNB safe synchronization](../../docs/cnb-sync.md), inspect GitHub auto-deploy effects, target main and tag state, least-privilege credentials and CNB branch protection. Adoption never automatically synchronizes production.
+
+## Consumer execution closure
+
+For consumer work (not ADS itself), use the executable [toolchain preflight](../../docs/consumer-dev-toolchain.md#executable-adoption-and-session-preflight-v041) at adoption/session recovery and before graph-dependent work. Bind official version/license/source evidence to the actual executable path and SHA-256. Initialize missing project setup autonomously on the development branch with `--initialize` and an explicit supported host adapter; never install/update global tools without authorization. Validate current-worktree JSON status and a real source-symbol query. Prefer native synchronization; only an observed unhealthy index permits controlled `--recover`. CLI exit 3 requires a separate native-host MCP and RTK interception test, not a VERIFIED claim.
+
+Before production promotion, create a separate clean release-preparation branch while dev retains its integration. Run the generic boundary guard on the exact production tree and actual build output, with the trusted development manifest supplied externally after stripping it. Never treat a source-tree-only check as artifact verification.
