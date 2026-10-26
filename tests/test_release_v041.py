@@ -31,6 +31,7 @@ class FakeGitHub:
         self.fail_release_once = False
         self.main_reads = 0
         self.drift_at = None
+        self.invalidate_ci_at = None
         self.pr = {
             "merged": True, "state": "closed", "merge_commit_sha": target,
             "base": {"ref": "dev", "repo": {"full_name": RELEASE.REPOSITORY}},
@@ -81,6 +82,8 @@ class FakeGitHub:
             raise AssertionError(f"unexpected mutation {route}")
         if route == "git/ref/heads/main":
             self.main_reads += 1
+            if self.invalidate_ci_at and self.main_reads >= self.invalidate_ci_at:
+                self.runs[RELEASE.WORKFLOWS[0]][0].update(run_attempt=2, status="in_progress", conclusion=None)
             sha = "f" * 40 if self.drift_at and self.main_reads >= self.drift_at else self.main
             return {"object": {"type": "commit", "sha": sha}}
         if route == "pulls/69":
@@ -202,7 +205,7 @@ class ReleaseV041Tests(unittest.TestCase):
     def test_wrong_workflow_path_sha_branch_and_repository_are_rejected(self):
         run = self.github.runs[RELEASE.WORKFLOWS[0]][0]
         for field, value in [("path", ".github/workflows/unrelated.yml"), ("head_sha", "d" * 40),
-                             ("head_branch", "feature/unreviewed"), ("event", "pull_request_target"),
+                             ("head_branch", "feature/unreviewed"), ("event", "pull_request_target"), ("event", "pull_request"),
                              ("repository", {"full_name": "someone/fork"})]:
             with self.subTest(field=field):
                 original = run[field]
@@ -229,11 +232,26 @@ class ReleaseV041Tests(unittest.TestCase):
         self.blocked()
 
     def test_remote_main_drift_after_tag_stops_release_creation(self):
-        self.github.drift_at = 3
+        self.github.drift_at = 4
         with self.assertRaisesRegex(ValueError, "main drifted"):
             self.execute(publish=True)
         self.assertIsNotNone(self.github.tag)
         self.assertIsNone(self.github.release)
+
+    def test_ci_rerun_after_validation_blocks_before_tag_write(self):
+        self.github.invalidate_ci_at = 2
+        self.blocked()
+        self.assertIsNone(self.github.tag)
+
+    def test_ci_invalidated_after_tag_blocks_release_and_can_resume(self):
+        self.github.invalidate_ci_at = 4
+        with self.assertRaisesRegex(ValueError, 'CI is not successful'):
+            self.execute(publish=True)
+        self.assertIsNotNone(self.github.tag)
+        self.assertIsNone(self.github.release)
+        self.github.invalidate_ci_at = None
+        self.github.runs[RELEASE.WORKFLOWS[0]][0].update(status='completed', conclusion='success')
+        self.assertEqual(self.execute(publish=True)['mode'], 'PUBLISHED')
 
     def test_tag_collision_and_lightweight_tag_are_rejected(self):
         self.github.matching_tag()

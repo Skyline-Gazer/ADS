@@ -102,9 +102,18 @@ def verify_executable(item, executable):
 
 
 def project_status(executable, root):
-    configured = Path(os.environ.get("CODEGRAPH_DIR", ".codegraph"))
-    if not (root / configured).resolve().is_relative_to(root):
-        raise ValueError("configured CodeGraph index escapes worktree")
+    root = root.resolve()
+    configured = root / Path(os.environ.get("CODEGRAPH_DIR", ".codegraph"))
+    index = configured.resolve()
+    if index == root or not index.is_relative_to(root) or index != configured:
+        raise ValueError("configured CodeGraph index escapes worktree or uses a shared symlink")
+    if index.exists():
+        for path in index.rglob("*"):
+            if path.is_symlink():
+                raise ValueError("CodeGraph index contains an unverified symlink")
+    # Upstream status searches parents and opens SQLite; do not borrow an ancestor's index.
+    if not (index / "codegraph.db").is_file():
+        return {"initialized": False, "projectPath": str(root), "indexPath": str(index)}
     value = json.loads(run([executable, "status", "--json", str(root)], root))
     if not isinstance(value, dict) or not isinstance(value.get("initialized"), bool):
         raise ValueError("CodeGraph status schema unverified")

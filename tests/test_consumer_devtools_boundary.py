@@ -47,6 +47,14 @@ class ConsumerDevtoolsBoundaryTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertIn("artifact", result.stderr)
 
+    def test_native_alternate_index_and_sidecars_are_rejected(self):
+        for relative in ('.codegraph-win/codegraph.db-wal', '.codegraph-linux/codegraph.db-shm', 'cache/codegraph.db-wal'):
+            self.write(relative, 'index data')
+        result = self.run_guard()
+        self.assertEqual(result.returncode, 1)
+        for name in ('.codegraph-win', '.codegraph-linux', 'cache/codegraph.db-wal'):
+            self.assertIn(name, result.stderr)
+
     def test_missing_output_fails_closed(self):
         result = subprocess.run([sys.executable, str(SCRIPT), "--root", str(self.root),
             "--target-branch", "dev", "--artifact-root", str(self.root / "absent")], capture_output=True, text=True)

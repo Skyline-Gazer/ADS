@@ -46,30 +46,39 @@ class PreflightTests(TestCase):
                 self.assertEqual(run.call_args_list[0].args[0][1], 'sync')
 
     def test_status_rejects_shared_index_and_wrong_worktree(self):
-        root = Path('/tmp/consumer')
-        for key, value in [('projectPath', '/another'), ('indexPath', '/shared/index'), ('worktreeMismatch', True)]:
-            payload = status(root)
-            payload[key] = value
-            with patch.object(MODULE, 'run', return_value=json.dumps(payload)):
-                with self.assertRaises(ValueError):
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp).resolve()
+            (root / '.codegraph').mkdir()
+            (root / '.codegraph/codegraph.db').write_text('fixture')
+            for key, value in [('projectPath', '/another'), ('indexPath', '/shared/index'), ('worktreeMismatch', True)]:
+                payload = status(root)
+                payload[key] = value
+                with patch.object(MODULE, 'run', return_value=json.dumps(payload)):
+                    with self.assertRaises(ValueError):
+                        MODULE.project_status('cg', root)
+
+    def test_no_local_database_does_not_probe_parent_index(self):
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp).resolve()
+            with patch.object(MODULE, 'run') as run:
+                self.assertFalse(MODULE.project_status('cg', root)['initialized'])
+                run.assert_not_called()
+
+    def test_database_symlink_rejected_before_status(self):
+        with TemporaryDirectory() as tmp, TemporaryDirectory() as outside:
+            root = Path(tmp).resolve()
+            (root / '.codegraph').mkdir()
+            (root / '.codegraph/codegraph.db').symlink_to(Path(outside) / 'codegraph.db')
+            with patch.object(MODULE, 'run') as run:
+                with self.assertRaisesRegex(ValueError, 'symlink'):
                     MODULE.project_status('cg', root)
+                run.assert_not_called()
 
     def test_empty_query_and_malformed_status_fail_closed(self):
-        with patch.object(MODULE, 'run', return_value='{}'):
-            with self.assertRaises(ValueError):
-                MODULE.project_status('cg', Path('/tmp'))
         root = Path('/tmp')
         with patch.object(MODULE, 'project_status', return_value=status(root)), patch.object(MODULE, 'run', return_value='[]'):
             with self.assertRaisesRegex(ValueError, 'query'):
                 MODULE.initialize_codegraph('cg', root, 'symbol')
-
-    def test_uninitialized_status_rejects_actual_external_index(self):
-        root = Path('/tmp/consumer').resolve()
-        value = status(root, False)
-        value['indexPath'] = '/outside/custom-index'
-        with patch.object(MODULE, 'run', return_value=json.dumps(value)):
-            with self.assertRaisesRegex(ValueError, 'mismatch'):
-                MODULE.project_status('cg', root)
 
     def test_error_json_is_not_a_source_query_result(self):
         root = Path('/tmp').resolve()

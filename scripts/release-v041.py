@@ -126,9 +126,9 @@ def check_source_and_ci(github, manifest):
         latest = max(exact, key=lambda run: (run.get("id", 0), run.get("run_attempt", 0)))
         require(latest.get("repository", {}).get("full_name") == REPOSITORY, f"wrong CI repository: {path}")
         require(latest.get("head_branch") == "dev", f"CI must test the integrated dev target: {path}")
-        require(latest.get("event") in {"push", "pull_request", "workflow_dispatch"}, f"untrusted CI event: {path}")
+        require(latest.get("event") in {"push", "workflow_dispatch"}, f"untrusted CI event: {path}")
         require(latest.get("status") == "completed" and latest.get("conclusion") == "success", f"latest exact-target CI is not successful: {path}")
-        receipts[path] = latest["id"]
+        receipts[path] = {"run_id": latest["id"], "run_attempt": latest["run_attempt"]}
     return receipts
 
 
@@ -170,16 +170,20 @@ def execute(root, manifest, expected_main, github, publish=False):
                 "private_receipt": "operator-attested; not queried with repository token"}
     # Recheck immediately before mutations; each retry validates all gates again.
     check_main(root, github, manifest, expected_main)
+    receipts = check_source_and_ci(github, manifest)
     if tag is None:
         created = github.api(f"repos/{REPOSITORY}/git/tags", payload={
             "tag": VERSION, "message": "ADS v0.4.1 — consumer governance stabilization",
             "object": target, "type": "commit",
         })
         require(full_sha(created.get("sha")), "GitHub returned an invalid tag object SHA")
+        check_main(root, github, manifest, expected_main)
+        receipts = check_source_and_ci(github, manifest)
         github.api(f"repos/{REPOSITORY}/git/refs", payload={"ref": f"refs/tags/{VERSION}", "sha": created["sha"]})
     tag = tag_state(github, target)
     require(tag is not None, "published tag was not independently observed")
     check_main(root, github, manifest, expected_main)
+    receipts = check_source_and_ci(github, manifest)
     if release is None:
         github.api(f"repos/{REPOSITORY}/releases", payload={
             "tag_name": VERSION, "target_commitish": target, "name": "ADS v0.4.1",
@@ -187,6 +191,8 @@ def execute(root, manifest, expected_main, github, publish=False):
         })
     require(release_state(github, target, notes, tag) is not None, "published Release was not independently observed")
     require(tag_state(github, target) == tag, "remote tag changed during publication")
+    check_main(root, github, manifest, expected_main)
+    receipts = check_source_and_ci(github, manifest)
     return {"mode": "PUBLISHED" if release is None else "ALREADY_PUBLISHED", "target": target, "tag": tag, "ci": receipts}
 
 

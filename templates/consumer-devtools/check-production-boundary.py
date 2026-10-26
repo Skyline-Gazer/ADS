@@ -78,9 +78,11 @@ def violations(root: Path, *, artifact=False, dev_only_paths=()) -> list[str]:
             found.append(f"{rel_posix}: tool-specific workflow must remain on development branches")
         if rel.name == "RTK.md":
             found.append(f"{rel_posix}: generated RTK adapter instructions must remain development-only")
+        if rel.name in {"codegraph.db-wal", "codegraph.db-shm"}:
+            found.append(f"{rel_posix}: forbidden generated SQLite sidecar")
         if rel.name in FORBIDDEN_NAMES and rel_posix != ".ads-devtools.json":
             found.append(f"{rel_posix}: forbidden generated artifact or tool binary")
-        if any(part.lower() in FORBIDDEN_DIRS for part in rel.parts):
+        if any(part.lower() in FORBIDDEN_DIRS or part.lower().startswith(".codegraph-") for part in rel.parts):
             found.append(f"{rel_posix}: forbidden tool configuration/artifact directory")
         if rel.name.lower() in {"rtk", "rtk.exe"}:
             found.append(f"{rel_posix}: RTK executable must not enter production")
