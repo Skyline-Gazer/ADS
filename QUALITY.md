@@ -1,6 +1,6 @@
 # ADS Quality and Layered Verification
 
-Version: **0.3 candidate**.
+Version: **development after v0.4**. Released v0.4 remains immutable; unreleased extensions require separate consumer review.
 
 Choose checks from changed behavior, impact and consumers—not a mandatory test count. Docs: meaningful formatting/links. Ordinary code: impacted tests, types/lint/build as relevant. API/refactor: contract and integration tests. Sensitive changes: negative/security and recovery tests. Don't mask transitive impact with path filters.
 

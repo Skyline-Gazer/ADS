@@ -1,6 +1,6 @@
 # ADS Safety and Scoped Authorization
 
-Version: **0.3 candidate**.
+Version: **development after v0.4**. Released v0.4 remains immutable; unreleased extensions require separate consumer review.
 
 Classify risk by real-world effect, not task size. Coding, branch work, local tests and isolated previews normally need no repeated approval. Production state changes, destructive migrations, secrets, IAM, finance, resource expenditure, customer data, security controls and availability-impacting actions may require explicit owner authorization. Native Git push-to-deploy does not silently authorize these high-risk effects.
 
