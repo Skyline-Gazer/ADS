@@ -72,3 +72,7 @@ On test/CI failure, inspect and diagnose, fix only related issues and rerun appr
 ## Existing frameworks
 
 Trellis, Comet, OpenSpec and hooks may be useful, but fixed mandatory stages and repeated consents are not ADS requirements. Migration must inspect executable hooks/CI as well as Markdown. Do not remove legitimate release or security controls to make a workflow seem simpler.
+
+## Optional Git provider
+
+For consumer adoption read [provider selection](docs/git-provider.md). A configured CNB Primary consumer uses CNB-native Issue-linked dev PRs, AI Review and release checks; GitHub receives only approved main and release tags. Existing GitHub Primary consumers retain their prior behavior. Provider choice does not relax dev-first development, release authorization or CodeGraph/RTK production boundary.

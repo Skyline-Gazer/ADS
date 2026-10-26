@@ -18,3 +18,7 @@ These files help an ADS consumer apply the mandatory policy in [the canonical Gi
 7. If the API returns `403`, do not interpret that as an unprotected branch. Verify the `gh` account has repository-admin permission and the GitHub plan supports protection. GitHub Free supports protected branches for public repositories; private repositories require an eligible paid plan. If blocked, record the exact owner action. The workflow itself cannot prevent direct pushes.
 
 The check validates the PR's base, head branch type, and an explicit Issue reference in the PR body. In GitHub Actions, the read-only token verifies that each referenced number resolves to an Issue in the same repository and rejects references that resolve to pull requests. Without a token/repository context, local invocation checks syntax only. Neither mode proves that the Issue's acceptance criteria are complete.
+
+## CNB Primary consumers
+
+The GitHub workflow and gh branch-protection helper above are GitHub Primary adapters only. Read [provider selection](../../docs/git-provider.md). CNB Primary requires CNB-native Issue-linked PRs, CI and protection; do not install this GitHub workflow as a substitute for CNB protection, nor duplicate CNB PRs on GitHub.

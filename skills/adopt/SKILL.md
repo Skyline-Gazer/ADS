@@ -17,3 +17,7 @@ description: Adopt ADS in an existing codebase or simplify legacy Trellis, Comet
 11. Validate with one small real task or an isolated rehearsal. Prefer remote CI and target-platform preview when relevant; if missing, provision a minimal task-scoped hosted workflow or ephemeral environment when current authorization and existing capabilities allow it. Request exact user action only for a genuine access/permission/secret/budget boundary, continue independent safe work, and keep unrun checks explicitly blocked. Avoid creating duplicate persistent infrastructure; report remaining workflow conflicts and each verification layer not exercised.
 
 Never silently rewrite production configs, rotate credentials or merge a high-risk migration without scoped authorization.
+
+## Provider decision gate
+
+Read [provider selection](../../docs/git-provider.md) before running any GitHub-specific gh helper. Preserve existing providers by default; only an explicit decision enables CNB Primary. Validate .ads-project.json, existing Issues/Projects, native protection and CI. Do not create duplicate GitHub PRs or execute live mirror migration as a preflight side effect.

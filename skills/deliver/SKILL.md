@@ -16,3 +16,7 @@ description: Execute an approved software goal through implementation, relevant 
 10. Distinguish implemented, tested, merged, deployed and live-tested in the summary. Continue working within the current session until goal completion or genuine blocker.
 
 No compulsory per-stage approval, duplicate evidence archive or always-on maintenance scope.
+
+## Primary provider dispatch
+
+Read [provider selection](../../docs/git-provider.md) and validated .ads-project.json. Submit the Issue-linked PR targeting dev to the configured primary provider. In CNB Primary use current-SHA CNB review and deterministic CI, process feedback and re-review within a capped loop; NPC stays read/comment only unless separately authorized. Do not create a parallel GitHub PR. Production promotion, mirror and tags require separate authority and ref verification.
