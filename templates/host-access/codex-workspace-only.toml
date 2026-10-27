@@ -1,0 +1,14 @@
+# Codex filesystem permission profiles are beta, not supported by every CLI build.
+# Install only with owner consent into the supported active config scope.
+# Do NOT combine with legacy sandbox_mode or pass --sandbox (it overrides this profile).
+# Do NOT claim TUI-wide containment until native Read/Grep/Glob/MCP/child tests pass.
+default_permissions = "ads-project-only"
+
+[permissions.ads-project-only]
+extends = ":workspace"
+
+[permissions.ads-project-only.filesystem]
+":root" = "deny"
+":minimal" = "read"
+":tmpdir" = "deny"
+":slash_tmp" = "deny"
