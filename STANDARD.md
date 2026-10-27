@@ -6,6 +6,10 @@ Version: **v0.4.1 candidate**. The immutable `v0.4` release remains commit `2af1
 
 Follow host safety restrictions and the user's explicit task instructions. Respect project-local factual constraints (architecture, build, API contracts and deployment effects); they may specialize ADS defaults but may not bypass safety boundaries. Surface genuine conflicts. Pin an ADS commit/release rather than a moving branch. Keep a short local AGENTS.md as the canonical repository entrypoint; platform adapters should only point there, not copy competing rules.
 
+## Project-only filesystem reads on local TUI hosts
+
+For the main Agent as well as every native child, do not treat project CWD or workspace-write as authorization to explore the parent, user's home folders or attached drives. At bootstrap, adoption, resumed TUI sessions and before sensitive local work, verify the effective **read-and-write** sandbox boundary on synthetic positive and negative fixtures; include Shell, Read, Glob, Grep, filesystem MCP and indexing routes as applicable. Refuse unapproved personal-folder access, including listing/hashing, even for environment discovery. If there is no enforceable host/OS restriction, use an isolated process/VM without external mounts or mark the task BLOCKED; the ADS markdown is not a security boundary. See [host filesystem boundary](docs/host-filesystem-boundary.md).
+
 ## Environment first, reuse first
 
 Before choosing how to build, test or integrate, check what the host and the project already provide: agent and platform capabilities, native Skills, installed runtimes and package managers, lockfiles, caches, declared build/test commands and reachable local services. Prefer the smallest existing facility that can satisfy the task instead of installing a second runtime, rebuilding a container, provisioning unnecessary or duplicate cloud resources, or adding another service.

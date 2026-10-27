@@ -20,7 +20,7 @@ def referenced_issue_numbers(body):
     return sorted({int(match.group(1)) for match in ISSUE_REFERENCE.finditer(visible_body)})
 
 
-def validate_pull_request(event, development_branch="dev", production_branch="main"):
+def validate_pull_request(event, development_branch="dev", production_branch="main", mode_b=False):
     """Return policy violations for a GitHub pull_request event payload."""
     pull_request = event.get("pull_request")
     if not isinstance(pull_request, dict):
@@ -37,6 +37,8 @@ def validate_pull_request(event, development_branch="dev", production_branch="ma
     if base == development_branch:
         if head in {development_branch, production_branch}:
             errors.append("task PR must use a separate task branch, not a protected integration/production branch")
+        elif mode_b and re.fullmatch(r"release/cnb-[a-f0-9]{40}", head) and pull_request.get("head", {}).get("sha") == head.removeprefix("release/cnb-"):
+            pass
         elif not TASK_BRANCH.fullmatch(head):
             errors.append(f"PR targeting {development_branch!r} must come from a recognized task branch; got {head!r}")
     elif base == production_branch:
@@ -97,6 +99,7 @@ def main():
         event,
         development_branch=os.environ.get("ADS_DEVELOPMENT_BRANCH", "dev"),
         production_branch=os.environ.get("ADS_PRODUCTION_BRANCH", "main"),
+        mode_b=os.environ.get("ADS_RELEASE_GATE_MODE") == "verified-mode-b",
     )
     pull_request = event.get("pull_request") or {}
     repository = os.environ.get("GITHUB_REPOSITORY")
