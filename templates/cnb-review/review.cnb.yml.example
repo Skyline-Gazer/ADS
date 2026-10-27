@@ -2,8 +2,10 @@
 # Protect authoritative CI configuration; a PR must not supply its own gate.
 "**":
   pull_request:
-    - docker:
-        image: python:3.12-bookworm
+    - breakIfModify: true
+      retry: 0
+      docker:
+        image: python:3.12-bookworm@sha256:20e6f14233a62b44f2ffbac49f3c2520a91da96bbe65ddae37b9bdf1ce43c081
       git:
         submodules: false
       stages:
