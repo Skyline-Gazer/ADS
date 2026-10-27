@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - '.github/workflows/v04-consumer-acceptance.yml'
+      - 'docs/releases/v0.4.2-notes.md'
       - 'templates/consumer-devtools/**'
       - 'docs/consumer-dev-toolchain.md'
       - 'docs/tool-licensing.md'
@@ -11,6 +12,7 @@ on:
     branches: [dev]
     paths:
       - '.github/workflows/v04-consumer-acceptance.yml'
+      - 'docs/releases/v0.4.2-notes.md'
       - 'templates/consumer-devtools/**'
       - 'docs/consumer-dev-toolchain.md'
       - 'docs/tool-licensing.md'
