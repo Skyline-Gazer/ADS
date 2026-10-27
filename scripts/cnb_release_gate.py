@@ -38,9 +38,35 @@ def remote_identity(remote, host, repository):
     return remote
 
 
-def require_verified_writer():
-    # shortcut: no verified exclusive native writer/CAS, upgrade after provider enforcement is proven.
-    raise MirrorError('Mode B writes disabled: exclusive native publication writer not verified')
+def cas_push(remote, updates, leases):
+    """One atomic push of every update, each guarded by an explicit
+    compare-and-swap lease (--force-with-lease=<ref>:<expected>). The remote
+    rejects the whole push when any ref moved since its lease was read, which
+    is the provider-enforced serialization Mode B requires. Never --force."""
+    require(updates and set(updates) == set(leases), 'CAS push needs one lease per update ref')
+    arguments = ['push', '--atomic', remote]
+    for ref, value in sorted(updates.items()):
+        require(SHA_RE.fullmatch(value), 'CAS push value must be a full SHA')
+        arguments.append(value + ':' + ref)
+    for ref, expected in sorted(leases.items()):
+        require(SHA_RE.fullmatch(expected), 'CAS lease must be a full SHA')
+        arguments.append('--force-with-lease=' + ref + ':' + expected)
+    result = git(*arguments, check=False)
+    require(result.returncode == 0, 'atomic CAS push rejected: ' + (result.stderr.strip().splitlines() or ['unknown'])[-1][-160:])
+    return result
+
+
+def require_verified_writer(policy):
+    """Fail closed unless the protected controller recorded a verified CAS-capable
+    exclusive publication writer for this exact remote pair. Policy alone is not
+    evidence: the verification receipt must be present and name the same remotes."""
+    receipt = policy['release'].get('writer_verification')
+    require(isinstance(receipt, dict) and receipt.get('verified') is True and
+            isinstance(receipt.get('method'), str) and receipt['method'].strip() and
+            isinstance(receipt.get('verified_remote'), str), 'Mode B writes disabled: exclusive native publication writer not verified')
+    require(receipt.get('verified_remote') == policy['git']['cnb_repository'] or
+            receipt.get('verified_remote') == policy['git']['github_repository'],
+            'writer verification does not name a policy remote')
 
 
 def verify_clean_preparation(development, candidate, development_paths):
@@ -181,10 +207,14 @@ def import_candidate(policy, manifest, cnb='cnb', github='github', execute=False
     require(existing in (None, manifest['source_sha']), 'transfer ref collision')
     if execute:
         require(policy['release']['enabled'] is True, 'Mode B execution is disabled')
-        require_verified_writer()
+        require_verified_writer(policy)
         require(live(cnb, 'refs/heads/dev') == manifest['development_sha'] and live(cnb, source_ref) == manifest['source_sha'] and live(github, 'refs/heads/dev') == manifest['expected_target_sha'], 'refs moved before import')
         if existing is None:
-            git('push', github, manifest['source_sha'] + ':' + ref)
+            current = refs(github, ref).get(ref)
+            if current is None:
+                git('push', github, manifest['source_sha'] + ':' + ref)
+            else:
+                cas_push(github, {ref: manifest['source_sha']}, {ref: current})
         require(live(github, ref) == manifest['source_sha'], 'transfer readback mismatch')
     return {'state': 'IMPORTED' if execute else 'DRY_RUN', 'ref': ref, 'sha': manifest['source_sha'], 'next': 'reviewed transfer PR to GitHub dev; separate release PR to main'}
 
@@ -217,15 +247,27 @@ def copy_release(policy, manifest, cnb='cnb', github='github', execute=False, ap
     ancestor(before['refs/heads/main'], manifest['source_sha'])
     if execute:
         require(policy['release']['enabled'] is True, 'Mode B execution is disabled')
-        require_verified_writer()
+        require_verified_writer(policy)
         verify_github_release(policy, manifest, api)
         require(refs(github, *expected) == expected and refs(cnb, *expected) == before, 'provider refs moved before publication copy')
+        updates, leases = {}, {}
         if before['refs/heads/main'] != manifest['source_sha']:
-            git('push', cnb, manifest['source_sha'] + ':refs/heads/main')
+            updates['refs/heads/main'] = manifest['source_sha']
+            leases['refs/heads/main'] = before['refs/heads/main']
+        if tag not in before:
+            updates[tag] = manifest['tag_object']
+            leases[tag] = before.get(tag, '0' * 40)
+        if updates:
+            if leases.get(tag) == '0' * 40:
+                tag_update = {tag: updates.pop(tag)}
+                del leases[tag]
+                if updates:
+                    cas_push(cnb, updates, leases)
+                git('push', cnb, tag_update[tag] + ':' + tag)
+            else:
+                cas_push(cnb, updates, leases)
         require(live(cnb, 'refs/heads/main') == manifest['source_sha'], 'PARTIAL: branch copy failed; tag withheld')
         require(refs(github, *expected) == expected, 'PARTIAL: GitHub release drift; tag withheld')
-        if tag not in before:
-            git('push', cnb, manifest['tag_object'] + ':' + tag)
         require(refs(cnb, *expected) == expected, 'PARTIAL: publication readback failed; retain refs for safe retry')
         require(refs(github, *expected) == expected, 'PARTIAL: GitHub release changed during copy')
     return {'state': ('ALREADY_COPIED' if before == expected else 'COPIED') if execute else 'DRY_RUN', 'release_sha': manifest['source_sha'], 'tag_object': manifest['tag_object'], 'tag_target': manifest['tag_target'], 'next': 'reviewed CNB dev reconciliation preserving development files'}

@@ -71,11 +71,14 @@ def validate_v2(config):
         raise ProviderError("trusted deterministic CI App/check required")
     if (review["release_app_id"], review["release_check"]) == (review["ci_app_id"], review["ci_check"]):
         raise ProviderError("release review and deterministic CI must be distinct checks")
-    release = object_with_keys(config["release"], "release", {"approval_required", "force_push", "copy_direction", "enabled", "development_paths"})
+    release = object_with_keys(config["release"], "release", {"approval_required", "force_push", "copy_direction", "enabled", "development_paths", "writer_verification"})
     if not isinstance(release["development_paths"], list) or not release["development_paths"] or any(not isinstance(path, str) or not path or path.startswith("/") or ".." in Path(path).parts for path in release["development_paths"]):
         raise ProviderError("explicit relative development paths required")
     if release["approval_required"] is not True or release["force_push"] is not False or release["copy_direction"] != "github-to-cnb" or type(release["enabled"]) is not bool:
         raise ProviderError("Mode B requires approved forward-only GitHub publication copy")
+    writer = release.get("writer_verification")
+    if not isinstance(writer, dict) or set(writer) != {"verified", "method", "verified_remote"} or type(writer["verified"]) is not bool or not isinstance(writer["method"], str) or not isinstance(writer["verified_remote"], str):
+        raise ProviderError("release writer_verification must declare verified, method and verified_remote")
     return config
 
 def load(path):

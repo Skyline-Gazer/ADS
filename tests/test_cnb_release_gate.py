@@ -173,6 +173,65 @@ class ReleaseGateTests(unittest.TestCase):
         with self.assertRaisesRegex(gate.MirrorError, 'not successful'):
             gate.copy_release(self.policy, release, api=failed)
 
+    def test_cas_push_rejects_moved_ref(self):
+        self.git('switch', '-C', 'cas-a')
+        (self.work / 'cas.txt').write_text('A')
+        self.git('add', '.'); self.git('commit', '-m', 'A')
+        a = self.sha()
+        self.git('push', 'cnb', a + ':refs/heads/cas/prod')
+        self.git('switch', '-C', 'cas-b', 'main')
+        (self.work / 'cas.txt').write_text('B')
+        self.git('add', '.'); self.git('commit', '-m', 'B')
+        b = self.sha()
+        moved = gate.live('cnb', 'refs/heads/cas/prod')
+        with self.assertRaisesRegex(gate.MirrorError, 'atomic CAS push rejected'):
+            gate.cas_push('cnb', {'refs/heads/cas/prod': b}, {'refs/heads/cas/prod': self.base})
+        self.assertEqual(gate.live('cnb', 'refs/heads/cas/prod'), moved)
+        gate.cas_push('cnb', {'refs/heads/cas/prod': b}, {'refs/heads/cas/prod': moved})
+        self.assertEqual(gate.live('cnb', 'refs/heads/cas/prod'), b)
+
+    def test_cas_push_is_atomic_across_refs(self):
+        ref = 'refs/heads/cas/atomic'
+        self.git('push', 'cnb', 'main:' + ref)
+        current = gate.live('cnb', ref)
+        self.git('switch', '-C', 'advance', 'main')
+        (self.work / 'advance.txt').write_text('adv')
+        self.git('add', '.')
+        self.git('commit', '-m', 'advance')
+        self.git('tag', '-a', 'v0.0.0-cas', '-m', 't')
+        tag_object = self.sha('v0.0.0-cas')
+        advanced = self.sha('HEAD')
+        stale = gate.live('cnb', ref)
+        self.git('push', 'cnb', advanced + ':' + ref)  # concurrent writer moves it
+        self.assertNotEqual(stale, gate.live('cnb', ref))
+        self.git('switch', '-C', 'final', 'advance')
+        (self.work / 'final.txt').write_text('final')
+        self.git('add', '.')
+        self.git('commit', '-m', 'final')
+        final = self.sha('HEAD')
+        with self.assertRaisesRegex(gate.MirrorError, 'atomic CAS push rejected'):
+            gate.cas_push('cnb', {ref: final, 'refs/tags/v0.0.0-cas': tag_object},
+                          {ref: stale, 'refs/tags/v0.0.0-cas': '0' * 40})
+        self.assertEqual(gate.live('cnb', ref), advanced)
+        # cross-ref atomic rollback is transport-dependent (local bare test remotes
+        # may lack the atomic capability); the live CNB verification covers it.
+
+    def test_writer_requires_verification_receipt_naming_policy_remote(self):
+        manifest = self.candidate()
+        self.writer.stop()
+        bad = copy.deepcopy(self.policy)
+        bad['release']['writer_verification'] = {'verified': True, 'method': 'force-with-lease probe', 'verified_remote': 'other/repo'}
+        with self.assertRaisesRegex(gate.MirrorError, 'does not name a policy remote'):
+            gate.import_candidate(bad, manifest, execute=True)
+        missing = copy.deepcopy(self.policy)
+        missing['release']['writer_verification'] = {'verified': False, 'method': '', 'verified_remote': ''}
+        with self.assertRaisesRegex(gate.MirrorError, 'exclusive native publication writer'):
+            gate.import_candidate(missing, manifest, execute=True)
+        good = copy.deepcopy(self.policy)
+        good['release']['writer_verification'] = {'verified': True, 'method': 'force-with-lease probe', 'verified_remote': self.policy['git']['github_repository']}
+        result = gate.import_candidate(good, manifest, execute=True)
+        self.assertEqual(result['state'], 'IMPORTED')
+
     def test_writes_are_blocked_without_verified_native_exclusive_writer(self):
         manifest = self.candidate()
         self.writer.stop()

@@ -25,6 +25,11 @@
     "force_push": false,
     "copy_direction": "github-to-cnb",
     "enabled": false,
+    "writer_verification": {
+      "verified": false,
+      "method": "",
+      "verified_remote": ""
+    },
     "development_paths": [
       ".ads-devtools.json",
       ".codex/hooks.json",
