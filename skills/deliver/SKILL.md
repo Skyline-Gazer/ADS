@@ -18,6 +18,10 @@ description: Execute an approved software goal through implementation, relevant 
 
 No compulsory per-stage approval, duplicate evidence archive or always-on maintenance scope.
 
+## Remote-heavy execution and lifecycle convergence
+
+Follow [lifecycle and execution governance](../../docs/execution-and-drift-governance.md): choose existing hosted Docker/Compose, browser, performance, SCA and full CI rather than local heavyweight stacks. Local coding, Git and bounded checks remain normal; no silent installation of Docker or browsers. Verify task/PR state before edits; after merge read back target SHA and reconcile Issue/Project/docs before claiming closure. At Phase, release or Provider cutover run full affected drift checks. The receipt checker validates declarations only and does not substitute for live Provider/Project reads.
+
 ## Primary provider dispatch
 
 Read [provider selection](../../docs/git-provider.md) and validated .ads-project.json. Submit the Issue-linked PR targeting dev to the configured primary provider. In CNB Primary use current-SHA CNB review and deterministic CI, process feedback and re-review within a capped loop; NPC stays read/comment only unless separately authorized. Do not create a parallel GitHub PR. Production promotion, mirror and tags require separate authority and ref verification.
