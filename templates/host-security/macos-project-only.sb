@@ -1,0 +1,7 @@
+(version 1)
+(allow default)
+(deny file-read* (require-all (subpath "/private/tmp/ads-canary-outside")))
+(deny file-read* (require-all (subpath "/Users/ian/Desktop") (require-not (subpath "/Users/ian/Desktop/Projects/ADS"))))
+(deny file-read* (subpath "/Users/ian/Documents") (subpath "/Users/ian/Downloads") (subpath "/Users/ian/Music") (subpath "/Users/ian/Pictures") (subpath "/Users/ian/Movies") (subpath "/Users/ian/.ssh") (subpath "/Users/ian/Library/Keychains"))
+(deny file-write* (require-all (subpath "/Users/ian") (require-not (subpath "/Users/ian/Desktop/Projects/ADS"))))
+(deny file-write* (subpath "/private/tmp/ads-canary-outside"))
