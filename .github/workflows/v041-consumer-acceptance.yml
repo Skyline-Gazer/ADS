@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - '.github/workflows/v041-consumer-acceptance.yml'
+      - 'docs/releases/v0.4.2-notes.md'
       - 'scripts/test-v041-consumer.py'
       - 'tests/test_v041_consumer_acceptance.py'
       - 'templates/consumer-devtools/**'
@@ -14,6 +15,7 @@ on:
     branches: [dev]
     paths:
       - '.github/workflows/v041-consumer-acceptance.yml'
+      - 'docs/releases/v0.4.2-notes.md'
       - 'scripts/test-v041-consumer.py'
       - 'templates/consumer-devtools/**'
       - 'skills/**'
