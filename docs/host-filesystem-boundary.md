@@ -16,6 +16,16 @@ This applies to the **main TUI Agent, its native child Agents, shell/Python/Ruby
 
 **Other hosts:** Establish an equivalent OS-enforced read AND write boundary. If unavailable, mark `PROMPT_ONLY` / `BLOCKED`, use a separate isolated VM/container with no mounted user-home directories, or suspend tasks needing isolation. Host extensions and external filesystem/search MCPs are separate attack surfaces, not covered automatically by a shell sandbox.
 
+**macOS Seatbelt (host-native, harness-independent) — `omp` and any TUI:** When the TUI harness has no built-in OS sandbox, wrap the *entire agent launch command* in a generated Seatbelt profile; every child process (shells, interpreters, MCP stdio servers, indexers, subagents) inherits the containment. Generate per-project:
+
+```sh
+python3 templates/host-security/gen_project_sandbox.py /path/to/project > /tmp/agent.sb
+mkdir -p /private/tmp/ads-agent-tmp          # the only writable scratch outside the project
+sandbox-exec -f /tmp/agent.sb <agent launch command>
+```
+
+The profile denies file reads and writes everywhere under `$HOME` except the project subtree, denies `/private/tmp` except the dedicated scratch dir, and explicitly denies known private directories (Documents, Downloads, Music, Pictures, Movies, `.ssh`, Keychains). It does NOT restrict network or process execution beyond the filesystem; combine with TUI-level tool policy where needed. `sandbox-exec` is deprecated by Apple but remains the only host-native per-process filesystem sandbox available without disabling SIP; a passing profile matrix must still be re-verified after macOS upgrades. Evidence protocol: run the same synthetic canary matrix through the wrapped session (native read tools, Glob/Grep, `cat`, Python, Node, RTK/CodeGraph, symlink and realpath escape, listing, and legitimate project read/write). A profile that cannot deny a vector is `UNSAFE`, not VERIFIED_BOUNDED.
+
 ## Read-only preflight at Bootstrap / Adopt / Deliver / resume
 
 1. Identify the executing host/version and current **real** repo root and actual working directory. Verify that the TUI is started from the intended repo, not a parent directory; capture only sanitized metadata.
