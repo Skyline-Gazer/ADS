@@ -1,7 +1,7 @@
 name: Validate ADS
 on:
   push:
-    branches: [main, dev, "draft/**", "feat/**", "feature/**", "fix/**", "bugfix/**", "chore/**", "docs/**", "refactor/**", "test/**", "ci/**", "build/**", "perf/**", "style/**", "deps/**", "release/**", "hotfix/**"]
+    branches: [main, dev, "cnb/**", "draft/**", "feat/**", "feature/**", "fix/**", "bugfix/**", "chore/**", "docs/**", "refactor/**", "test/**", "ci/**", "build/**", "perf/**", "style/**", "deps/**", "release/**", "hotfix/**"]
   pull_request:
     types: [opened, synchronize, reopened, edited, ready_for_review]
   workflow_dispatch:
@@ -24,6 +24,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+          ADS_DEVELOPMENT_BRANCH: ${{ github.base_ref == 'cnb/v0.4.1' && 'cnb/v0.4.1' || 'dev' }}
         run: python3 scripts/check_git_governance.py
       - name: Test ADS checker
         run: python3 -m unittest discover -s tests -v
