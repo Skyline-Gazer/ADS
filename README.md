@@ -26,6 +26,7 @@ ADS is an agent-native, minimal-ceremony development standard for personal softw
 - [profiles/](profiles/): optional stack hints, not mandatory architectures.
 - [scenarios/](scenarios/): acceptance scenarios.
 - [docs/how-to-update.md](docs/how-to-update.md): AI-native submodule-first adoption, update triggers, review and rollback.
+- [docs/host-filesystem-boundary.md](docs/host-filesystem-boundary.md): local TUI project-only read/write security, host-enforced profiles and synthetic negative test; does not claim that ADS text itself is an OS sandbox.
 - [docs/native-subagent-safety.md](docs/native-subagent-safety.md): verified child permission ceilings, command/file-system containment and lifecycle preflight; preserves observed host failures.
 - [docs/milestone-reconciliation.md](docs/milestone-reconciliation.md): Phase-end GitHub Project/Issue/PR/CI drift convergence.
 - [docs/agent-adoption.md](docs/agent-adoption.md): practical, pinned adoption and skill discovery.
