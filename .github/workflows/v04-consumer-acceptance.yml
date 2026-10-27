@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/v04-consumer-acceptance.yml'
       - 'docs/releases/v0.4.2-notes.md'
+      - 'scripts/release-v042.py'
       - 'templates/consumer-devtools/**'
       - 'docs/consumer-dev-toolchain.md'
       - 'docs/tool-licensing.md'
@@ -13,6 +14,7 @@ on:
     paths:
       - '.github/workflows/v04-consumer-acceptance.yml'
       - 'docs/releases/v0.4.2-notes.md'
+      - 'scripts/release-v042.py'
       - 'templates/consumer-devtools/**'
       - 'docs/consumer-dev-toolchain.md'
       - 'docs/tool-licensing.md'

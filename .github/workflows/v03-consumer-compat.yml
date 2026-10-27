@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/v03-consumer-compat.yml'
       - 'docs/releases/v0.4.2-notes.md'
+      - 'scripts/release-v042.py'
       - 'docs/releases/v0.3.md'
       - '.github/workflows/release-v03.yml'
       - 'STANDARD.md'
@@ -16,6 +17,7 @@ on:
     paths:
       - '.github/workflows/v03-consumer-compat.yml'
       - 'docs/releases/v0.4.2-notes.md'
+      - 'scripts/release-v042.py'
       - 'docs/releases/v0.3.md'
       - 'STANDARD.md'
       - 'SAFETY.md'
