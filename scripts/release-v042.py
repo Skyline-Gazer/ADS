@@ -25,7 +25,7 @@ WORKFLOWS = (
     ".github/workflows/validate.yml",
     ".github/workflows/v03-consumer-compat.yml",
     ".github/workflows/v04-consumer-acceptance.yml",
-    ".github/workflows/v042-consumer-acceptance.yml",
+    ".github/workflows/v041-consumer-acceptance.yml",
 )
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 
