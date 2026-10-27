@@ -4,6 +4,10 @@ Version: **v0.4.1 candidate**. Released v0.4 remains immutable; unreleased exten
 
 Classify risk by real-world effect, not task size. Coding, branch work, local tests and isolated previews normally need no repeated approval. Production state changes, destructive migrations, secrets, IAM, finance, resource expenditure, customer data, security controls and availability-impacting actions may require explicit owner authorization. Native Git push-to-deploy does not silently authorize these high-risk effects.
 
+## Local TUI filesystem read containment
+
+A project-scoped coding grant does **not** authorize the main TUI Agent or any child to read, list, hash, index, search or traverse user files outside the canonical project root (including personal Music/Documents/Downloads and unrelated sibling projects). A workspace **write** sandbox, an AGENTS.md prohibition, a Git worktree, and a clean Git diff do not enforce a **read** boundary. Before local agent execution where the Owner expects project-only access, select a host/OS-enforced read+write policy and verify denial of synthetic outside-file reads through the actual TUI, shell, child and MCP pathways. Missing enforcement is `PROMPT_ONLY`/`BLOCKED`; never claim safety because the Agent promised not to look. No automatic edits to the user's global host config. Follow [local TUI host filesystem boundary](docs/host-filesystem-boundary.md) and [native subagent preflight](docs/native-subagent-safety.md).
+
 ## Scoped consent
 
 When needed, ask once for a concrete scope: intended outcome, resources/environment, allowed operations, data impact and recovery constraints. Continue inside that scope without new approval at each phase. A material new impact, target, privilege or blast radius requires new authorization. Authorization cannot override host/tool restrictions or other higher-priority safety rules.
