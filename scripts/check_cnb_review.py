@@ -22,11 +22,11 @@ def gate(data, review_head, current_head):
         raise ReviewGateError("STALE_REVIEW: source HEAD changed since review started")
     if not isinstance(data, dict) or set(data) != {"status", "issues"}:
         raise ReviewGateError("review result missing required structured fields")
-    if data["status"] not in STATUS or not isinstance(data["issues"], list):
+    if not isinstance(data["status"], str) or data["status"] not in STATUS or not isinstance(data["issues"], list):
         raise ReviewGateError("review result has invalid status or issue collection")
     counts = {"critical": 0, "warning": 0, "info": 0}
     for item in data["issues"]:
-        if not isinstance(item, dict) or item.get("severity") not in SEVERITY:
+        if not isinstance(item, dict) or not isinstance(item.get("severity"), str) or item["severity"] not in SEVERITY:
             raise ReviewGateError("review issue has missing or unknown severity")
         if not isinstance(item.get("problem"), str) or not item["problem"].strip():
             raise ReviewGateError("review issue missing problem evidence")
@@ -41,15 +41,36 @@ def gate(data, review_head, current_head):
         raise ReviewGateError("review requires modification but provides no actionable issues")
     return counts
 
+def gate_candidate(data, reviewed, current):
+    """Snapshots come from trusted platform/ref readback, never from report JSON."""
+    for key in ("source", "target", "merge"):
+        for snapshot in (reviewed, current):
+            value = snapshot.get(key)
+            if not isinstance(value, str) or not SHA.fullmatch(value):
+                raise ReviewGateError(f"missing trusted {key} SHA")
+        if reviewed[key] != current[key]:
+            raise ReviewGateError(f"STALE_REVIEW: {key} changed")
+    return gate(data, reviewed["source"], current["source"])
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--result", required=True)
     parser.add_argument("--review-head", required=True)
     parser.add_argument("--current-head", required=True)
+    parser.add_argument("--review-target")
+    parser.add_argument("--current-target")
+    parser.add_argument("--review-merge")
+    parser.add_argument("--current-merge")
     args = parser.parse_args(argv)
     try:
         data = json.loads(Path(args.result).read_text(encoding="utf-8"))
-        counts = gate(data, args.review_head, args.current_head)
+        candidate = (args.review_target, args.current_target, args.review_merge, args.current_merge)
+        if any(value is not None for value in candidate):
+            counts = gate_candidate(data,
+                {"source": args.review_head, "target": args.review_target, "merge": args.review_merge},
+                {"source": args.current_head, "target": args.current_target, "merge": args.current_merge})
+        else:
+            counts = gate(data, args.review_head, args.current_head)
     except (ReviewGateError, OSError, UnicodeError, json.JSONDecodeError) as exc:
         print(f"REVIEW_BLOCKED: {exc}", file=sys.stderr)
         return 1

@@ -6,4 +6,6 @@ ADS is a lightweight standard, not a new execution framework. Read README.md, ST
 
 Provider-aware consumer adoption is defined in [docs/git-provider.md](docs/git-provider.md). ADS itself remains GitHub Primary unless separately authorized to migrate.
 
-For v0.4.1 stabilization keep released v0.4 history immutable. Consumer preflight templates distinguish CLI and actual native Host evidence, and production guards cover both candidate trees and actual build outputs. New CNB Development + GitHub Release Gate remains unsupported/default off; do not extend old provider validation to bypass rejection.
+The Owner-authorized CNB variant exception (Issue #63) is `cnb/v0.4.1` → `feat/cnb-*`, `fix/cnb-*`, `ci/cnb-*` or `test/cnb-*` → reviewed PR to `cnb/v0.4.1`. It starts at immutable generic v0.4.1 commit `3abf6025657a5d716476029cc8cbf5239543210b`. Generic tasks still follow dev-based governance. Never merge variant changes automatically to generic dev/main, publish a stable release or switch a Consumer provider. Consumers pin an accepted immutable variant commit; native acceptance remains separate from source CI.
+
+Consumer preflight templates distinguish CLI and actual native Host evidence, and production guards cover both candidate trees and actual build outputs. Mode B must use its separate versioned contract and adapter; never reverse Mode A's mirror to simulate GitHub release authority.

@@ -75,3 +75,7 @@ The mandatory branch / Issue-linked PR / review / release invariants apply on th
 ## Consumer release-preparation lifecycle
 
 Consumer dev continuously retains reproducible developer integration. Strip it only on an independent release-preparation branch cut from the approved dev SHA. Supply the development manifest externally to the production guard so custom paths remain checked after removal, and scan actual build outputs. Reconcile published-release ancestry through a reviewed merge whose result preserves pre-merge dev-only files; do not delete from dev and restore in a later commit. Use merge commits where ancestry-preserving release transport requires them; no force-push or published-history rewrite.
+
+## Owner-scoped CNB variant exception
+
+Only the opted-in cnb/v0.4.1 line uses its current HEAD as the integration base and reviewed feat/cnb-*, fix/cnb-*, ci/cnb-* or test/cnb-* PRs back to that branch. Generic ADS remains dev-based. The [separate Mode B adapter](cnb-variant.md) accepts exact release/cnb-FULL_SHA transfers into GitHub dev only through a trusted controller enabling that already-verified mode; generic defaults reject them. Neither exception grants production release or protection bypass.

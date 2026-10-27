@@ -34,3 +34,7 @@ Read [CNB safe release synchronization](cnb-sync.md) before enabling any mirror.
 ## Proposed dual-platform release gate — not a supported mirror mode
 
 The [CNB Development + GitHub Release Gate pilot](cnb-github-release-gate-pilot.md) is a separate, unaccepted extension under Issue #63. It makes GitHub main authoritative for releases, so the existing CNB-to-GitHub main mirror and schema MUST NOT be repurposed for it. Current validators must continue rejecting that unsupported mode until an independently reviewed implementation and real isolated-platform acceptance exist. No consumer cutover is authorized by this document.
+
+## Opt-in CNB variant implementation
+
+On the dedicated cnb/v0.4.1 variant only, [the versioned Mode B contract and adapter](cnb-variant.md) supplement schema v1. The historical proposed-mode text above describes the released generic contract; it does not override the Owner-authorized variant implementation. Execution remains disabled until policy and native acceptance are verified. Generic v0.4.1 and existing Consumer pins are unchanged.

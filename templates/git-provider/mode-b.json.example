@@ -1,0 +1,34 @@
+{
+  "schema_version": 2,
+  "git": {
+    "mode": "cnb-development-github-release-gate",
+    "development_provider": "cnb",
+    "release_provider": "github",
+    "issue_provider": "github",
+    "development_branch": "dev",
+    "production_branch": "main",
+    "cnb_repository": "isolated/consumer",
+    "github_repository": "isolated/consumer",
+    "transfer_prefix": "release/cnb-"
+  },
+  "review": {
+    "auto": "cnb-code-review",
+    "npc": "on-demand-read-only",
+    "max_fix_rounds": 3,
+    "release_app_id": 0,
+    "release_check": "REPLACE_WITH_OBSERVED_GREPTILE_CHECK",
+    "ci_app_id": 0,
+    "ci_check": "REPLACE_WITH_OBSERVED_CI_CHECK"
+  },
+  "release": {
+    "approval_required": true,
+    "force_push": false,
+    "copy_direction": "github-to-cnb",
+    "enabled": false,
+    "development_paths": [
+      ".ads-devtools.json",
+      ".codex/hooks.json",
+      "RTK.md"
+    ]
+  }
+}

@@ -38,3 +38,7 @@ Greptile App installation, paid plans, secret provisioning, IAM changes, product
 ## Version-title correction
 
 Released v0.4's STANDARD/SAFETY/QUALITY headers still said 0.3 candidate. Correct only this development branch's headers; never move or rewrite the v0.4 tag. Consumers continue pinning the released commit until a separately reviewed upgrade.
+
+## Dedicated variant source implementation — 2026-10-27
+
+The Owner-authorized [CNB variant](cnb-variant.md) now provides a separate schema v2 and import/publication adapter with supplementary two-round bare-Git tests. The earlier draft remains historical design evidence. This does not make generic v0.4.1 Mode B-capable, prove native branch protection/review, or authorize Consumer cutover. Native acceptance is still separately required.

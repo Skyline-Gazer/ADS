@@ -15,3 +15,7 @@ The official plugin supports pull_request events, including creation/reopen/sour
 - Treat CNB review result as a newly introduced **configured but not yet live-verified** adapter. Require a real Consumer PR, current-SHA evidence and branch protection in the Pilot.
 
 Official upstream: https://cnb.cool/cnb/plugins/cnbcool/code-review ; https://docs.cnb.cool/zh/build/npc.html ; https://docs.cnb.cool/zh/build/build-in-env.html
+
+## Variant candidate binding
+
+The variant template now uses the observed immutable v1.22.2 image manifest and loads the verifier from the trusted target. It additionally binds native target and evaluated merge SHA, rejects forks pending an API adapter, validates refs and rereads both branch heads after review. The legacy three-argument Python function/CLI remains source-compatible for released v1 consumers, but source-only checks cannot establish full variant acceptance. Native protection must keep the authoritative configuration outside PR control. The Python runtime tag remains a consumer adoption input requiring its own observed image digest before activation.

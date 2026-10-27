@@ -56,3 +56,7 @@ Goal-driven execution; phase-end GitHub Project milestone convergence; review-ga
 ## Migration and publication
 
 The v0.2 and v0.3 baselines remain archived; v0.4 is officially published via a reviewed release manifest. Consumer updates are separate pinned-Submodule PRs and do not occur automatically. Isolated GitHub Actions KIRARI/AiringCal compatibility and *real private* ADS Submodule consumer CI are separate release gates listed in [the v0.3 release decision](docs/releases/v0.3.md). Those projects do not adopt ADS merely because this repository is updated.
+
+## Opt-in CNB v0.4.1 variant
+
+This dedicated branch carries [CNB variant source and acceptance boundaries](docs/cnb-variant.md), including a separate versioned GitHub release-gate adapter and [service exit](docs/cnb-service-exit.md). Generic v0.4.1 remains immutable. Consumers pin an independently accepted commit; source CI is not full native CNB acceptance.

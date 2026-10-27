@@ -123,3 +123,17 @@ class GitGovernanceTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class ModeBGovernanceTests(unittest.TestCase):
+    def test_exact_import_exception_does_not_change_default(self):
+        sha = 'a' * 40
+        event = {'pull_request': {'base': {'ref': 'dev'}, 'head': {'ref': 'release/cnb-' + sha, 'sha': sha}, 'body': 'Refs #63'}}
+        self.assertTrue(validate_pull_request(event))
+        self.assertEqual(validate_pull_request(event, mode_b=True), [])
+        event['pull_request']['head']['sha'] = 'b' * 40
+        self.assertTrue(validate_pull_request(event, mode_b=True))
+
+    def test_variant_branch_uses_explicit_owner_scope_only(self):
+        event = {'pull_request': {'base': {'ref': 'cnb/v0.4.1'}, 'head': {'ref': 'feat/cnb-63-integration'}, 'body': 'Refs #63'}}
+        self.assertTrue(validate_pull_request(event))
+        self.assertEqual(validate_pull_request(event, development_branch='cnb/v0.4.1'), [])

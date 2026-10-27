@@ -65,3 +65,27 @@ class ProviderTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class ModeBProviderTests(unittest.TestCase):
+    def setUp(self):
+        self.cfg = json.loads((EXAMPLE.parent / 'mode-b.json.example').read_text())
+        self.cfg['review']['release_app_id'] = 12345
+        self.cfg['review']['ci_app_id'] = 6789
+
+    def test_mode_b_separates_authority(self):
+        self.assertEqual(validate(self.cfg)['git']['release_provider'], 'github')
+
+    def test_no_activation_from_unobserved_app_or_reversed_mirror(self):
+        mutations = [lambda c: c['review'].update(release_app_id=0),
+                     lambda c: c['review'].update(release_app_id=True),
+                     lambda c: c['git'].update(release_provider='cnb'),
+                     lambda c: c['release'].update(copy_direction='cnb-to-github'),
+                     lambda c: c['release'].update(enabled='true'),
+                     lambda c: c['git'].update(github_repository='../private'),
+                     lambda c: c['git'].update(transfer_prefix='feat/'),
+                     lambda c: c['review'].update(max_fix_rounds=4)]
+        for change in mutations:
+            cfg = copy.deepcopy(self.cfg)
+            change(cfg)
+            with self.assertRaises(ProviderError):
+                validate(cfg)

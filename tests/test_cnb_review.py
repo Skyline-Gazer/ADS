@@ -3,7 +3,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
-from scripts.check_cnb_review import gate, ReviewGateError, main
+from scripts.check_cnb_review import gate, gate_candidate, ReviewGateError, main
 
 A = "a" * 40
 B = "b" * 40
@@ -12,6 +12,20 @@ def finding(level):
     return {"severity": level, "problem": "Concrete triggering input and consequence", "file": "src/a.py"}
 
 class CNBReviewGateTests(unittest.TestCase):
+    def test_candidate_source_target_merge_binding(self):
+        identity = {"source": A, "target": B, "merge": "c" * 40}
+        self.assertEqual(gate_candidate(CLEAN, identity, identity)["critical"], 0)
+        for key in identity:
+            for value in ("", "d" * 40):
+                with self.subTest(key=key, value=value), self.assertRaises(ReviewGateError):
+                    gate_candidate(CLEAN, identity, {**identity, key: value})
+
+    def test_json_container_values_fail_closed(self):
+        for data in ({"status": [], "issues": []},
+                     {"status": "passed", "issues": [{"severity": [], "problem": "x"}]}):
+            with self.assertRaises(ReviewGateError):
+                gate(data, A, A)
+
     def test_clean_current_sha(self):
         self.assertEqual(gate(CLEAN, A, A)["critical"], 0)
 

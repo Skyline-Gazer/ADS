@@ -15,6 +15,8 @@ def object_with_keys(value, name, keys):
     return value
 
 def validate(config):
+    if isinstance(config, dict) and type(config.get("schema_version")) is int and config["schema_version"] == 2:
+        return validate_v2(config)
     object_with_keys(config, "root", {"schema_version", "git", "review", "release"})
     if type(config["schema_version"]) is not int or config["schema_version"] != 1:
         raise ProviderError("unsupported schema version")
@@ -43,6 +45,37 @@ def validate(config):
             raise ProviderError("GitHub primary uses existing reviewer")
     return config
 
+def validate_v2(config):
+    """Separate Mode B authority; schema v1's one-way mirror stays unchanged."""
+    object_with_keys(config, "root", {"schema_version", "git", "review", "release"})
+    git = object_with_keys(config["git"], "git", {
+        "mode", "development_provider", "release_provider", "issue_provider",
+        "development_branch", "production_branch", "cnb_repository", "github_repository",
+        "transfer_prefix"})
+    if git["mode"] != "cnb-development-github-release-gate" or git["development_provider"] != "cnb" or git["release_provider"] != "github":
+        raise ProviderError("Mode B requires CNB development and GitHub release authority")
+    if git["development_branch"] != "dev" or git["production_branch"] != "main" or git["issue_provider"] not in ("github", "cnb"):
+        raise ProviderError("Mode B requires dev/main and an explicit issue authority")
+    if git["transfer_prefix"] != "release/cnb-":
+        raise ProviderError("Mode B requires exact release/cnb-<SHA> transfers")
+    for key in ("cnb_repository", "github_repository"):
+        value = git[key]
+        if not isinstance(value, str) or not re.fullmatch(r"[A-Za-z0-9_-]+(?:/[A-Za-z0-9_.-]+)+", value) or ".." in value:
+            raise ProviderError("canonical repository identity required")
+    review = object_with_keys(config["review"], "review", {"auto", "npc", "max_fix_rounds", "release_app_id", "release_check", "ci_app_id", "ci_check"})
+    if review["auto"] != "cnb-code-review" or review["npc"] != "on-demand-read-only" or type(review["max_fix_rounds"]) is not int or not 1 <= review["max_fix_rounds"] <= 3:
+        raise ProviderError("automatic CNB review, read-only NPC and at most three repairs required")
+    if type(review["release_app_id"]) is not int or review["release_app_id"] <= 0 or not isinstance(review["release_check"], str) or not review["release_check"].strip():
+        raise ProviderError("independently observed trusted release App/check required")
+    if type(review["ci_app_id"]) is not int or review["ci_app_id"] <= 0 or not isinstance(review["ci_check"], str) or not review["ci_check"].strip():
+        raise ProviderError("trusted deterministic CI App/check required")
+    release = object_with_keys(config["release"], "release", {"approval_required", "force_push", "copy_direction", "enabled", "development_paths"})
+    if not isinstance(release["development_paths"], list) or not release["development_paths"] or any(not isinstance(path, str) or not path or path.startswith("/") or ".." in Path(path).parts for path in release["development_paths"]):
+        raise ProviderError("explicit relative development paths required")
+    if release["approval_required"] is not True or release["force_push"] is not False or release["copy_direction"] != "github-to-cnb" or type(release["enabled"]) is not bool:
+        raise ProviderError("Mode B requires approved forward-only GitHub publication copy")
+    return config
+
 def load(path):
     path = Path(path)
     if not path.exists():
@@ -65,7 +98,7 @@ def main(argv=None):
     if cfg is None:
         print("UNCONFIGURED: inspect actual remotes/CI and ask once; no changes made")
         return 2
-    print(f"CONFIGURED: {cfg['git']['primary']}; live remote state not VERIFIED")
+    print(f"CONFIGURED: {cfg['git'].get('primary', cfg['git'].get('mode'))}; live remote state not VERIFIED")
     return 0
 
 if __name__ == "__main__":

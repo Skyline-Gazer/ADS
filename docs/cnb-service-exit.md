@@ -1,0 +1,12 @@
+# CNB service exit and variant retirement
+
+CNB is optional. An exit does not rewrite generic ADS v0.4.1 or switch any existing Consumer automatically. Owner-directed production provider cutover remains separately authorized; rehearse this sequence in isolated repositories first.
+
+1. Read current provider policy, active native jobs/NPC/schedules, both platforms' refs, pending PRs and in-flight release identity. Preserve downloadable reports, reviews, source/target/merge receipts, SBOM, LCOV and browser/Lighthouse evidence before their TTL expires.
+2. Disable CNB event producers, scheduled jobs, automatic NPC and both import/publication jobs. Drain or cancel active runs, reread native run state, and revoke only the scoped service write grants already approved for retirement. Do not reveal or repurpose credentials. An empty YAML file alone does not prove no live synchronization remains.
+3. Preserve approved history and an Owner-authorized immutable archival tag in the isolated rehearsal. Record both tag object and peeled commit. A production archival tag or branch deletion needs separate explicit authorization. GitHub has no native “archive branch” operation; keep an inactive branch when deletion is not authorized.
+4. Through a reviewed Consumer PR pin Generic ADS v0.4.1 commit `3abf6025657a5d716476029cc8cbf5239543210b`, restore the existing GitHub Primary schema v1 configuration, and verify bootstrap/adopt/deliver and developer-only production boundaries. Do not repurpose Mode A as reverse synchronization. Queued Mode B actions must be rejected by the schema/mode boundary after exit.
+5. Rerun the same immutable external Site build, Core/Site provenance, root/nested URLs, unit/type/browser checks and upgrade/rollback contract. Compare Site digests and approved release/tag history before/after. Confirm generic ADS dev/main and Consumer production refs are unaffected by the rehearsal.
+6. Observe no new CNB runs or cross-platform writes after a controlled event, and record an explicit final provider/credential/job/PR receipt. Only that real readback establishes native service-exit acceptance. Local submodule roundtrip tests prove Git/configuration compatibility only.
+
+The [exit fixture](../tests/test_cnb_exit.py) exercises the immutable Generic pin, Consumer source preservation and incompatible old-mode rejection without touching any production remote. Live shutdown, credential revocation and post-exit synchronization observation remain separate required evidence.
