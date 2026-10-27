@@ -126,8 +126,11 @@ def check_source_and_ci(github, manifest):
         endpoint = f"repos/{REPOSITORY}/actions/workflows/{Path(path).name}/runs?head_sha={target}&per_page=100"
         runs = github.api(endpoint).get("workflow_runs", [])
         exact = [run for run in runs if run.get("head_sha") == target and run.get("path", "").split("@", 1)[0] == path]
-        require(exact, f"no exact-target CI run for {path}")
-        latest = max(exact, key=lambda run: (run.get("id", 0), run.get("run_attempt", 0)))
+        # A release transport branch can trigger a newer run for the SAME commit.
+        # Reject unrelated branch events and select the newest actual dev integration run.
+        dev_runs = [run for run in exact if run.get("head_branch") == "dev" and run.get("event") in {"push", "workflow_dispatch"}]
+        require(dev_runs, f"no exact-target trusted dev CI run for {path}")
+        latest = max(dev_runs, key=lambda run: (run.get("id", 0), run.get("run_attempt", 0)))
         require(latest.get("repository", {}).get("full_name") == REPOSITORY, f"wrong CI repository: {path}")
         require(latest.get("head_branch") == "dev", f"CI must test the integrated dev target: {path}")
         require(latest.get("event") in {"push", "workflow_dispatch"}, f"untrusted CI event: {path}")
