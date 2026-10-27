@@ -79,9 +79,14 @@ class ReleaseGateTests(unittest.TestCase):
         self.git('push', 'cnb', branch)
         return {'schema_version': 1, 'action': 'import', 'source_sha': source, 'source_tree': self.sha('HEAD^{tree}'),
                 'expected_target_sha': gate.live('github', 'refs/heads/dev'), 'development_sha': dev, 'source_branch': branch,
-                'tag_name': None, 'tag_object': None, 'tag_target': None, 'github_pr': None, 'origin_event': 'cnb-approved-candidate'}
+                'candidate_sha': source, 'import_pr': None, 'cnb_repository': self.policy['git']['cnb_repository'],
+                'github_repository': self.policy['git']['github_repository'], 'tag_name': None, 'tag_object': None, 'tag_target': None,
+                'github_pr': None, 'origin_event': 'cnb-approved-candidate'}
 
     def native_evidence(self, repository, endpoint):
+        if endpoint == f'pulls/{self.release["import_pr"]}':
+            return [{'merged': True, 'merge_commit_sha': self.import_merge, 'base': {'ref': 'dev', 'repo': {'full_name': repository}},
+                     'head': {'ref': 'release/cnb-' + self.release['candidate_sha'], 'sha': self.release['candidate_sha'], 'repo': {'full_name': repository}}}]
         if endpoint.startswith('pulls/'):
             return [{'merged': True, 'merge_commit_sha': self.release['source_sha'], 'base': {'ref': 'main', 'repo': {'full_name': repository}}, 'head': {'ref': 'dev'}}]
         if endpoint.startswith('releases/tags/'):
@@ -96,6 +101,7 @@ class ReleaseGateTests(unittest.TestCase):
     def publish_github(self, manifest, round_number=1):
         self.git('switch', '-C', 'github-dev', manifest['expected_target_sha'])
         self.git('merge', '--no-ff', manifest['source_sha'], '-m', 'reviewed import PR (fixture)')
+        self.import_merge = self.sha()
         self.git('push', 'github', 'HEAD:refs/heads/dev')
         previous_main = gate.live('cnb', 'refs/heads/main')
         self.git('switch', 'main')
@@ -107,7 +113,7 @@ class ReleaseGateTests(unittest.TestCase):
         self.git('push', 'github', 'main', 'refs/tags/' + tag)
         self.release = {**manifest, 'action': 'copy', 'source_sha': sha, 'expected_target_sha': previous_main,
                         'tag_name': tag, 'tag_object': self.sha('refs/tags/' + tag), 'tag_target': sha,
-                        'github_pr': round_number, 'origin_event': 'github-approved-release'}
+                        'github_pr': round_number, 'import_pr': 100 + round_number, 'origin_event': 'github-approved-release'}
         return self.release
 
     def test_two_rounds_import_copy_recovery_and_reconciliation(self):
@@ -179,7 +185,7 @@ class ReleaseGateTests(unittest.TestCase):
         self.git('add', 'app.txt')
         self.git('commit', '-m', 'unreviewed extra')
         self.git('push', 'cnb', manifest['source_branch'])
-        manifest.update(source_sha=self.sha(), source_tree=self.sha('HEAD^{tree}'))
+        manifest.update(source_sha=self.sha(), candidate_sha=self.sha(), source_tree=self.sha('HEAD^{tree}'))
         with self.assertRaisesRegex(gate.MirrorError, 'outside approved'):
             gate.import_candidate(self.policy, manifest)
         with self.assertRaisesRegex(gate.MirrorError, 'must be covered'):
@@ -195,6 +201,40 @@ class ReleaseGateTests(unittest.TestCase):
             return result
         with self.assertRaisesRegex(gate.MirrorError, 'protection is unverified'):
             gate.copy_release(self.policy, release, api=missing)
+
+    def test_foreign_approval_or_import_pr_blocks(self):
+        manifest = self.candidate()
+        with self.assertRaisesRegex(gate.MirrorError, 'repository pair'):
+            gate.import_candidate(self.policy, {**manifest, 'github_repository': 'other/repo'})
+        release = self.publish_github(manifest)
+        def foreign(repository, endpoint):
+            result = self.native_evidence(repository, endpoint)
+            if endpoint == f'pulls/{release["import_pr"]}':
+                result[0]['head']['sha'] = 'f' * 40
+            return result
+        with self.assertRaisesRegex(gate.MirrorError, 'does not bind'):
+            gate.copy_release(self.policy, release, api=foreign)
+
+    def test_next_candidate_must_include_current_cnb_main(self):
+        manifest = self.candidate()
+        self.git('switch', 'main')
+        (self.work / 'released.txt').write_text('new isolated release')
+        self.git('add', 'released.txt')
+        self.git('commit', '-m', 'advance release main')
+        self.git('push', 'cnb', 'main')
+        with self.assertRaisesRegex(gate.MirrorError, 'release ancestry'):
+            gate.import_candidate(self.policy, manifest)
+
+    def test_named_import_merge_must_belong_to_release_history(self):
+        manifest = self.candidate()
+        release = self.publish_github(manifest)
+        self.git('switch', '--detach', manifest['source_sha'])
+        (self.work / 'unrelated-import.txt').write_text('other import')
+        self.git('add', 'unrelated-import.txt')
+        self.git('commit', '-m', 'separate import merge')
+        self.import_merge = self.sha()
+        with self.assertRaisesRegex(gate.MirrorError, 'release ancestry'):
+            gate.copy_release(self.policy, release, api=self.native_evidence)
 
 class RemoteIdentityTests(unittest.TestCase):
     def test_canonical_repo_and_no_embedded_credentials(self):

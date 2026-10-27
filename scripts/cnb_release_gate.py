@@ -71,12 +71,13 @@ def ancestor(parent, child):
 
 def check_manifest(manifest, action):
     fields = {'schema_version', 'action', 'source_sha', 'source_tree', 'expected_target_sha',
-              'tag_name', 'tag_object', 'tag_target', 'github_pr', 'origin_event', 'development_sha', 'source_branch'}
+              'tag_name', 'tag_object', 'tag_target', 'github_pr', 'origin_event', 'development_sha', 'source_branch',
+              'candidate_sha', 'import_pr', 'cnb_repository', 'github_repository'}
     require(isinstance(manifest, dict) and set(manifest) == fields and type(manifest['schema_version']) is int and manifest['schema_version'] == 1,
             'invalid release approval fields')
     require(manifest['action'] == action and manifest['origin_event'] == ('cnb-approved-candidate' if action == 'import' else 'github-approved-release'),
             'wrong authority/event direction; reject sync loops')
-    for key in ('source_sha', 'source_tree', 'expected_target_sha'):
+    for key in ('source_sha', 'source_tree', 'expected_target_sha', 'candidate_sha'):
         require(isinstance(manifest[key], str) and SHA_RE.fullmatch(manifest[key]), 'invalid immutable ' + key)
     require(isinstance(manifest['development_sha'], str) and SHA_RE.fullmatch(manifest['development_sha']), 'approved development SHA required')
     require(isinstance(manifest['source_branch'], str) and re.fullmatch(r'release/[A-Za-z0-9._/-]+', manifest['source_branch']) and '..' not in manifest['source_branch'], 'reviewed release-preparation branch required')
@@ -85,8 +86,9 @@ def check_manifest(manifest, action):
             require(isinstance(manifest[key], str) and SHA_RE.fullmatch(manifest[key]), 'invalid ' + key)
         require(isinstance(manifest['tag_name'], str) and TAG_RE.fullmatch(manifest['tag_name']), 'exact approved release tag required')
         require(type(manifest['github_pr']) is int and manifest['github_pr'] > 0, 'native release PR required')
+        require(type(manifest['import_pr']) is int and manifest['import_pr'] > 0 and manifest['import_pr'] != manifest['github_pr'], 'distinct native candidate import PR required')
     else:
-        require(all(manifest[key] is None for key in ('tag_name', 'tag_object', 'tag_target', 'github_pr')), 'candidate imports cannot publish releases')
+        require(manifest['candidate_sha'] == manifest['source_sha'] and all(manifest[key] is None for key in ('tag_name', 'tag_object', 'tag_target', 'github_pr', 'import_pr')), 'candidate imports cannot publish releases')
     return manifest
 
 
@@ -104,6 +106,12 @@ def github_api(repository, endpoint):
 
 def verify_github_release(policy, manifest, api=github_api):
     repository = policy['git']['github_repository']
+    imported = api(repository, f'pulls/{manifest["import_pr"]}')[0]
+    require(imported.get('merged') is True and SHA_RE.fullmatch(imported.get('merge_commit_sha') or '') and
+            imported.get('base', {}).get('ref') == 'dev' and imported.get('base', {}).get('repo', {}).get('full_name') == repository and
+            imported.get('head', {}).get('repo', {}).get('full_name') == repository and
+            imported.get('head', {}).get('ref') == policy['git']['transfer_prefix'] + manifest['candidate_sha'] and
+            imported.get('head', {}).get('sha') == manifest['candidate_sha'], 'native import PR does not bind the approved candidate')
     pr = api(repository, f'pulls/{manifest["github_pr"]}')[0]
     require(pr.get('merged') is True and pr.get('merge_commit_sha') == manifest['source_sha'] and
             pr.get('base', {}).get('ref') == 'main' and pr.get('base', {}).get('repo', {}).get('full_name') == repository,
@@ -132,7 +140,7 @@ def verify_github_release(policy, manifest, api=github_api):
         latest = max(trusted, key=lambda check: check.get('id', 0))
         require(latest.get('head_sha') == manifest['source_sha'] and latest.get('status') == 'completed' and latest.get('conclusion') == 'success',
                 'latest exact-candidate Review/CI check is not successful')
-    return pr
+    return imported['merge_commit_sha']
 
 
 def verify_production_tree(sha, development_paths):
@@ -154,6 +162,7 @@ def verify_production_tree(sha, development_paths):
 
 def import_candidate(policy, manifest, cnb='cnb', github='github', execute=False):
     check_manifest(manifest, 'import')
+    require(all(manifest[key] == policy['git'][key] for key in ('cnb_repository', 'github_repository')), 'approval repository pair mismatch')
     remote_identity(cnb, 'cnb.cool', policy['git']['cnb_repository'])
     remote_identity(github, 'github.com', policy['git']['github_repository'])
     require(live(cnb, 'refs/heads/dev') == manifest['development_sha'], 'CNB dev moved since approval')
@@ -161,7 +170,8 @@ def import_candidate(policy, manifest, cnb='cnb', github='github', execute=False
     git('check-ref-format', source_ref)
     require(live(cnb, source_ref) == manifest['source_sha'], 'clean preparation branch moved')
     require(live(github, 'refs/heads/dev') == manifest['expected_target_sha'], 'GitHub dev moved since approval')
-    git('fetch', '--no-tags', cnb, 'refs/heads/dev', source_ref)
+    git('fetch', '--no-tags', cnb, 'refs/heads/dev', 'refs/heads/main', source_ref)
+    ancestor(live(cnb, 'refs/heads/main'), manifest['development_sha'])
     ancestor(manifest['development_sha'], manifest['source_sha'])
     verify_clean_preparation(manifest['development_sha'], manifest['source_sha'], policy['release']['development_paths'])
     require(oid(manifest['source_sha'] + '^{tree}') == manifest['source_tree'], 'frozen candidate tree mismatch')
@@ -181,13 +191,21 @@ def import_candidate(policy, manifest, cnb='cnb', github='github', execute=False
 
 def copy_release(policy, manifest, cnb='cnb', github='github', execute=False, api=github_api):
     check_manifest(manifest, 'copy')
+    require(all(manifest[key] == policy['git'][key] for key in ('cnb_repository', 'github_repository')), 'approval repository pair mismatch')
     remote_identity(cnb, 'cnb.cool', policy['git']['cnb_repository'])
     remote_identity(github, 'github.com', policy['git']['github_repository'])
-    verify_github_release(policy, manifest, api)
+    imported_merge = verify_github_release(policy, manifest, api)
     tag = 'refs/tags/' + manifest['tag_name']
     expected = {'refs/heads/main': manifest['source_sha'], tag: manifest['tag_object'], tag + '^{}': manifest['tag_target']}
     require(refs(github, *expected) == expected, 'authoritative GitHub release/tag drift')
     git('fetch', '--no-tags', github, 'refs/heads/main', tag)
+    source_ref = 'refs/heads/' + manifest['source_branch']
+    require(live(cnb, source_ref) == manifest['candidate_sha'], 'approved preparation ref moved')
+    git('fetch', '--no-tags', cnb, source_ref)
+    ancestor(manifest['candidate_sha'], imported_merge)
+    ancestor(imported_merge, manifest['source_sha'])
+    ancestor(manifest['development_sha'], manifest['candidate_sha'])
+    verify_clean_preparation(manifest['development_sha'], manifest['candidate_sha'], policy['release']['development_paths'])
     require(oid(manifest['source_sha'] + '^{tree}') == manifest['source_tree'], 'released tree differs from approval')
     verify_production_tree(manifest['source_sha'], policy['release']['development_paths'])
     require(git('cat-file', '-t', manifest['tag_object']).stdout.strip() == 'tag', 'annotated tag object required')

@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "action": "import",
+  "cnb_repository": "isolated/consumer",
+  "github_repository": "isolated/consumer",
+  "source_sha": "REPLACE_WITH_APPROVED_PREPARATION_SHA",
+  "candidate_sha": "REPLACE_WITH_APPROVED_PREPARATION_SHA",
+  "source_tree": "REPLACE_WITH_APPROVED_TREE_SHA",
+  "expected_target_sha": "REPLACE_WITH_CURRENT_GITHUB_DEV_SHA",
+  "development_sha": "REPLACE_WITH_APPROVED_CNB_DEV_SHA",
+  "source_branch": "release/preparation-example",
+  "origin_event": "cnb-approved-candidate",
+  "github_pr": null,
+  "import_pr": null,
+  "tag_name": null,
+  "tag_object": null,
+  "tag_target": null
+}
