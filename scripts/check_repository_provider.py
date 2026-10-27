@@ -69,6 +69,8 @@ def validate_v2(config):
         raise ProviderError("independently observed trusted release App/check required")
     if type(review["ci_app_id"]) is not int or review["ci_app_id"] <= 0 or not isinstance(review["ci_check"], str) or not review["ci_check"].strip():
         raise ProviderError("trusted deterministic CI App/check required")
+    if (review["release_app_id"], review["release_check"]) == (review["ci_app_id"], review["ci_check"]):
+        raise ProviderError("release review and deterministic CI must be distinct checks")
     release = object_with_keys(config["release"], "release", {"approval_required", "force_push", "copy_direction", "enabled", "development_paths"})
     if not isinstance(release["development_paths"], list) or not release["development_paths"] or any(not isinstance(path, str) or not path or path.startswith("/") or ".." in Path(path).parts for path in release["development_paths"]):
         raise ProviderError("explicit relative development paths required")

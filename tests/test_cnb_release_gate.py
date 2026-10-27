@@ -47,9 +47,12 @@ class ReleaseGateTests(unittest.TestCase):
         self.policy['release'].update(enabled=True, development_paths=['.ads-devtools.json'])
         self.identity = patch.object(gate, 'remote_identity', side_effect=lambda remote, host, repo: remote)
         self.identity.start()
+        self.writer = patch.object(gate, 'require_verified_writer')
+        self.writer.start()  # Explicit simulation; native writer enforcement remains unverified.
 
     def tearDown(self):
         self.identity.stop()
+        self.writer.stop()
         os.chdir(self.old_cwd)
         self.scratch.cleanup()
 
@@ -81,8 +84,12 @@ class ReleaseGateTests(unittest.TestCase):
     def native_evidence(self, repository, endpoint):
         if endpoint.startswith('pulls/'):
             return [{'merged': True, 'merge_commit_sha': self.release['source_sha'], 'base': {'ref': 'main', 'repo': {'full_name': repository}}, 'head': {'ref': 'dev'}}]
+        if endpoint.startswith('releases/tags/'):
+            return [{'tag_name': self.release['tag_name'], 'draft': False}]
         if endpoint.endswith('/protection'):
-            return [{'required_pull_request_reviews': {}, 'enforce_admins': {'enabled': True}, 'allow_force_pushes': {'enabled': False}, 'allow_deletions': {'enabled': False}}]
+            return [{'required_pull_request_reviews': {'required_approving_review_count': 1, 'dismiss_stale_reviews': True},
+                     'required_status_checks': {'strict': True, 'checks': [{'context': 'Greptile', 'app_id': 12}, {'context': 'verify', 'app_id': 34}]},
+                     'enforce_admins': {'enabled': True}, 'allow_force_pushes': {'enabled': False}, 'allow_deletions': {'enabled': False}}]
         return [{'check_runs': [{'id': i, 'name': name, 'app': {'id': app}, 'head_sha': self.release['source_sha'], 'status': 'completed', 'conclusion': 'success'}
                                for i, name, app in [(1, 'Greptile', 12), (2, 'verify', 34)]]}]
 
@@ -160,6 +167,35 @@ class ReleaseGateTests(unittest.TestCase):
         with self.assertRaisesRegex(gate.MirrorError, 'not successful'):
             gate.copy_release(self.policy, release, api=failed)
 
+    def test_writes_are_blocked_without_verified_native_exclusive_writer(self):
+        manifest = self.candidate()
+        self.writer.stop()
+        with self.assertRaisesRegex(gate.MirrorError, 'exclusive native publication writer'):
+            gate.import_candidate(self.policy, manifest, execute=True)
+
+    def test_release_preparation_cannot_hide_product_edits_or_unlisted_tool_paths(self):
+        manifest = self.candidate()
+        (self.work / 'app.txt').write_text('unreviewed product edit')
+        self.git('add', 'app.txt')
+        self.git('commit', '-m', 'unreviewed extra')
+        self.git('push', 'cnb', manifest['source_branch'])
+        manifest.update(source_sha=self.sha(), source_tree=self.sha('HEAD^{tree}'))
+        with self.assertRaisesRegex(gate.MirrorError, 'outside approved'):
+            gate.import_candidate(self.policy, manifest)
+        with self.assertRaisesRegex(gate.MirrorError, 'must be covered'):
+            gate.verify_clean_preparation(manifest['development_sha'], manifest['source_sha'], ['different-path'])
+
+    def test_missing_native_required_check_blocks(self):
+        manifest = self.candidate()
+        release = self.publish_github(manifest)
+        def missing(repository, endpoint):
+            result = self.native_evidence(repository, endpoint)
+            if endpoint.endswith('/protection'):
+                result[0]['required_status_checks']['checks'].pop()
+            return result
+        with self.assertRaisesRegex(gate.MirrorError, 'protection is unverified'):
+            gate.copy_release(self.policy, release, api=missing)
+
 class RemoteIdentityTests(unittest.TestCase):
     def test_canonical_repo_and_no_embedded_credentials(self):
         for url, accepted in [('https://cnb.cool/group/repo.git', True), ('https://github.com/group/repo', False),
@@ -169,3 +205,14 @@ class RemoteIdentityTests(unittest.TestCase):
                     self.assertEqual(gate.remote_identity('cnb', 'cnb.cool', 'group/repo'), 'cnb')
                 else:
                     with self.assertRaises(gate.MirrorError): gate.remote_identity('cnb', 'cnb.cool', 'group/repo')
+
+    def test_rejects_substituted_or_multiple_effective_push_urls(self):
+        def result(*args):
+            value = 'https://cnb.cool/group/repo.git'
+            if '--push' in args:
+                value = 'https://cnb.cool/group/other.git'
+            return subprocess.CompletedProcess([], 0, stdout=value)
+        with patch.object(gate, 'git', side_effect=result), self.assertRaises(gate.MirrorError):
+            gate.remote_identity('cnb', 'cnb.cool', 'group/repo')
+        with patch.object(gate, 'git', return_value=subprocess.CompletedProcess([], 0, stdout='https://cnb.cool/group/repo\nhttps://cnb.cool/group/repo')):
+            with self.assertRaises(gate.MirrorError): gate.remote_identity('cnb', 'cnb.cool', 'group/repo')

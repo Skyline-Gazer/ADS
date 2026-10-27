@@ -34,7 +34,8 @@
             live_head="$(git ls-remote origin "refs/heads/$CNB_PULL_REQUEST_BRANCH" | cut -f1)"
             live_target="$(git ls-remote origin "refs/heads/$CNB_BRANCH" | cut -f1)"
             merge="$(git rev-parse HEAD)"
-            test "$merge" = "$CNB_COMMIT"
+            test "$CNB_EVENT" = pull_request
+            test "$CNB_COMMIT" = "$CNB_PULL_REQUEST_SHA"
             test "$merge" = "$CNB_PULL_REQUEST_MERGE_SHA"
             git merge-base --is-ancestor "$CNB_PULL_REQUEST_SHA" "$merge"
             git merge-base --is-ancestor "$CNB_PULL_REQUEST_TARGET_SHA" "$merge"

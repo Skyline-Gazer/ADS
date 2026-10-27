@@ -28,12 +28,34 @@ def require(value, message):
 
 def remote_identity(remote, host, repository):
     require(re.fullmatch(r'[A-Za-z][A-Za-z0-9_-]*', remote), 'named remote required')
-    url = git('remote', 'get-url', remote).stdout.strip()
-    parsed = urlsplit(url)
-    require(parsed.scheme == 'https' and parsed.hostname == host and not parsed.username and
-            not parsed.password and not parsed.query and not parsed.fragment and not parsed.port and
-            parsed.path.removesuffix('.git') == '/' + repository, 'remote identity differs from trusted policy')
+    for arguments in (('--all',), ('--push', '--all')):
+        urls = git('remote', 'get-url', *arguments, remote).stdout.splitlines()
+        require(len(urls) == 1, 'exactly one effective fetch and push URL required')
+        parsed = urlsplit(urls[0])
+        require(parsed.scheme == 'https' and parsed.hostname == host and not parsed.username and
+                not parsed.password and not parsed.query and not parsed.fragment and not parsed.port and
+                parsed.path.removesuffix('.git') == '/' + repository, 'remote identity differs from trusted policy')
     return remote
+
+
+def require_verified_writer():
+    # shortcut: no verified exclusive native writer/CAS, upgrade after provider enforcement is proven.
+    raise MirrorError('Mode B writes disabled: exclusive native publication writer not verified')
+
+
+def verify_clean_preparation(development, candidate, development_paths):
+    original = git('show', development + ':.ads-devtools.json', check=False)
+    require(original.returncode == 0, 'original development tool manifest required')
+    try:
+        paths = json.loads(original.stdout)['dev_only_paths']
+    except (ValueError, KeyError, TypeError) as exc:
+        raise MirrorError('invalid original development tool manifest') from exc
+    require(isinstance(paths, list) and all(isinstance(p, str) and p in development_paths for p in paths),
+            'original development-only paths must be covered by trusted policy')
+    changed = git('diff', '--no-renames', '--name-only', '-z', development, candidate).stdout.split('\0')
+    for name in filter(None, changed):
+        require(any(name == p or name.startswith(p.rstrip('/') + '/') for p in development_paths),
+                'preparation changes a path outside approved development cleanup')
 
 
 def live(remote, ref):
@@ -88,8 +110,20 @@ def verify_github_release(policy, manifest, api=github_api):
             'release is not the approved native merged main PR')
     require(pr.get('head', {}).get('ref') == 'dev' or re.fullmatch(r'release/.+', pr.get('head', {}).get('ref', '')),
             'release PR does not follow reviewed promotion')
+    release = api(repository, 'releases/tags/' + manifest['tag_name'])[0]
+    require(release.get('tag_name') == manifest['tag_name'] and release.get('draft') is False,
+            'published native GitHub Release is missing or still draft')
     protection = api(repository, 'branches/main/protection')[0]
-    require(protection.get('required_pull_request_reviews') is not None and protection.get('enforce_admins', {}).get('enabled') is True and protection.get('allow_force_pushes', {}).get('enabled') is False and protection.get('allow_deletions', {}).get('enabled') is False, 'native GitHub main protection is unverified')
+    reviews = protection.get('required_pull_request_reviews') or {}
+    required = protection.get('required_status_checks') or {}
+    bindings = {(check.get('context'), check.get('app_id')) for check in required.get('checks', []) if isinstance(check, dict)}
+    require(reviews.get('required_approving_review_count', 0) >= 1 and reviews.get('dismiss_stale_reviews') is True and
+            required.get('strict') is True and
+            all((policy['review'][name], policy['review'][app]) in bindings for name, app in
+                [('release_check', 'release_app_id'), ('ci_check', 'ci_app_id')]) and
+            protection.get('enforce_admins', {}).get('enabled') is True and
+            protection.get('allow_force_pushes', {}).get('enabled') is False and
+            protection.get('allow_deletions', {}).get('enabled') is False, 'native GitHub main protection is unverified')
     checks = [check for page in api(repository, f'commits/{manifest["source_sha"]}/check-runs?per_page=100') for check in page.get('check_runs', [])]
     for app_key, check_key in [('release_app_id', 'release_check'), ('ci_app_id', 'ci_check')]:
         trusted = [check for check in checks if check.get('name') == policy['review'][check_key] and
@@ -129,6 +163,7 @@ def import_candidate(policy, manifest, cnb='cnb', github='github', execute=False
     require(live(github, 'refs/heads/dev') == manifest['expected_target_sha'], 'GitHub dev moved since approval')
     git('fetch', '--no-tags', cnb, 'refs/heads/dev', source_ref)
     ancestor(manifest['development_sha'], manifest['source_sha'])
+    verify_clean_preparation(manifest['development_sha'], manifest['source_sha'], policy['release']['development_paths'])
     require(oid(manifest['source_sha'] + '^{tree}') == manifest['source_tree'], 'frozen candidate tree mismatch')
     verify_production_tree(manifest['source_sha'], policy['release']['development_paths'])
     ref = 'refs/heads/' + policy['git']['transfer_prefix'] + manifest['source_sha']
@@ -136,6 +171,7 @@ def import_candidate(policy, manifest, cnb='cnb', github='github', execute=False
     require(existing in (None, manifest['source_sha']), 'transfer ref collision')
     if execute:
         require(policy['release']['enabled'] is True, 'Mode B execution is disabled')
+        require_verified_writer()
         require(live(cnb, 'refs/heads/dev') == manifest['development_sha'] and live(cnb, source_ref) == manifest['source_sha'] and live(github, 'refs/heads/dev') == manifest['expected_target_sha'], 'refs moved before import')
         if existing is None:
             git('push', github, manifest['source_sha'] + ':' + ref)
@@ -156,13 +192,14 @@ def copy_release(policy, manifest, cnb='cnb', github='github', execute=False, ap
     verify_production_tree(manifest['source_sha'], policy['release']['development_paths'])
     require(git('cat-file', '-t', manifest['tag_object']).stdout.strip() == 'tag', 'annotated tag object required')
     require(oid(manifest['tag_object'] + '^{commit}') == manifest['tag_target'], 'annotated tag target mismatch')
-    ancestor(manifest['tag_target'], manifest['source_sha'])
+    require(manifest['tag_target'] == manifest['source_sha'], 'release tag must target exact release commit')
     before = refs(cnb, 'refs/heads/main', tag, tag + '^{}')
     require(before.get('refs/heads/main') in (manifest['expected_target_sha'], manifest['source_sha']), 'CNB main drift; no overwrite')
     require(before.get(tag) in (None, manifest['tag_object']) and before.get(tag + '^{}') in (None, manifest['tag_target']), 'immutable CNB tag collision')
     ancestor(before['refs/heads/main'], manifest['source_sha'])
     if execute:
         require(policy['release']['enabled'] is True, 'Mode B execution is disabled')
+        require_verified_writer()
         verify_github_release(policy, manifest, api)
         require(refs(github, *expected) == expected and refs(cnb, *expected) == before, 'provider refs moved before publication copy')
         if before['refs/heads/main'] != manifest['source_sha']:
@@ -172,6 +209,7 @@ def copy_release(policy, manifest, cnb='cnb', github='github', execute=False, ap
         if tag not in before:
             git('push', cnb, manifest['tag_object'] + ':' + tag)
         require(refs(cnb, *expected) == expected, 'PARTIAL: publication readback failed; retain refs for safe retry')
+        require(refs(github, *expected) == expected, 'PARTIAL: GitHub release changed during copy')
     return {'state': ('ALREADY_COPIED' if before == expected else 'COPIED') if execute else 'DRY_RUN', 'release_sha': manifest['source_sha'], 'tag_object': manifest['tag_object'], 'tag_target': manifest['tag_target'], 'next': 'reviewed CNB dev reconciliation preserving development files'}
 
 
