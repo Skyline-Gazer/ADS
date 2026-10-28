@@ -1,0 +1,22 @@
+{
+  "adapter": "claude-code-sandbox-audit",
+  "runtime_kinds": [
+    "cli"
+  ],
+  "discovery": {
+    "commands": [
+      "claude --version"
+    ]
+  },
+  "enforce": {
+    "mechanism": "Claude Code sandbox/permissions; known 2.1.304 single-slash deny bypass (see native-subagent-safety.md)"
+  },
+  "verify": {
+    "command": "PENDING"
+  },
+  "evidence": {
+    "schema": "pending"
+  },
+  "status": "planned",
+  "status_reason": "deny bypass observed historically \u2014 UNVERIFIED until probe passes"
+}

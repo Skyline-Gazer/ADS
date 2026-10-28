@@ -8,10 +8,11 @@ PROJECT="$(cd "${1:?project dir required}" && pwd)"
 PROFILE="${2:-$HOME/.omp/sandbox/$(basename "$PROJECT").sb}"
 SCRATCH=/private/tmp/ads-agent-tmp
 PASS=0; FAIL=0
+EV="${EVIDENCE_OUT:-/private/tmp/ads-agent-tmp/.sandbox-evidence.jsonl}"; : > "$EV"
 
-ok()   { printf '  \033[32mALLOWED\033[0m %s\n' "$1"; PASS=$((PASS+1)); }
-den()  { printf '  \033[31mDENIED \033[0m %s\n' "$1"; PASS=$((PASS+1)); }
-bad()  { printf '  \033[31mFAIL   \033[0m %s (rc=%s want %s)\n' "$1" "$2" "$3"; FAIL=$((FAIL+1)); }
+ok()   { printf '  \033[32mALLOWED\033[0m %s\n' "$1"; PASS=$((PASS+1)); printf '{"name":"%s","expected":"ALLOWED","observed":"ALLOWED"}\n' "$1" >> "$EV"; }
+den()  { printf '  \033[31mDENIED \033[0m %s\n' "$1"; PASS=$((PASS+1)); printf '{"name":"%s","expected":"DENIED","observed":"DENIED"}\n' "$1" >> "$EV"; }
+bad()  { printf '  \033[31mFAIL   \033[0m %s (rc=%s want %s)\n' "$1" "$2" "$3"; FAIL=$((FAIL+1)); printf '{"name":"%s","expected":"%s","observed":"MISMATCH"}\n' "$1" "$3" >> "$EV"; }
 
 s() { sandbox-exec -f "$PROFILE" "$@"; }
 
@@ -74,5 +75,7 @@ OMP_OUT="$(s /opt/homebrew/bin/omp "Reply SANDBOX_PROBE_OK" 2>/dev/null | tail -
 case "$OMP_OUT" in *SANDBOX_PROBE_OK*) ok "omp agent one-shot run";; *) bad "omp agent one-shot run" 1 0;; esac
 
 rm -f "$CAN_IN" "$PROJECT/.sandbox-canary-w.txt" "$PROJECT/.sandbox-escape-link" "$HOME/.omp/agent/.sandbox-probe" "$SCRATCH/.sandbox-probe" "$CAN_OUT"
-printf '\n%d passed, %d failed\n' "$PASS" "$FAIL"
+printf '{\"summary\":\"%d passed %d failed\",\"profile\":\"%s\",\"profile_sha256\":\"%s\"}\n' "$PASS" "$FAIL" "$PROFILE" "$(shasum -a 256 "$PROFILE" | cut -d' ' -f1)" >> "$EV"
+EVIDENCE_OUT="$EV"
+printf '\n%d passed, %d failed\nEvidence: %s\n' "$PASS" "$FAIL" "$EV"
 [ "$FAIL" -eq 0 ]
