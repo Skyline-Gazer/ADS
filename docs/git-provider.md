@@ -31,6 +31,6 @@ For practical CNB automatic review, the deterministic current-SHA gate, security
 Read [CNB safe release synchronization](cnb-sync.md) before enabling any mirror. It is deliberately manifest-driven rather than automatically pushing every main update; owner approval, exact ref validation and protection against unknown auto-deploy triggers are required.
 
 
-## Proposed dual-platform release gate — not a supported mirror mode
+## Cancelled dual-platform release gate — Mode B terminated (never supported)
 
-The [CNB Development + GitHub Release Gate pilot](cnb-github-release-gate-pilot.md) is a separate, unaccepted extension under Issue #63. It makes GitHub main authoritative for releases, so the existing CNB-to-GitHub main mirror and schema MUST NOT be repurposed for it. Current validators must continue rejecting that unsupported mode until an independently reviewed implementation and real isolated-platform acceptance exist. No consumer cutover is authorized by this document.
+The [CNB Development + GitHub Release Gate pilot](cnb-github-release-gate-pilot.md) (Mode B) is **permanently cancelled**: PR [#71](https://github.com/Skyline-Gazer/ADS/pull/71) was closed unmerged and the Owner terminated the mode on 2026-10-28 (Issue #63). It made GitHub main authoritative for releases, so the existing CNB-to-GitHub main mirror and schema MUST NOT be repurposed for it. Validators must continue rejecting that unsupported mode. Mode A (CNB Primary → GitHub Mirror) is the selected path and is live-verified on an isolated fixture (see [cnb-sync.md](cnb-sync.md)); consumer cutovers still require separate owner authorization.
