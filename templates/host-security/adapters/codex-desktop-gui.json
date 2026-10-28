@@ -1,0 +1,22 @@
+{
+  "adapter": "codex-desktop-worker-audit",
+  "runtime_kinds": [
+    "gui"
+  ],
+  "discovery": {
+    "commands": [
+      "ps -ax | grep -i codex"
+    ]
+  },
+  "enforce": {
+    "mechanism": "App Sandbox + XPC/Helper boundary of the agent WORKER process (not the GUI shell)"
+  },
+  "verify": {
+    "command": "PENDING"
+  },
+  "evidence": {
+    "schema": "pending"
+  },
+  "status": "planned",
+  "status_reason": "worker process isolation not audited \u2014 UNVERIFIED"
+}

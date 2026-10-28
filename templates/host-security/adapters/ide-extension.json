@@ -1,0 +1,20 @@
+{
+  "adapter": "ide-extension-child-policy",
+  "runtime_kinds": [
+    "ide"
+  ],
+  "discovery": {
+    "commands": []
+  },
+  "enforce": {
+    "mechanism": "extension-host child process policy; verify the child that executes code"
+  },
+  "verify": {
+    "command": "PENDING"
+  },
+  "evidence": {
+    "schema": "pending"
+  },
+  "status": "planned",
+  "status_reason": "no verification \u2014 UNVERIFIED"
+}
