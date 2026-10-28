@@ -48,7 +48,7 @@ Contract: an adapter MUST NOT claim `supported` without a recorded passing verif
 | Codex Desktop (GUI) | worker-process audit | planned | none — UNVERIFIED |
 | Claude Code | sandbox/permissions audit | planned | none — UNVERIFIED (2.1.304 deny bypass observed) |
 | IDE extension | extension-host child policy | planned | none — UNVERIFIED |
-| Remote/Cloud agent | runner/container isolation audit | planned | CNB runner container evidence exists (Issue #63) but not bound to this contract |
+| Remote/Cloud agent | runner/container isolation audit | planned | CNB runner container evidence (Issue #63) + Mode A native dev/release chain live-verified 2026-10-28 on isolated fixture; adapter binding still pending |
 | MCP servers / subagents | inherit launcher profile (CLI) | verified for CLI children | included in verify-sandbox.sh vectors |
 | Network isolation | none in current adapters | blocked pending design | out of scope of FS evidence |
 

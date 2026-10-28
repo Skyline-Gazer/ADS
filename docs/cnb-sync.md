@@ -1,6 +1,6 @@
 # CNB to GitHub safe release mirror
 
-**Validation status:** CONFIGURED / EXPERIMENTAL / NOT_LIVE_VERIFIED. Local Git fixtures cover safe ref transport; real CNB protection, credentials and push-triggered deployment still require a specifically authorized pilot. No mirror runs by default.
+**Validation status:** LIVE_VERIFIED (isolated fixture, 2026-10-28) — real CNB protected `dev`/`main`, owner-approved fixture release `dev→main`, dry-run then authorized `--execute` mirror to a disposable GitHub target with exact SHA/tag readback; negative gates verified: non-ff/drift refusal, tag-collision refusal, unapproved-manifest refusal, credential/unreachable fail-closed, main-pushed/tag-failed recovery, idempotent re-run. See ADS Issue #63 for run evidence.
 
 **Opt-in only; never installed as a default ADS pipeline.** The consumer's CNB dev and PR process is authoritative. Its GitHub mirror accepts only production main and an exact, approved release tag. No dev, feature, PR, or unapproved tag refs are pushed.
 
@@ -25,6 +25,13 @@ Main push and tag push are not atomic. If the connection fails between them, sta
 The official CNB tencentcom/git-sync plugin can push a single branch with branch: main, force: false, push_tags: false. However omitting branch pushes ALL branches, and enabling push_tags pushes more tags than this release policy authorizes. Therefore this adapter uses explicit refspecs for main and one release tag, and intentionally does **not** install a generic auto-sync-on-every-push plugin. CNB review/plugin scopes must not read the GitHub mirror token.
 
 Official documentation: https://cnb.cool/cnb/plugins/tencentcom/git-sync
+
+
+## Live acceptance findings (2026-10-28)
+
+- **Empty-mirror bootstrap is fail-closed by design.** The sync refuses an uninitialized GitHub mirror (`missing GitHub main: bootstrap mirror separately with approval`). Bootstrap once by pushing the approved `main` SHA, then run the sync.
+- **Mirror pushes trigger inherited workflows.** The mirrored `main` tree carries the consumer's `.github/workflows/`; GitHub fires them on every mirror push (observed live: `Deploy`/boundary workflows ran and failed on a fixture). Before enabling mirror writes, consumers MUST audit and disable/guard (paths, conditions, or `workflow_dispatch`-only) any workflow that deploys production — e.g. ALNILAM's `deploy.yml` triggers on `push` to `main` and deploys GitHub Pages.
+- **Branch protection on the GitHub mirror:** the classic protection API is plan-gated for private repos (HTTP 403). Mirror write authorization therefore rests on token scope and owner identity unless the mirror repo is public or the plan supports protection. Record the actual state in the consumer's Mode A acceptance.
 
 ## Acceptance and deployment boundaries
 
