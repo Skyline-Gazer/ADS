@@ -53,38 +53,106 @@ def preflight(adapter_id):
     return 0
 
 
+MANIFEST_PATH = Path(__file__).resolve().parents[1] / "templates" / "host-security" / "probe-manifest.json"
+
+
+def _sha256(path):
+    import hashlib
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
 def verify(adapter_id, evidence_path, host_label):
     a = load_adapter(adapter_id)
     raw = Path(evidence_path).read_text()
+    manifest = json.loads(MANIFEST_PATH.read_text())
+
+    # --- mandatory probe manifest integrity ---
+    current_gen_sha = _sha256(Path(__file__).resolve().parents[1] / "templates" / "host-security" / "gen_project_sandbox.py")
+    if manifest.get("manifest_version") != 1:
+        return _fail("unsupported manifest_version")
+    if manifest.get("generator_sha256") != current_gen_sha:
+        return _fail(f"manifest generator_sha256 {manifest.get('generator_sha256','')[:12]} does not match current generator {current_gen_sha[:12]} — regenerate manifest")
+    required = manifest["required_checks"]
+    req_names = [c["name"] for c in required]
+    if len(req_names) != len(set(req_names)):
+        return _fail("manifest contains duplicate probe names")
+    expected_by_name = {c["name"]: c["expected"] for c in required}
+
+    # --- parse evidence ---
     if evidence_path.endswith(".jsonl"):
         rows = [json.loads(l) for l in raw.splitlines() if l.strip()]
         summary = next((r for r in rows if "summary" in r), {})
-        checks = [r for r in rows if "name" in r]
-        ev = {"adapter": adapter_id, "host": host_label, "checks": checks,
-              "profile_sha256": summary.get("profile_sha256"), "summary": summary.get("summary")}
-        if summary.get("summary") and " 0 failed" not in summary["summary"]:
-            ev["checks"].append({"name": "suite", "expected": "0 failed", "observed": summary["summary"]})
+        observed_rows = [r for r in rows if "name" in r]
+        if " 0 failed" not in summary.get("summary", ""):
+            return _fail(f"suite reported failures: {summary.get('summary')}")
+        profile_sha = summary.get("profile_sha256")
     else:
-        ev = json.loads(raw)
+        return _fail("JSON evidence format is not trusted; run verify-sandbox.sh to produce JSONL")
+
+    # --- provenance: producer must be the bundled probe script ---
+    if manifest.get("probe_script") != "scripts/verify-sandbox.sh":
+        return _fail("manifest producer mismatch")
+
+    # --- profile digest binding + freshness ---
+    if not profile_sha or len(profile_sha) != 64:
+        return _fail("missing or malformed profile_sha256")
+    ev_profile = evidence_profile_path(evidence_path, profile_sha)
+    if ev_profile is None:
+        return _fail(f"profile file for sha256 {profile_sha[:12]} not found or not registered in ~/.omp/sandbox")
+    live_sha = _sha256(ev_profile)
+    if live_sha != profile_sha:
+        return _fail(f"profile changed since run: evidence {profile_sha[:12]} vs live {live_sha[:12]}")
+
+    # --- host identity binding ---
+    if a["adapter"] == "macos-cli-seatbelt" and not host_label.startswith("macOS"):
+        return _fail(f"host label {host_label!r} incompatible with adapter")
+
+    # --- completeness / uniqueness ---
+    obs_names = [r["name"] for r in observed_rows]
+    dupes = {n for n in obs_names if obs_names.count(n) > 1}
+    if dupes:
+        return _fail(f"duplicate observed probes: {sorted(dupes)}")
+    missing = set(req_names) - set(obs_names)
+    extra = set(obs_names) - set(req_names)
+    if missing:
+        return _fail(f"omitted mandatory probes: {sorted(missing)}")
+    if extra:
+        return _fail(f"unregistered probes present: {sorted(extra)}")
+
+    # --- expected outcomes come from the manifest, never the evidence ---
     errors = []
-    if ev.get("adapter") != adapter_id:
-        errors.append("evidence adapter mismatch")
-    if ev.get("host") != host_label:
-        errors.append("evidence host mismatch")
-    if not isinstance(ev.get("checks"), list) or not ev["checks"]:
-        errors.append("no recorded checks")
-    else:
-        for n, c in enumerate(ev["checks"]):
-            if not {"name", "expected", "observed"} <= set(c):
-                errors.append(f"checks[{n}] incomplete")
-            elif c["observed"] != c["expected"]:
-                errors.append(f"checks[{n}] {c['name']}: expected {c['expected']}, observed {c['observed']}")
-    verdict = "BLOCKED" if a.get("status") != "supported" else ("VERIFIED_BOUNDED" if not errors else "UNSAFE" if any("observed" in e for e in errors) else "UNVERIFIED")
-    if verdict != SENSITIVE_REQUIRED and ev.get("sensitive_data"):
-        print(f"GATE_FAIL: sensitive-data task requires {SENSITIVE_REQUIRED}, verdict {verdict}")
+    for r in observed_rows:
+        want = expected_by_name[r["name"]]
+        got = r.get("observed")
+        if got != want:
+            errors.append(f"{r['name']}: expected {want}, observed {got}")
+    if errors:
+        print(f"GATE_UNSAFE: {adapter_id}: " + "; ".join(errors[:5]))
         return 2
-    print(f"GATE_{verdict}: {adapter_id} on {host_label}" + (f" errors={errors}" if errors else ""))
-    return 0 if verdict == "VERIFIED_BOUNDED" else 1
+
+    # --- adapter status must independently claim support ---
+    if a.get("status") != "supported":
+        return _fail(f"adapter status is {a.get('status')}; no support claim permitted")
+
+    print(f"GATE_VERIFIED_BOUNDED: {adapter_id} on {host_label} profile={profile_sha[:12]} probes={len(observed_rows)}")
+    return 0
+
+
+def evidence_profile_path(evidence_path, profile_sha):
+    """Bind evidence to a live profile file registered under ~/.omp/sandbox."""
+    import glob
+    for cand in glob.glob(str(Path.home() / ".omp" / "sandbox" / "*.sb")):
+        try:
+            if _sha256(cand) == profile_sha:
+                return cand
+        except OSError:
+            continue
+    return None
+
+
+def _fail(reason):
+    print(f"GATE_FAIL: {reason}")
+    return 2
 
 
 def main():

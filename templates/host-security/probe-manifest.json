@@ -1,0 +1,179 @@
+{
+  "manifest_version": 1,
+  "generator_sha256": "ccdcf19c35eb5cf31d628aa0108d2a4479789b43a010b5da97a68aecb9adcfc8",
+  "probe_script": "scripts/verify-sandbox.sh",
+  "required_checks": [
+    {
+      "name": "project file read",
+      "expected": "ALLOWED"
+    },
+    {
+      "name": "project file write",
+      "expected": "ALLOWED"
+    },
+    {
+      "name": "git status",
+      "expected": "ALLOWED"
+    },
+    {
+      "name": "python project read",
+      "expected": "ALLOWED"
+    },
+    {
+      "name": "node project read",
+      "expected": "ALLOWED"
+    },
+    {
+      "name": "omp state write",
+      "expected": "ALLOWED"
+    },
+    {
+      "name": "scratch tmp write",
+      "expected": "ALLOWED"
+    },
+    {
+      "name": "rtk project read",
+      "expected": "ALLOWED"
+    },
+    {
+      "name": "codegraph init (scratch project)",
+      "expected": "ALLOWED"
+    },
+    {
+      "name": "codegraph status",
+      "expected": "ALLOWED"
+    },
+    {
+      "name": "codegraph query",
+      "expected": "ALLOWED"
+    },
+    {
+      "name": "codegraph outside index",
+      "expected": "DENIED"
+    },
+    {
+      "name": "omp agent one-shot run",
+      "expected": "ALLOWED"
+    },
+    {
+      "name": "outside file read",
+      "expected": "DENIED"
+    },
+    {
+      "name": "outside dir list",
+      "expected": "DENIED"
+    },
+    {
+      "name": "outside file write",
+      "expected": "DENIED"
+    },
+    {
+      "name": "python outside read",
+      "expected": "DENIED"
+    },
+    {
+      "name": "node outside read",
+      "expected": "DENIED"
+    },
+    {
+      "name": "symlink escape",
+      "expected": "DENIED"
+    },
+    {
+      "name": "realpath escape",
+      "expected": "DENIED"
+    },
+    {
+      "name": "home list",
+      "expected": "DENIED"
+    },
+    {
+      "name": "home dotfile read",
+      "expected": "DENIED"
+    },
+    {
+      "name": "private dir list: ~/Documents",
+      "expected": "DENIED"
+    },
+    {
+      "name": "private dir list: ~/Downloads",
+      "expected": "DENIED"
+    },
+    {
+      "name": "private dir list: ~/Music",
+      "expected": "DENIED"
+    },
+    {
+      "name": "private dir list: ~/Pictures",
+      "expected": "DENIED"
+    },
+    {
+      "name": "private dir list: ~/Movies",
+      "expected": "DENIED"
+    },
+    {
+      "name": "private dir list: ~/.ssh",
+      "expected": "DENIED"
+    },
+    {
+      "name": "keychains list",
+      "expected": "DENIED"
+    },
+    {
+      "name": "sibling project read (synthetic)",
+      "expected": "DENIED"
+    },
+    {
+      "name": "/Volumes list",
+      "expected": "DENIED"
+    },
+    {
+      "name": "/Volumes write",
+      "expected": "DENIED"
+    },
+    {
+      "name": "/var/tmp write",
+      "expected": "DENIED"
+    },
+    {
+      "name": "/private write",
+      "expected": "DENIED"
+    },
+    {
+      "name": "/var/log list",
+      "expected": "DENIED"
+    },
+    {
+      "name": "/var/folders list",
+      "expected": "DENIED"
+    },
+    {
+      "name": "/Users list",
+      "expected": "DENIED"
+    },
+    {
+      "name": "rtk outside read",
+      "expected": "DENIED"
+    },
+    {
+      "name": "/private/var/log list",
+      "expected": "DENIED"
+    },
+    {
+      "name": "/private/var/db/dslocal",
+      "expected": "DENIED"
+    },
+    {
+      "name": "/private/etc list",
+      "expected": "DENIED"
+    },
+    {
+      "name": "master.passwd content",
+      "expected": "DENIED"
+    },
+    {
+      "name": "sibling private dir list",
+      "expected": "DENIED"
+    }
+  ]
+}

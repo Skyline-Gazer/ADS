@@ -1,4 +1,6 @@
 import json
+import hashlib
+import tempfile
 import unittest
 from pathlib import Path
 from scripts import runtime_security_gate as gate
@@ -19,16 +21,32 @@ class RuntimeSecurityGateTests(unittest.TestCase):
         supported = {k for k, a in adapters.items() if a["status"] == "supported"}
         self.assertEqual(supported, {"macos-cli-seatbelt"})
 
-    def test_verify_requires_full_evidence(self):
-        import tempfile
+    def test_manifest_binds_current_generator(self):
+        m = json.loads(gate.MANIFEST_PATH.read_text())
+        self.assertEqual(m["manifest_version"], 1)
+        gen = ROOT / "templates" / "host-security" / "gen_project_sandbox.py"
+        self.assertEqual(m["generator_sha256"], hashlib.sha256(gen.read_bytes()).hexdigest())
+        names = [c["name"] for c in m["required_checks"]]
+        self.assertEqual(len(names), len(set(names)), "duplicate probe names in manifest")
+        self.assertGreaterEqual(len(names), 40)
+
+    def test_verify_fails_closed_on_forged_json(self):
         with tempfile.TemporaryDirectory() as d:
             p = Path(d) / "ev.json"
-            p.write_text(json.dumps({"adapter": "macos-cli-seatbelt", "host": "macOS 27.0.1", "sensitive_data": True,
-                                     "checks": [{"name": "outside_read", "expected": "DENIED", "observed": "ALLOWED"}]}))
-            self.assertEqual(gate.verify("macos-cli-seatbelt", str(p), "macOS 27.0.1"), 2)  # UNSAFE + sensitive → fail closed
+            p.write_text(json.dumps({"adapter": "macos-cli-seatbelt", "host": "macOS 27.0.1",
+                                     "checks": [{"name": "outside_read", "expected": "DENIED", "observed": "DENIED"}]}))
+            self.assertEqual(gate.verify("macos-cli-seatbelt", str(p), "macOS 27.0.1"), 2)
+
+    def test_verify_fails_closed_on_unsupported_adapter(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "ev.jsonl"
+            m = json.loads(gate.MANIFEST_PATH.read_text())
+            rows = "".join(json.dumps(c) + "\n" for c in m["required_checks"])
+            p.write_text(rows)
+            # adapter 'claude-code' is planned: no support claim even with perfect evidence
+            self.assertEqual(gate.verify("claude-code", str(p), "macOS 27.0.1"), 2)
 
     def test_gate_does_not_rewire_default_entry(self):
-        # governance docs must not instruct global alias modification
         doc = (ROOT / "docs" / "agent-runtime-security-governance.md").read_text()
         self.assertNotIn("alias omp=", doc)
         self.assertIn("owner-approved", doc)

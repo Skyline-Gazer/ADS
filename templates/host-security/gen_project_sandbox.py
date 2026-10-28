@@ -46,7 +46,7 @@ print(f"""(version 1)
 (allow file-read-metadata (subpath "/"))
 
 ;; ---- system runtime: data read-only ----
-(allow file-read-data (literal "/") (subpath "/usr") (subpath "/bin") (subpath "/sbin") (subpath "/private") (subpath "/opt") (subpath "/Library") (subpath "/System") (subpath "/dev"))
+(allow file-read-data (literal "/") (subpath "/usr") (subpath "/bin") (subpath "/sbin") (subpath "/System") (subpath "/opt") (subpath "/Library") (subpath "/dev") (literal "/private/etc/hosts") (literal "/private/etc/resolv.conf") (literal "/private/etc/services") (literal "/private/etc/protocols") (literal "/private/etc/paths") (subpath "/private/etc/paths.d") (subpath "/private/etc/ssl") (subpath "/private/etc/openssl") (subpath "/private/var/db") (subpath "/private/var/folders") (subpath "/private/preboot"))
 
 ;; ---- private user data: explicit deny (defense in depth) ----
 (deny file-read-data {' '.join(f'(subpath "{home}{p}")' for p in private)})
@@ -61,6 +61,9 @@ print(f"""(version 1)
 
 ;; ---- omp state: write only state dirs ----
 (allow file-write* {' '.join(f'(subpath "{home}/.omp/{p}")' for p in ("agent", "cache", "run", "logs", "extensions"))})
+
+;; ---- deny sensitive /private/var/db subtrees ----
+(deny file-read-data (subpath "/private/var/db/dslocal") (subpath "/private/var/db/locationd") (subpath "/private/var/db/uuidtext") (subpath "/private/var/db/ConfigurationProfiles") (subpath "/private/var/db/securityd"))
 
 ;; ---- deny system log/temp subtrees before scratch grant ----
 (deny file-read-data (subpath "/private/var/log") (subpath "/var/log") (subpath "/private/var/folders") (subpath "/var/folders"))

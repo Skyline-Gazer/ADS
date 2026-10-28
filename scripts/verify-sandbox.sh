@@ -53,7 +53,11 @@ for d in Documents Downloads Music Pictures Movies .ssh; do
 done
 check_deny  "keychains list"             /bin/ls "$HOME/Library/Keychains"
 check_deny  "sibling private dir list"   /bin/ls "$HOME/Desktop/Oneplus" 2>/dev/null || den "sibling private dir list (absent)"
-check_deny  "other project read"         /bin/cat "$HOME/Desktop/Projects/airingcal-v3/package.json"
+SIBLING="$HOME/Desktop/Projects/.ads-sandbox-sibling-$$"
+mkdir -p "$SIBLING"
+echo SYNTHETIC_SIBLING > "$SIBLING/synthetic.json"
+check_deny  "sibling project read (synthetic)" /bin/cat "$SIBLING/synthetic.json"
+rm -rf "$SIBLING"
 check_deny  "/Volumes list"              /bin/ls /Volumes
 check_deny  "/Volumes write"             /usr/bin/touch /Volumes/.ads-probe
 check_deny  "/var/tmp write"             /usr/bin/touch /var/tmp/.ads-probe
@@ -61,6 +65,10 @@ check_deny  "/private write"             /usr/bin/touch /private/.ads-probe
 check_deny  "/var/log list"              /bin/ls /var/log
 check_deny  "/var/folders list"          /bin/ls /var/folders
 check_deny  "/Users list"                /bin/ls /Users
+check_deny  "/private/var/log list"      /bin/ls /private/var/log
+check_deny  "/private/var/db/dslocal"    /bin/ls /private/var/db/dslocal
+check_deny  "/private/etc list"          /bin/ls /private/etc
+check_deny  "master.passwd content"       /bin/cat /private/etc/master.passwd
 command -v rtk >/dev/null && check_deny "rtk outside read" rtk cat "$CAN_OUT" || true
 
 echo "export function sandboxProbe(){return 1}" > "$PROJECT/.sandbox-cg-probe.ts"
