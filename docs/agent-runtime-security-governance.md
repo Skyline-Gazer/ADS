@@ -57,3 +57,10 @@ Rules: statuses change only with evidence attached here; "supported" is per runt
 ## Owner authorization boundary
 
 No global alias, GUI app, IDE setting, or system security policy is modified by this governance; runtime-specific activation (e.g. making a sandboxed launcher the default) is a separate owner-approved action per runtime.
+
+## Version boundary (2026-10-28)
+
+- **Mode A (CNB Primary → GitHub Mirror) is part of the published, immutable v0.4.2** and has passed isolated live acceptance — consumers may pin v0.4.2 for Mode A adoption.
+- **The macOS CLI Seatbelt hardening (PR #83) is merged to `dev` only** and is NOT part of any published release; it is a candidate for a future version. Do not attribute OS-level sandbox enforcement to a v0.4.2 pin.
+- **Per-runtime support statuses above are independent**: the macOS CLI Seatbelt verification must not be generalized to GUI, desktop, IDE or remote runtimes; each requires its own evidence.
+- Consumer cutovers (including ALNILAM) remain separately authorized; task tracking stays on GitHub regardless of provider mode.
