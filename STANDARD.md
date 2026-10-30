@@ -1,6 +1,6 @@
 # ADS Development Standard
 
-Version: **v0.5.0 Lite candidate**. Prior immutable releases (`v0.4`, `v0.4.1`, …) remain unchanged. Lite defaults and optional profiles are not automatically adopted until a consumer advances its submodule pin.
+Version: **v0.6.0 Adaptive Goal Execution (dev)**. Prior immutable releases (`v0.4.x`, `v0.5.0`) remain unchanged. Lite defaults and optional profiles are not automatically adopted until a consumer advances its submodule pin. v0.6 adds execution semantics only — not a second standards stack ([v0.6.0](docs/releases/v0.6.0.md)).
 
 ## Priority and inheritance
 
@@ -36,7 +36,9 @@ Strict post-merge SHA readback, drift receipts and Phase-end reconciliation are 
 
 ## Agent-native goal execution
 
-A concrete goal authorizes investigation, changes, relevant tests, task branches, commits, PRs and CI repair within its scope. Split work and use platform-native subagents when beneficial; don't build an orchestrator. Continue until completion, a real blocker or a materially new decision, within the host session's capabilities. No promise of execution after the session ends. Give concise milestone updates, not approval requests for phases.
+A concrete goal authorizes investigation, changes, relevant tests, task branches, commits, PRs and CI repair within its scope. Prefer a short **session-local Goal Contract** (Goal, Invariants, Acceptance, Scope, Adaptation, Stop) when the task is non-trivial — see [deliver](skills/deliver/SKILL.md). Do not add mandatory contract files or fixed phase gates for ordinary work.
+
+Adapt the implementation path when the environment blocks the first plan; do not adapt Invariants, authorization ceilings, or Acceptance downward. Split work and use platform-native subagents when beneficial; don't build an orchestrator. Continue until verified completion, a real blocker, or a materially new decision, within the host session's capabilities. Default toward **authorized convergence** (reuse existing PR, merge when allowed, re-read target state) without production deploy, Provider switch, or safety bypass. No promise of execution after the session ends. Give concise milestone updates, not approval requests for phases.
 
 ## Native multi-agent coordination
 

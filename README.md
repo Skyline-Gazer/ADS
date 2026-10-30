@@ -2,6 +2,8 @@
 
 ADS **v0.5.0 Lite is published:** [GitHub Release](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.5.0) at `9bd8b115fa7a3bff19c0d69c22c0423c7141e63f`. Notes: [v0.5.0-notes.md](docs/releases/v0.5.0-notes.md). Contract: [v0.5.0.md](docs/releases/v0.5.0.md). Consumers pin tag `v0.5.0` (or that full SHA).
 
+**In development:** [v0.6.0 Adaptive Goal Execution](docs/releases/v0.6.0.md) — execution-semantics patch on Lite (Goal / Adaptation / Outcome / Convergence). Not a published tag.
+
 **Status:** Current released pin is **v0.5.0**. Prior **v0.4.x** tags remain immutable. Mac TUI host enforcement remains NOT_VERIFIED.
 
 ADS is an agent-native development standard for personal software projects: **submodule + short `AGENTS.md` + core rules**, not a second app copied into your repo. It reuses the coding agent, GitHub and the host platform—no CLI, approval engine, task database, orchestrator or deployment controller.
