@@ -1,4 +1,4 @@
-"""Contract tests for the mandatory consumer developer-toolchain policy."""
+"""Contract tests for the optional consumer developer-toolchain profile."""
 from pathlib import Path
 import unittest
 
@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 class ConsumerDevToolchainPolicyTests(unittest.TestCase):
     def test_policy_is_consumer_scoped_and_latest_stable(self):
         policy = (ROOT / "docs" / "consumer-dev-toolchain.md").read_text(encoding="utf-8")
-        self.assertIn("projects that adopt ADS", policy)
+        self.assertIn("consumer repositories that opted in", policy)
         self.assertIn("does **not** require CodeGraph or RTK to be installed or initialized in the ADS", policy)
         self.assertIn("latest stable upstream release", policy)
         self.assertIn("full RTK", policy)
@@ -24,12 +24,12 @@ class ConsumerDevToolchainPolicyTests(unittest.TestCase):
         self.assertIn("Each independently indexed Git worktree must have its own index.", policy)
         self.assertIn("full reindexing", policy)
 
-    def test_bootstrap_and_adopt_skills_reference_policy(self):
-        for relative in ("skills/bootstrap/SKILL.md", "skills/adopt/SKILL.md"):
-            content = (ROOT / relative).read_text(encoding="utf-8")
-            self.assertIn("consumer-dev-toolchain.md", content)
-            self.assertIn("full RTK", content)
-            self.assertIn("production", content)
+    def test_profile_and_lite_adoption_reference_toolchain_policy(self):
+        profile = (ROOT / "profiles" / "consumer-devtoolchain" / "README.md").read_text(encoding="utf-8")
+        self.assertIn("consumer-dev-toolchain.md", profile)
+        lite = (ROOT / "docs" / "lite-adoption.md").read_text(encoding="utf-8")
+        self.assertIn("consumer-devtoolchain", lite)
+        self.assertIn("not part of lite", profile.lower())
 
     def test_consumer_manifest_does_not_pin_tool_versions(self):
         manifest = (ROOT / "templates" / "consumer-devtools" / ".ads-devtools.json.example").read_text(encoding="utf-8")

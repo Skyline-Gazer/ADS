@@ -1,6 +1,6 @@
 # Lifecycle Drift Convergence & Remote-Heavy Execution
 
-**Scope:** ADS and all adopting consumers. This is a proposed next-version governance change, not a rewrite of immutable ADS v0.4.2. Read [STANDARD](../STANDARD.md), [Phase reconciliation](milestone-reconciliation.md), [remote-first verification](../scenarios/remote-first-verification.md), and [Provider selection](git-provider.md).
+**Optional profile — not [lite adoption](lite-adoption.md).** Enable when project `AGENTS.md` lists [profiles/strict-lifecycle/README.md](../profiles/strict-lifecycle/README.md). Mandatory for contributors working **in the ADS repository**. Read [STANDARD](../STANDARD.md), [Phase reconciliation](milestone-reconciliation.md), [remote-first verification](../scenarios/remote-first-verification.md), and [Provider selection](git-provider.md).
 
 ## Execution placement: local-light, remote-heavy
 

@@ -1,10 +1,12 @@
 # Consumer-project developer toolchain: CodeGraph + full RTK
 
-**Scope:** This policy applies to software projects that adopt ADS. It does **not** require CodeGraph or RTK to be installed or initialized in the ADS standards repository itself.
+**Optional profile — not [lite adoption](lite-adoption.md).** Enable only when the project `AGENTS.md` lists [profiles/consumer-devtoolchain/README.md](../profiles/consumer-devtoolchain/README.md).
 
-## Required outcome
+**Scope:** This policy applies to consumer repositories that opted in. It does **not** require CodeGraph or RTK in the ADS standards repository itself.
 
-Every ADS consumer project must use both tools during development:
+## Required outcome (when profile enabled)
+
+The consumer project must use both tools during development:
 
 - **CodeGraph** for code navigation and impact analysis.
 - **Full RTK** for supported command-output compression. Do not substitute `rtk-oss`.

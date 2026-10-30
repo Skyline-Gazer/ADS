@@ -1,6 +1,6 @@
 # Mandatory Git Development Governance
 
-**Status: normative.** This policy applies equally to the ADS repository and every project that adopts ADS. It is not an ADS-repository-only convention or an optional recommendation. Project-local guidance may add detail but must not silently relax these rules.
+**Status: normative for the ADS repository.** Consumer projects use [lite adoption](lite-adoption.md) by default and are **not** bound by this policy unless root `AGENTS.md` enables the [strict Git governance profile](../profiles/strict-git-governance/README.md). When enabled, project-local guidance may add detail but must not silently relax these rules.
 
 ## Branch model
 

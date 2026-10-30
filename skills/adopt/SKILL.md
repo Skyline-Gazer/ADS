@@ -4,33 +4,19 @@ description: Adopt ADS in an existing codebase or simplify legacy Trellis, Comet
 ---
 # Adopt ADS safely
 
-Apply [lifecycle and execution governance](../../docs/execution-and-drift-governance.md) at adoption/session recovery: compare live dev, Provider, Issue/Project and prior Handoff; reuse existing hosted CI for Docker/Browser/SCA E2E rather than requiring local Docker. Do not auto-change Provider or ADS Gitlink.
+Default path: [lite adoption](../../docs/lite-adoption.md). Do not auto-change Provider, remotes, or the ADS gitlink.
 
-1. Inventory AGENTS.md, agent-specific instructions, hooks, CI workflows, issue/PR conventions, ADRs and actual deployment triggers, and apply the mandatory [Git governance policy](../../docs/git-governance.md) before implementation. `dev` is required; if absent, establish it through a reviewable branch/CI migration first. Start ordinary task branches from latest `dev`, use an Issue and PR targeting `dev`, and keep production promotion separate.
-2. Copy `templates/git-governance/ensure-ads-branch-protection.py` from the pinned ADS revision into the consumer repository as `scripts/ensure-ads-branch-protection.py` through the same reviewable task branch (inspect an existing helper before replacing it). Inspect classic branch protection on `dev` and the production branch using the authenticated `gh` CLI. Identify exact blocking check names from real CI/PR runs. If protection is absent or incomplete, run the helper with `--branches dev main` and one `--required-check` per actual required check (at minimum `branch-policy` for the supplied workflow). The helper attempts to apply and verifies protection. If `gh` lacks repository-admin access or the GitHub plan blocks private-repository protection, stop and report the exact blocker; a `403` is not proof that protection is absent.
-3. For local TUI adoption or session resumption, apply [project-only filesystem read containment](../../docs/host-filesystem-boundary.md) **before** general installed-tool, filesystem, CodeGraph index or MCP discovery. Inspect effective main/child sandbox and permissions; use only synthetic workspace/sibling canaries for negative tests. Do not inspect `~/Music` or other real private directories to demonstrate denial. A write-only sandbox or prompt denial is insufficient; block access-sensitive work until actual OS/tool denial is verified or use a truly isolated remote host.
-3. Inspect what the host agent and machine already provide — native Skills, subagent or review capabilities, installed runtimes, existing scripts and fixtures — before proposing any replacement service. Reuse working facilities instead of adding a second one, and distinguish installed, configured and verified capabilities.
-4. Run the mandatory consumer CodeGraph + full RTK preflight in [consumer-dev-toolchain.md](../../docs/consumer-dev-toolchain.md). Verify latest stable upstream versions, project initialization and actual host integration separately. Ask before installing missing binaries or changing global host settings; when binaries already exist, initialize project integration on a consumer development branch. Keep tool-specific config off the consumer's production `main` and add a production-boundary guard before enabling it.
-5. Before adopting a multi-agent pattern, identify existing host-native delegation, **effective per-child read/edit/shell permissions**, writable shared directories, absolute-path/parent-worktree escape behavior and hooks. A separate child worktree may not be a filesystem sandbox, and a parent permission deny may not propagate. Check relevant safe negative controls under [docs/native-subagent-safety.md](../../docs/native-subagent-safety.md) before sensitive delegation. Keep project-local permission/CI/deployment rules authoritative for every child; prefer existing native capability over additional task orchestration.
-6. Separate executable controls from Markdown descriptions. Identify redundant consent phases, session journals and evidence duplication; also identify legitimate security and production gates.
-7. Propose a minimal diff that keeps project architecture, tests, data contracts, secrets controls and release behavior. Do not disable safeguards to force a green build.
-8. Prefer a pinned ADS Git submodule at `.ads` for new adoption and a carefully reviewed migration from old vendored/pointer approaches. Inspect existing `.ads`, `.gitmodules`, current host Skill copies and deployment behavior first; never force overwrite. Follow [docs/how-to-update.md](../../docs/how-to-update.md), verify private repository access and submodule gitlink visibility.
-9. Add a project-local AGENTS.md referencing an immutable accessible ADS revision. Treat it as canonical; other agent adapters should contain only short pointers.
-10. Remove or adjust obsolete mandatory hooks/CI **only** after understanding their operational effect. Preserve history through Git and existing Issues/PRs.
-11. Validate with one small real task or an isolated rehearsal. Prefer remote CI and target-platform preview when relevant; if missing, provision a minimal task-scoped hosted workflow or ephemeral environment when current authorization and existing capabilities allow it. Request exact user action only for a genuine access/permission/secret/budget boundary, continue independent safe work, and keep unrun checks explicitly blocked. Avoid creating duplicate persistent infrastructure; report remaining workflow conflicts and each verification layer not exercised.
+1. Inventory existing AGENTS.md, hooks, CI, deployment triggers and issue/PR habits. Separate executable controls from Markdown-only descriptions.
+2. On local TUI adoption, apply [host filesystem boundary](../../docs/host-filesystem-boundary.md) before sensitive discovery when personal data could be exposed.
+3. Inspect host-native Skills, runtimes and working test commands; reuse before replacing.
+4. Prefer a pinned ADS submodule at `.ads`; migrate from vendored copies on an isolated branch ([how-to-update.md](../../docs/how-to-update.md)).
+5. Render or update root `AGENTS.md` from [templates/AGENTS.md](../../templates/AGENTS.md) with project facts and `.ads` rule pointers.
+6. Enable optional profiles **only** when the owner names them in `AGENTS.md` ([profiles/README.md](../../profiles/README.md)): strict Git, consumer toolchain, strict lifecycle.
+7. Remove obsolete mandatory hooks or duplicated policy **only** after understanding operational effect; preserve legitimate security and release gates.
+8. Validate with one small real task or rehearsal; report checks not run.
 
-Never silently rewrite production configs, rotate credentials or merge a high-risk migration without scoped authorization.
+Never silently rewrite production configs, rotate credentials, or merge high-risk migrations without scoped authorization.
 
-## Provider decision gate
+## Provider note
 
-Read [provider selection](../../docs/git-provider.md) before running any GitHub-specific gh helper. Preserve existing providers by default; only an explicit decision enables CNB Primary. Validate .ads-project.json, existing Issues/Projects, native protection and CI. Do not create duplicate GitHub PRs or execute live mirror migration as a preflight side effect.
-
-During CNB adoption follow [CNB review](../../docs/cnb-review.md) and compare the current PR source SHA, review JSON and actual CI. If code-review or NPC access is unavailable, report BLOCKED rather than disabling the review gate or silently merging.
-
-Before enabling a CNB Primary mirror read [CNB safe synchronization](../../docs/cnb-sync.md), inspect GitHub auto-deploy effects, target main and tag state, least-privilege credentials and CNB branch protection. Adoption never automatically synchronizes production.
-
-## Consumer execution closure
-
-For consumer work (not ADS itself), use the executable [toolchain preflight](../../docs/consumer-dev-toolchain.md#executable-adoption-and-session-preflight-v041) at adoption/session recovery and before graph-dependent work. Bind official version/license/source evidence to the actual executable path and SHA-256. Initialize missing project setup autonomously on the development branch with `--initialize` and an explicit supported host adapter; never install/update global tools without authorization. Validate current-worktree JSON status and a real source-symbol query. Prefer native synchronization; only an observed unhealthy index permits controlled `--recover`. CLI exit 3 requires a separate native-host MCP and RTK interception test, not a VERIFIED claim.
-
-Before production promotion, create a separate clean release-preparation branch while dev retains its integration. Run the generic boundary guard on the exact production tree and actual build output, with the trusted development manifest supplied externally after stripping it. Never treat a source-tree-only check as artifact verification.
+Read [provider selection](../../docs/git-provider.md). CNB adoption follows [CNB review](../../docs/cnb-review.md) only when the owner configured CNB Primary.
