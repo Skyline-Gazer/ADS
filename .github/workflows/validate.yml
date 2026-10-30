@@ -1,11 +1,7 @@
 name: Validate ADS
 on:
   push:
-<<<<<<< HEAD
-    branches: [main, dev, "cnb/**", "draft/**", "feat/**", "feature/**", "fix/**", "bugfix/**", "chore/**", "docs/**", "refactor/**", "test/**", "ci/**", "build/**", "perf/**", "style/**", "deps/**", "release/**", "hotfix/**"]
-=======
     branches: [main, dev, "cnb/**", "cursor/**", "draft/**", "feat/**", "feature/**", "fix/**", "bugfix/**", "chore/**", "docs/**", "refactor/**", "test/**", "ci/**", "build/**", "perf/**", "style/**", "deps/**", "release/**", "hotfix/**"]
->>>>>>> origin/dev
   pull_request:
     types: [opened, synchronize, reopened, edited, ready_for_review]
   workflow_dispatch:
