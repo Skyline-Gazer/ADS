@@ -38,9 +38,9 @@ class GitGovernanceTests(unittest.TestCase):
         self.assertEqual(validate_pull_request(event("main", "hotfix/127-crash", "Backport; Refs #127")), [])
 
     def test_cnb_specialized_development_branch_is_explicit(self):
-        candidate = event('cnb/v0.4.1', 'chore/90-merge-dev-into-cnb', 'Refs #90')
+        candidate = event('cnb/dev', 'chore/90-merge-dev-into-cnb', 'Refs #90')
         self.assertTrue(validate_pull_request(candidate))
-        self.assertEqual(validate_pull_request(candidate, development_branch='cnb/v0.4.1'), [])
+        self.assertEqual(validate_pull_request(candidate, development_branch='cnb/dev'), [])
 
     def test_unknown_base_is_rejected(self):
         errors = validate_pull_request(event("feature", "feat/123-user-auth"))
