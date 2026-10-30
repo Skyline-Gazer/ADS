@@ -21,6 +21,17 @@ class GitGovernanceTests(unittest.TestCase):
     def test_task_branch_targets_dev_with_issue_reference(self):
         self.assertEqual(validate_pull_request(event("dev", "feat/123-user-auth")), [])
 
+    def test_cursor_cloud_agent_branch_targets_dev(self):
+        self.assertEqual(
+            validate_pull_request(event("dev", "cursor/trim-lite-ads-3528", "Refs #45")),
+            [],
+        )
+
+    def test_cnb_specialized_development_branch_is_explicit(self):
+        candidate = event("cnb/dev", "chore/90-merge-dev-into-cnb", "Refs #90")
+        self.assertTrue(validate_pull_request(candidate))
+        self.assertEqual(validate_pull_request(candidate, development_branch="cnb/dev"), [])
+
     def test_fix_branch_targets_dev(self):
         self.assertEqual(validate_pull_request(event("dev", "fix/124-timeout", "Closes #124")), [])
 

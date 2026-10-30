@@ -33,6 +33,14 @@ Official documentation: https://cnb.cool/cnb/plugins/tencentcom/git-sync
 - **Mirror pushes trigger inherited workflows.** The mirrored `main` tree carries the consumer's `.github/workflows/`; GitHub fires them on every mirror push (observed live: `Deploy`/boundary workflows ran and failed on a fixture). Before enabling mirror writes, consumers MUST audit and disable/guard (paths, conditions, or `workflow_dispatch`-only) any workflow that deploys production — e.g. ALNILAM's `deploy.yml` triggers on `push` to `main` and deploys GitHub Pages.
 - **Branch protection on the GitHub mirror:** the classic protection API is plan-gated for private repos (HTTP 403). Mirror write authorization therefore rests on token scope and owner identity unless the mirror repo is public or the plan supports protection. Record the actual state in the consumer's Mode A acceptance.
 
+## Compatibility note: GitHub sync-branch PR vs exact-SHA mirror (NOT interchangeable)
+
+ADS Mode A mirror (`sync_cnb_release.py`) requires **byte-identical commit SHA** on GitHub `main` (and approved tags) matching the authorized CNB production SHA. A consumer workflow that lands CNB production onto GitHub via a **`sync/*` (or similar) branch + ordinary GitHub PR merge** produces a **different merge commit SHA** on GitHub `main`. That path may be useful for PR/CI review on the mirror, but it is **not** the same as ADS exact-SHA mirror acceptance and must **not** be labeled LIVE_VERIFIED Mode A, PASS for `cnb-sync.md`, or a substitute for the manifest-driven sync.
+
+- Do not rewrite this document to treat sync-branch PR merge as the approved Mode A mirror.
+- Do not claim ALNILAM (or any consumer) has completed strict SHA mirror acceptance solely because a GitHub sync PR merged.
+- Reconciling PR-merge SHAs with exact-SHA mirror policy is a **separate** mirror-system change; it is **out of scope** for ADS v0.5.0 Lite.
+
 ## Acceptance and deployment boundaries
 
 - Verify GitHub main SHAs/immutable tags after sync, not merely CNB pipeline green.

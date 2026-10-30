@@ -1,6 +1,6 @@
 # ADS Development Standard
 
-Version: **v0.4.1 candidate**. The immutable `v0.4` release remains commit `2af17d9e1d816844c49835ae91b784405765ad46`. Development extensions are not part of that release and are not automatically adopted by consumers.
+Version: **v0.5.0 Lite candidate**. Prior immutable releases (`v0.4`, `v0.4.1`, …) remain unchanged. Lite defaults and optional profiles are not automatically adopted until a consumer advances its submodule pin.
 
 ## Priority and inheritance
 

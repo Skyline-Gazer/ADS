@@ -1,6 +1,6 @@
 # ADS Quality and Layered Verification
 
-Version: **v0.4.1 candidate**. Released v0.4 remains immutable; unreleased extensions require separate consumer review.
+Version: **v0.5.0 Lite candidate**. Released v0.4.x remains immutable; consumer pins advance only through reviewable submodule PRs.
 
 Choose checks from changed behavior, impact and consumers—not a mandatory test count. Docs: meaningful formatting/links. Ordinary code: impacted tests, types/lint/build as relevant. API/refactor: contract and integration tests. Sensitive changes: negative/security and recovery tests. Don't mask transitive impact with path filters.
 

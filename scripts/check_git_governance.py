@@ -9,7 +9,12 @@ import urllib.request
 from pathlib import Path
 
 ISSUE_REFERENCE = re.compile(r"\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?|refs?|references?)\s+#(\d+)\b", re.IGNORECASE)
-TASK_BRANCH = re.compile(r"^(?:feat|feature|fix|bugfix|chore|docs|refactor|test|ci|build|perf|style|deps|dependabot|renovate|security|sec|infra|ops|revert|spike|experiment|maintenance|upgrade)/.+$")
+# Include Cloud Agent `cursor/<slug>-<id>` task branches so hosts need not rebuild PRs solely for naming.
+TASK_BRANCH = re.compile(
+    r"^(?:feat|feature|fix|bugfix|chore|docs|refactor|test|ci|build|perf|style|deps|"
+    r"dependabot|renovate|security|sec|infra|ops|revert|spike|experiment|maintenance|"
+    r"upgrade|cursor)/.+$"
+)
 RELEASE_BRANCH = re.compile(r"^release/.+$")
 HOTFIX_BRANCH = re.compile(r"^hotfix/.+$")
 

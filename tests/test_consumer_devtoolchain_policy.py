@@ -9,7 +9,7 @@ class ConsumerDevToolchainPolicyTests(unittest.TestCase):
     def test_policy_is_consumer_scoped_and_latest_stable(self):
         policy = (ROOT / "docs" / "consumer-dev-toolchain.md").read_text(encoding="utf-8")
         self.assertIn("consumer repositories that opted in", policy)
-        self.assertIn("does **not** require CodeGraph or RTK to be installed or initialized in the ADS", policy)
+        self.assertIn("does **not** require CodeGraph or RTK in the ADS standards repository itself", policy)
         self.assertIn("latest stable upstream release", policy)
         self.assertIn("full RTK", policy)
         self.assertIn("development branch", policy)

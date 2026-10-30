@@ -31,6 +31,16 @@ If the owner wants ADS-style `dev` + Issue-linked PRs, enable the [strict Git go
 
 Follow [how-to-update.md](how-to-update.md): one reviewable PR that advances the `.ads` gitlink when the owner approves. Do not auto-track ADS `main`. Updating ADS does not require upgrading optional profile scripts unless the owner uses those profiles.
 
+## What lite still preserves
+
+Lite removes unnecessary script copies and ceremony. It does **not** remove, for projects that already use them:
+
+- Task branches, PRs, Review, CI, Agent repair, and owner-authorized merge loops
+- CNB Primary CodeBuddy comment disposition, current-SHA re-review, CI, and Agent-initiated **manual** merge ([cnb-review.md](cnb-review.md))
+- Host/OS safety boundaries in [SAFETY.md](../SAFETY.md) and [host-filesystem-boundary.md](host-filesystem-boundary.md)
+
 ## ADS repository itself
 
-Contributing to ADS still follows [git-governance.md](git-governance.md) in full. That requirement does not automatically apply to lite consumers.
+Contributing to ADS still follows [git-governance.md](git-governance.md) in full. The ADS repo keeps both `dev` (general) and `cnb/dev` (CNB-specialized integration) lines; Lite lands on `dev` first, then integrates into `cnb/dev` without force-overwriting CNB workflow specialty. That dual-line requirement does not automatically apply to lite consumers.
+
+Consumers pin a **single** published release (for example v0.5.0)—there is no separate `v0.5.0-cnb` tag.
