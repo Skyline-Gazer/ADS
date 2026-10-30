@@ -1,8 +1,8 @@
 # ADS — Agent Development Standard
 
-ADS **v0.5.0 Lite** development candidate: [release notes](docs/releases/v0.5.0-notes.md). Integrate on `dev` and `cnb/dev` before any release PR to `main`. No development merge authorizes publication.
+ADS **v0.5.0 Lite** release transport: [notes](docs/releases/v0.5.0-notes.md), [safety contract](docs/releases/v0.5.0.md). Lite is integrated on `dev` (`93a10b7`) and `cnb/dev` (`71bfafb`). Merging to `main` does **not** create the annotated tag; Owner-approved publish manifest + private Consumer receipt remain required.
 
-**Status:** **ADS v0.4.1 is released** at `3abf6025657a5d716476029cc8cbf5239543210b`. [v0.4.1 GitHub Release](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.4.1). v0.4.2 publication controls remain historical; Mac TUI host enforcement remains NOT_VERIFIED.
+**Status:** Last immutable published tag family remains **v0.4.x** ([v0.4.1](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.4.1) / v0.4.2). Mac TUI host enforcement remains NOT_VERIFIED.
 
 ADS is an agent-native development standard for personal software projects: **submodule + short `AGENTS.md` + core rules**, not a second app copied into your repo. It reuses the coding agent, GitHub and the host platform—no CLI, approval engine, task database, orchestrator or deployment controller.
 
