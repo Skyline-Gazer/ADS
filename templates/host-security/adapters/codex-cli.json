@@ -1,0 +1,22 @@
+{
+  "adapter": "codex-cli-native-profiles",
+  "runtime_kinds": [
+    "cli"
+  ],
+  "discovery": {
+    "commands": [
+      "codex --version"
+    ]
+  },
+  "enforce": {
+    "mechanism": "Codex native permission profiles (beta); template templates/host-access/codex-workspace-only.toml"
+  },
+  "verify": {
+    "command": "PENDING: adapter script not implemented"
+  },
+  "evidence": {
+    "schema": "pending"
+  },
+  "status": "planned",
+  "status_reason": "beta feature; no recorded passing verification \u2014 UNVERIFIED"
+}

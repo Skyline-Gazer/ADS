@@ -54,7 +54,18 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 templates/consumer-devtools/check-codegraph-channel.py --source-sha "$APPROVED_SHA" > "$RUNNER_TEMP/codegraph-channel.json"
+          # npm/GitHub observation can flake under parallel matrix jobs; retry before fail-closed.
+          ok=0
+          for attempt in 1 2 3; do
+            if python3 templates/consumer-devtools/check-codegraph-channel.py --source-sha "$APPROVED_SHA" > "$RUNNER_TEMP/codegraph-channel.json"; then
+              ok=1
+              break
+            fi
+            echo "codegraph-channel attempt $attempt failed; payload follows" >&2
+            cat "$RUNNER_TEMP/codegraph-channel.json" >&2 || true
+            sleep $((attempt * 2))
+          done
+          test "$ok" = 1
           python3 - <<'PY'
           import json,os
           from pathlib import Path

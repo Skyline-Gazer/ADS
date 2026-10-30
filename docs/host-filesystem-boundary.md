@@ -16,6 +16,18 @@ This applies to the **main TUI Agent, its native child Agents, shell/Python/Ruby
 
 **Other hosts:** Establish an equivalent OS-enforced read AND write boundary. If unavailable, mark `PROMPT_ONLY` / `BLOCKED`, use a separate isolated VM/container with no mounted user-home directories, or suspend tasks needing isolation. Host extensions and external filesystem/search MCPs are separate attack surfaces, not covered automatically by a shell sandbox.
 
+**macOS Seatbelt (host-native, harness-independent) — `omp` and any TUI:** When the TUI harness has no built-in OS sandbox, wrap the *entire agent launch command* in a generated Seatbelt profile; every child process (shells, interpreters, MCP stdio servers, indexers, subagents) inherits the containment. Generate per-project (extra audited private dirs may be appended):
+
+```sh
+python3 templates/host-security/gen_project_sandbox.py /path/to/project [extra-private-dir ...] > ~/.omp/sandbox/$(basename /path/to/project).sb
+mkdir -p /private/tmp/ads-agent-tmp          # the only writable scratch outside the project
+sandbox-exec -f ~/.omp/sandbox/<project>.sb <agent launch command>
+# validate before use:
+scripts/verify-sandbox.sh /path/to/project
+```
+
+**Hardened model (macOS 27.x validated):** filesystem is **deny-default** — `(deny file-read-data)`, `(deny file-read-metadata)`, `(deny file-write*)` with explicit minimal allows: the project real path (read+write), system runtime paths (read-only), audited home toolchain/state roots (`.omp`, `.local`, `.cache`, `.npm`, `.bun`, `.cargo`, `go`, `.config`, `rea`; read-only), omp state dirs (write), `/private/tmp/ads-agent-tmp` scratch, `/dev/null`. Explicit defense-in-depth denials cover Documents/Downloads/Music/Pictures/Movies/`.ssh`/Keychains, other private dirs passed as arguments, `/Volumes`, `/var/log`, `/var/folders`, `/tmp` (outside the scratch), and the `/Users` root listing. **Path resolution vs listing:** node-based tools (CodeGraph) require `lstat` on path ancestors; the profile grants `(allow file-read-metadata (subpath "/"))` — metadata lookups only, never directory listing or content (`ls $HOME` stays denied). **dyld requires `file-read-data` on the `/` literal itself** — keep that line. **Rule order matters:** allows must come after the blanket denies. **Residual, deliberately out of scope:** network is not filtered (separate audit dimension — never report FS PASS as network isolation), and writes to roots other than `$HOME`/`/private/tmp` (e.g. `/Volumes` children) are blocked only by the explicit `/Volumes` deny; extend the deny list if other writable roots are mounted. `sandbox-exec` is deprecated by Apple but remains the only host-native per-process filesystem sandbox available without disabling SIP; re-verify the matrix after macOS upgrades. Evidence protocol: run `scripts/verify-sandbox.sh` (39 synthetic checks incl. CodeGraph init/query, RTK, Git, Python, Node, symlink/realpath escape, subprocess inheritance) — never real private files.
+
 ## Read-only preflight at Bootstrap / Adopt / Deliver / resume
 
 1. Identify the executing host/version and current **real** repo root and actual working directory. Verify that the TUI is started from the intended repo, not a parent directory; capture only sanitized metadata.
