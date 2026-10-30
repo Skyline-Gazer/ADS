@@ -1,6 +1,6 @@
 # How to install and update ADS (AI-native Git Submodule)
 
-ADS is guidance, **not an auto-updating executable**. For new adoptions, use one pinned Git Submodule in the project, default path `.ads`, and a short root `AGENTS.md` linking to its rules. The consumer repository records ADS' exact commit (gitlink); updates are reviewable PRs. Read [docs/agent-adoption.md](agent-adoption.md) and [SAFETY.md](../SAFETY.md) first.
+ADS is guidance, **not an auto-updating executable**. Default adoption is [lite-adoption.md](lite-adoption.md): one pinned Git Submodule (default `.ads`) and a short root `AGENTS.md` with project facts—no copied ADS scripts unless optional profiles are enabled. The consumer records ADS' exact commit (gitlink); updates are reviewable PRs. Read [agent-adoption.md](agent-adoption.md) and [SAFETY.md](../SAFETY.md) first.
 
 ## New project: install once
 

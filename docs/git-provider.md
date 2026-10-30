@@ -1,12 +1,12 @@
 # Git provider selection
 
-**Normative, opt-in extension** to [mandatory Git governance](git-governance.md). This policy applies to ADS consumers and, only upon an independently authorized migration, the ADS repository itself. Existing consumers remain on their current GitHub Primary workflow unless the owner explicitly chooses CNB Primary. No new daemon, CLI framework, or second Issue database is required.
+**Normative, opt-in extension** for provider choice. Default consumer adoption remains [lite](lite-adoption.md). Full [git-governance.md](git-governance.md) applies to the ADS repository and to consumers that enable the [strict Git governance profile](../profiles/strict-git-governance/README.md). Existing consumers remain on their current GitHub Primary workflow unless the owner explicitly chooses CNB Primary. No new daemon, CLI framework, or second Issue database is required. **Do not switch provider modes without owner authorization.**
 
 ## Supported modes
 
-- **GitHub Primary**: existing GitHub dev and feature branches, GitHub Issue-linked PR to dev, GitHub CI and branch-protection checks, existing release behavior. Backward compatible.
-- **CNB Primary + GitHub Mirror**: CNB dev / task branch / PR / CI / AI Review is development authority. Existing GitHub Issues and Projects may stay authoritative; cite the full URL to avoid CNB/GitHub issue-number collisions. Only production main and individually approved release tags go to GitHub. Do not create a duplicate GitHub development PR.
-- The shared invariants never change: dev is mandatory, all ordinary tasks branch from current dev, Issue-linked PR to dev, deterministic tests, separate reviewable release PR, explicit production authorization, safe rollback, protected main, and no dev-only CodeGraph/RTK config in production main.
+- **GitHub Primary**: GitHub is the development authority for branches/PRs/CI. Lite consumers follow project `AGENTS.md` Git habits; with the strict Git profile, use Issue-linked PRs to `dev` and the GitHub governance helpers.
+- **CNB Primary + GitHub Mirror (Mode A)**: CNB task branch / PR / CI / CodeBuddy Review is development authority. Agent disposition of review comments, fresh-head re-review, CI, and **manual** merge stay on CNB ([cnb-review.md](cnb-review.md)). Existing **GitHub Issues and Projects** remain the task-management entry; do not migrate or duplicate them onto CNB. Only production `main` and individually approved release tags go to GitHub via the exact-SHA mirror ([cnb-sync.md](cnb-sync.md)). Do not create a duplicate GitHub development PR. Mode B remains cancelled.
+- Shared safety invariants (regardless of lite vs strict Git): truthful CI, explicit production authorization, safe rollback expectations, and no silent provider switch. `dev` / Issue-linked PR / CodeGraph production-boundary rules apply when the corresponding optional profiles are enabled or when the repository is ADS itself.
 
 ## First load and migration
 

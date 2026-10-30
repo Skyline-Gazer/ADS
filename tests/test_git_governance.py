@@ -21,6 +21,17 @@ class GitGovernanceTests(unittest.TestCase):
     def test_task_branch_targets_dev_with_issue_reference(self):
         self.assertEqual(validate_pull_request(event("dev", "feat/123-user-auth")), [])
 
+    def test_cursor_cloud_agent_branch_targets_dev(self):
+        self.assertEqual(
+            validate_pull_request(event("dev", "cursor/trim-lite-ads-3528", "Refs #45")),
+            [],
+        )
+
+    def test_cnb_specialized_development_branch_is_explicit(self):
+        candidate = event("cnb/dev", "chore/90-merge-dev-into-cnb", "Refs #90")
+        self.assertTrue(validate_pull_request(candidate))
+        self.assertEqual(validate_pull_request(candidate, development_branch="cnb/dev"), [])
+
     def test_fix_branch_targets_dev(self):
         self.assertEqual(validate_pull_request(event("dev", "fix/124-timeout", "Closes #124")), [])
 
@@ -72,26 +83,30 @@ class GitGovernanceTests(unittest.TestCase):
     def test_normative_policy_is_referenced_by_ads_and_consumer_entrypoints(self):
         root = Path(__file__).resolve().parents[1]
         policy = (root / "docs" / "git-governance.md").read_text(encoding="utf-8")
-        self.assertIn("applies equally to the ADS repository and every project that adopts ADS", policy)
+        self.assertIn("normative for the ADS repository", policy)
+        self.assertIn("lite adoption", policy)
         self.assertIn("latest `dev`", policy)
-        for relative in ("STANDARD.md", "QUALITY.md", "AGENTS.md", "templates/AGENTS.md", "skills/adopt/SKILL.md", "skills/bootstrap/SKILL.md", "skills/deliver/SKILL.md", "skills/recover/SKILL.md", "docs/agent-adoption.md"):
+        for relative in ("STANDARD.md", "QUALITY.md", "AGENTS.md", "docs/agent-adoption.md"):
             self.assertIn("git-governance.md", (root / relative).read_text(encoding="utf-8"), relative)
 
-    def test_adoption_and_bootstrap_enable_branch_protection_with_gh(self):
+    def test_strict_git_profile_documents_branch_protection_helper(self):
         root = Path(__file__).resolve().parents[1]
         policy = (root / "docs" / "git-governance.md").read_text(encoding="utf-8")
         self.assertIn("scripts/ensure_branch_protection.py", policy)
         self.assertIn("a `403` means the state could not be inspected", policy)
         self.assertIn("does not create branches or change the default branch", policy)
-        for relative in ("skills/adopt/SKILL.md", "skills/bootstrap/SKILL.md", "templates/AGENTS.md", "docs/agent-adoption.md", "templates/git-governance/README.md"):
-            content = (root / relative).read_text(encoding="utf-8")
-            self.assertIn("gh", content, relative)
-            self.assertIn("ensure-ads-branch-protection.py", content, relative)
+        profile = (root / "profiles" / "strict-git-governance" / "README.md").read_text(encoding="utf-8")
+        self.assertIn("ensure-ads-branch-protection.py", profile)
+        self.assertIn("gh", profile)
+        template_readme = (root / "templates" / "git-governance" / "README.md").read_text(encoding="utf-8")
+        self.assertIn("ensure-ads-branch-protection.py", template_readme)
 
-    def test_delivery_skill_does_not_allow_direct_commits_to_integration_branches(self):
+    def test_delivery_skill_defers_git_rules_to_project_agents_or_strict_profile(self):
         root = Path(__file__).resolve().parents[1]
         delivery = (root / "skills" / "deliver" / "SKILL.md").read_text(encoding="utf-8")
-        self.assertIn("PR targeting `dev`", delivery)
+        self.assertIn("AGENTS.md", delivery)
+        self.assertIn("strict-git-governance", delivery)
+        self.assertIn("git-governance.md", delivery)
         self.assertNotIn("authorized direct-commit path", delivery)
 
     def test_consumer_template_checker_matches_canonical_checker(self):

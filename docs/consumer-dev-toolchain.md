@@ -1,10 +1,12 @@
 # Consumer-project developer toolchain: CodeGraph + full RTK
 
-**Scope:** This policy applies to software projects that adopt ADS. It does **not** require CodeGraph or RTK to be installed or initialized in the ADS standards repository itself.
+**Optional profile — not [lite adoption](lite-adoption.md).** Enable only when the project `AGENTS.md` lists [profiles/consumer-devtoolchain/README.md](../profiles/consumer-devtoolchain/README.md).
 
-## Required outcome
+**Scope:** This policy applies to consumer repositories that opted in. It does **not** require CodeGraph or RTK in the ADS standards repository itself.
 
-Every ADS consumer project must use both tools during development:
+## Required outcome (when profile enabled)
+
+The consumer project must use both tools during development:
 
 - **CodeGraph** for code navigation and impact analysis.
 - **Full RTK** for supported command-output compression. Do not substitute `rtk-oss`.
@@ -54,7 +56,7 @@ The latest-version check is dynamic. Record observed versions in run evidence, b
 
 ## Consumer branch boundary — mandatory
 
-The consumer must follow ADS's mandatory Git governance policy: `dev` is the required development/integration branch, and every ordinary task branch starts from the latest `dev`. CodeGraph/RTK project configuration may exist on `dev` and its task branches, but must not enter the consumer's production `main` branch or production release/deployment artifacts. If the consumer has no `dev`, establish it through a reviewable migration before normal implementation.
+When this profile is enabled together with strict Git governance, prefer keeping CodeGraph/RTK configuration on the development integration branch and its task branches. Regardless of Git profile, CodeGraph/RTK project configuration must not enter the consumer's production `main` branch or production release/deployment artifacts.
 
 1. Identify the consumer's actual production branch from repository facts; use `main` when that is the project's production branch.
 2. Initialize CodeGraph and configure the host's RTK integration only in a consumer development checkout. Do not perform first-time project initialization on production `main`.
