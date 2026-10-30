@@ -1,0 +1,20 @@
+{
+  "adapter": "remote-runner-isolation-audit",
+  "runtime_kinds": [
+    "remote"
+  ],
+  "discovery": {
+    "commands": []
+  },
+  "enforce": {
+    "mechanism": "runner/container isolation, workspace mounts, credential scope (CNB runner container evidence: Issue #63)"
+  },
+  "verify": {
+    "command": "PENDING binding to this contract"
+  },
+  "evidence": {
+    "schema": "pending"
+  },
+  "status": "planned",
+  "status_reason": "container evidence exists but not bound to this contract \u2014 UNVERIFIED"
+}
