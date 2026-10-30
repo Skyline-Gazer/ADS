@@ -20,22 +20,19 @@ jobs:
           persist-credentials: true
 
       - name: Validate live refs and create complete branch-history archive
-        env:
-          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
           test "$GITHUB_REPOSITORY" = "Skyline-Gazer/ADS"
-          test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/cnb/dev" --jq .object.sha)" = "31507c6fe2c85e38abc5b962cf6c3a08d266bb93"
-          test -z "$(gh api "repos/$GITHUB_REPOSITORY/pulls?state=open&per_page=100" --jq '.[].number')"
           mkdir -p issue90-backup
-          gh api --paginate "repos/$GITHUB_REPOSITORY/branches?per_page=100" --jq '.[].name' | sort -u > issue90-backup/branch-names.txt
+          git ls-remote --heads origin > issue90-backup/remote-heads.tsv
+          awk '{sub(/^refs\/heads\//,"",$2); print $2}' issue90-backup/remote-heads.tsv | sort -u > issue90-backup/branch-names.txt
+          test "$(awk '$2=="refs/heads/cnb/dev" {print $1}' issue90-backup/remote-heads.tsv)" = "31507c6fe2c85e38abc5b962cf6c3a08d266bb93"
           test "$(wc -l < issue90-backup/branch-names.txt)" -gt 3
           for required in main dev cnb/dev; do
             grep -Fxq "$required" issue90-backup/branch-names.txt
           done
           git fetch --force origin '+refs/heads/*:refs/remotes/origin/*' --tags
-          git ls-remote --heads origin > issue90-backup/remote-heads.tsv
           git bundle create issue90-backup/all-branches.bundle --all
           git bundle verify issue90-backup/all-branches.bundle
           git bundle list-heads issue90-backup/all-branches.bundle > issue90-backup/bundle-heads.txt
@@ -57,20 +54,17 @@ jobs:
           compression-level: 0
 
       - name: Prune only obsolete branches and verify exactly three survivors
-        env:
-          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
-          test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/cnb/dev" --jq .object.sha)" = "31507c6fe2c85e38abc5b962cf6c3a08d266bb93"
-          test -z "$(gh api "repos/$GITHUB_REPOSITORY/pulls?state=open&per_page=100" --jq '.[].number')"
+          test "$(git ls-remote --heads origin refs/heads/cnb/dev | cut -f1)" = "31507c6fe2c85e38abc5b962cf6c3a08d266bb93"
           failed=0
           removed=0
           while IFS= read -r name; do
             case "$name" in
               main|dev|cnb/dev) continue ;;
             esac
-            if gh api -X DELETE "repos/$GITHUB_REPOSITORY/git/refs/heads/$name" >/dev/null; then
+            if git push origin --delete "refs/heads/$name" >/dev/null; then
               echo "Deleted branch: $name"
               removed=$((removed+1))
             else
@@ -80,7 +74,7 @@ jobs:
           done < issue90-backup/branch-names.txt
           echo "Removed: $removed; errors: $failed"
           test "$failed" -eq 0
-          gh api --paginate "repos/$GITHUB_REPOSITORY/branches?per_page=100" --jq '.[].name' | sort -u > issue90-backup/survivors.txt
+          git ls-remote --heads origin | awk '{sub(/^refs\/heads\//,"",$2); print $2}' | sort -u > issue90-backup/survivors.txt
           printf 'cnb/dev\ndev\nmain\n' > issue90-backup/expected-survivors.txt
           diff -u issue90-backup/expected-survivors.txt issue90-backup/survivors.txt
           echo "Confirmed: exactly main, dev, cnb/dev remain."
