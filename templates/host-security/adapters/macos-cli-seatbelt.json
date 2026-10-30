@@ -1,0 +1,30 @@
+{
+  "adapter": "macos-cli-seatbelt",
+  "runtime_kinds": [
+    "cli",
+    "mcp",
+    "subagent"
+  ],
+  "discovery": {
+    "os": "darwin",
+    "commands": [
+      "sw_vers",
+      "command -v omp || true",
+      "command -v codegraph || true"
+    ]
+  },
+  "enforce": {
+    "mechanism": "Apple Seatbelt (sandbox-exec) deny-default profile",
+    "generator": "templates/host-security/gen_project_sandbox.py",
+    "launcher": "~/.local/bin/omp-sandboxed (optional, owner-installed)"
+  },
+  "verify": {
+    "command": "scripts/verify-sandbox.sh <project> [profile]",
+    "checks": 39
+  },
+  "evidence": {
+    "schema": "verify-sandbox.sh stdout bound to profile sha256 + sw_vers"
+  },
+  "status": "supported",
+  "status_reason": "39/39 synthetic checks + live omp agent run, macOS 27.0.1"
+}

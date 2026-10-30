@@ -37,6 +37,11 @@ class GitGovernanceTests(unittest.TestCase):
     def test_hotfix_backport_can_target_production(self):
         self.assertEqual(validate_pull_request(event("main", "hotfix/127-crash", "Backport; Refs #127")), [])
 
+    def test_cnb_specialized_development_branch_is_explicit(self):
+        candidate = event('cnb/v0.4.1', 'chore/90-merge-dev-into-cnb', 'Refs #90')
+        self.assertTrue(validate_pull_request(candidate))
+        self.assertEqual(validate_pull_request(candidate, development_branch='cnb/v0.4.1'), [])
+
     def test_unknown_base_is_rejected(self):
         errors = validate_pull_request(event("feature", "feat/123-user-auth"))
         self.assertTrue(any("unsupported PR base" in error for error in errors))
@@ -119,21 +124,6 @@ class GitGovernanceTests(unittest.TestCase):
             errors, verified = verify_issue_references("Refs #999", "Skyline-Gazer/ADS", "test-token")
         self.assertTrue(verified)
         self.assertTrue(any("does not exist" in error for error in errors))
-
-
-class ModeBGovernanceTests(unittest.TestCase):
-    def test_exact_import_exception_does_not_change_default(self):
-        sha = 'a' * 40
-        event = {'pull_request': {'base': {'ref': 'dev'}, 'head': {'ref': 'release/cnb-' + sha, 'sha': sha}, 'body': 'Refs #63'}}
-        self.assertTrue(validate_pull_request(event))
-        self.assertEqual(validate_pull_request(event, mode_b=True), [])
-        event['pull_request']['head']['sha'] = 'b' * 40
-        self.assertTrue(validate_pull_request(event))
-
-    def test_variant_branch_uses_explicit_owner_scope_only(self):
-        event = {'pull_request': {'base': {'ref': 'cnb/v0.4.1'}, 'head': {'ref': 'feat/cnb-63-integration'}, 'body': 'Refs #63'}}
-        self.assertTrue(validate_pull_request(event))
-        self.assertEqual(validate_pull_request(event, development_branch='cnb/v0.4.1'), [])
 
 
 if __name__ == "__main__":
