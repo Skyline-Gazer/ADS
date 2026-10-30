@@ -2,42 +2,36 @@
 
 ADS is not a daemon, CLI or centralized policy delivery service. A file existing in ADS does not make the host agent automatically discover it.
 
-## Pin and make guidance accessible
+## Default: lite adoption
+
+Follow [lite-adoption.md](lite-adoption.md):
 
 1. Pick an approved ADS release or immutable full commit SHA.
-2. **Default for new consumers:** add ADS as a pinned Git submodule at `.ads` following [how-to-update.md](how-to-update.md), using a published approved tag/full SHA and authorized clone access. Existing vendored or connector-based consumers may migrate on an isolated branch, after inspecting existing files and deploy rules; don't destructively overwrite an existing `.ads` path. If submodules are genuinely unsupported, document the fallback and keep one immutable, locally readable rule snapshot.
-3. Add a short project AGENTS.md based on [templates/AGENTS.md](../templates/AGENTS.md) specifying the **actual consumer gitlink SHA**, `.ads` rule paths, build commands, auto-deploy behavior and real operational limits. Root AGENTS.md remains necessary: an agent will not automatically load nested submodule policies. Do not point only to a private URL that the agent cannot access.
-4. Expose the skill directories through that host's **documented** native discovery mechanism, or explicitly instruct the agent to read a particular SKILL.md. Test discovery with a harmless prompt. Do not assume a generic .agents/skills path works on every agent version.
+2. Add ADS as a pinned Git submodule at `.ads` ([how-to-update.md](how-to-update.md)), with authorized clone access.
+3. Render [templates/AGENTS.md](../templates/AGENTS.md) at the repository root with **project facts** and pointers to `.ads/STANDARD.md`, `.ads/SAFETY.md`, `.ads/QUALITY.md`.
+4. Expose needed skills through the host's documented discovery path; test with a harmless prompt.
 
-5. Keep a single content source. Platform adapters should contain minimal links/pointers, not duplicated conflicting policy.
-6. At an explicit request, a Phase/Milestone checkpoint or an owner-configured periodic trigger, check approved upstream releases without changing the consumer gitlink. To upgrade, compare exact old/new SHAs, review guideline and host Skill changes, advance the submodule on a task branch, test a scoped task and send a PR. `git submodule update --init --recursive` only materializes the parent-recorded pin and does not fetch the latest version automatically; see [how-to-update.md](how-to-update.md).
+Do **not** copy ADS scripts, governance checkers, or toolchain preflights unless the owner enables an [optional profile](../profiles/README.md) in `AGENTS.md`.
 
-Verified example (OMP): a skill is discovered natively at `<project>/.omp/skills/<name>/SKILL.md` (non-recursive; the host also scans ancestor `.omp/skills` directories and `~/.omp/agent/skills`, and has separate Claude/Codex/`.agents`/`.github` project providers). Copying `skills/bootstrap`, `skills/recover`, `skills/adopt` or `skills/deliver` there exposes it natively. ADS itself ships no host-specific skill directory, so a bare clone exposes nothing until the chosen skills are copied or linked into that path. Run a harmless discovery prompt after copying and record the host version.
+## Submodule updates
 
-## Mandatory consumer developer-toolchain
+At owner request or a configured periodic trigger, compare approved upstream releases to the recorded gitlink without changing it. Upgrades are isolated PRs that advance the gitlink after review ([how-to-update.md](how-to-update.md)). `git submodule update --init` only materializes the existing pin.
 
-For the consumer repository being adopted, complete the required CodeGraph + full RTK preflight described in [consumer-dev-toolchain.md](consumer-dev-toolchain.md). This applies to the consumer, not to ADS itself.
+## Optional profiles
 
-- Check the latest stable upstream release, installed binary version, project initialization and actual host integration separately.
-- Ask before installing a missing tool or changing global configuration. If the binaries already exist, initialize the consumer project's integration on a development branch without asking the user to repeat safe project-local work.
-- Keep the consumer manifest, host integration and tool-specific configuration off the consumer's production `main`; install the generic branch-boundary guard before enabling the development-only integration.
-- Prefer native CodeGraph reconciliation; verify freshness and worktree binding before graph-dependent analysis. Use explicit sync/status only for observed unhealthy or stale state.
-
-## Mandatory Git workflow
-
-Before ordinary work, apply the [mandatory Git governance policy](git-governance.md). The consumer must have a `dev` integration branch; create it through a reviewable migration if absent. Every feature/fix/chore/docs/refactor/test/CI task starts from the latest `dev`, references an Issue, and is delivered by a PR to `dev`. Production changes use a separate release PR; emergency fixes are developed from `dev` and selectively backported as the same reviewed change. During adoption, copy `templates/git-governance/ensure-ads-branch-protection.py` from the pinned ADS revision into the consumer repository as `scripts/ensure-ads-branch-protection.py` through a reviewable change. Inspect actual CI check names and branch protection with authenticated `gh`; if classic protection is absent/incomplete, run the copied helper with exact `--required-check` names, then verify the API result. A `403` is an access/plan blocker, not evidence that protection is absent. Existing consumers are migrated through scoped PRs, not silently rewritten.
+| Profile | When to enable |
+| --- | --- |
+| [Strict Git governance](../profiles/strict-git-governance/README.md) ([git-governance.md](git-governance.md)) | Owner wants `dev`, Issue-linked PRs, optional branch-protection helper |
+| [Consumer developer toolchain](../profiles/consumer-devtoolchain/README.md) | Owner wants CodeGraph + full RTK and production-boundary guards |
+| [Strict lifecycle](../profiles/strict-lifecycle/README.md) | Owner wants drift receipts and strict post-merge reconciliation |
 
 ## Boundaries
 
-- A private GitHub repository requires explicit read permission, and may be inaccessible to other agents or offline hosts.
-- Agents cannot continue after a session terminates unless the host platform offers persistence or scheduling.
-- Native deployment integrations remain authoritative; ADS does not create another deploy controller.
-- `actions/checkout` of a private consumer does not itself guarantee access to a different private ADS repository; provide only authorized checkout credentials in existing secure CI configuration.
-- Phase closure and GitHub Project status alignment follow [milestone-reconciliation.md](milestone-reconciliation.md); unqueried Project fields never count as verified alignment.
-- A repository's CI/security hooks can override behavior until separately migrated. Never claim adoption was successful without checking executable restrictions.
+- Private ADS requires explicit read permission for each host and CI job that needs it.
+- Agents cannot continue after session end unless the host offers persistence.
+- Native deployment integrations remain authoritative; ADS does not add a deploy controller.
+- Never claim successful adoption without checking executable restrictions the project actually uses.
 
-## Provider-specific bootstrap
+## Provider note
 
-Before executing the GitHub-specific gh / classic-protection steps above, read [provider selection](git-provider.md) and verify the consumer-root .ads-project.json, if present. In CNB Primary mode use CNB-native protection and PR/CI, and do not require a duplicate GitHub PR. Preserve existing GitHub Issues/Projects unless a separate migration is authorized.
-
-The executable v0.4.1 preflight in [consumer-dev-toolchain.md](consumer-dev-toolchain.md) requires versioned license/provenance evidence bound to active executable hashes, a real source query, and an explicit project-local RTK host adapter. Exit 3 records CLI success with live Host verification pending; bootstrap/adoption must complete the separate native MCP/hook smoke tests before declaring VERIFIED.
+Read [provider selection](git-provider.md) before GitHub-specific `gh` steps. CNB Primary consumers use CNB-native PR/CI; do not require duplicate GitHub PRs unless configured.
