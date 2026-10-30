@@ -16,6 +16,12 @@ At session/task recovery, read actual Provider, repository/branch SHA, remote CI
 
 **A Dockerfile or Compose recipe is a deployable product output, not proof that the Mac needs Docker.** Do not silently install Docker Desktop, launch its daemon, pull images or run heavyweight E2E locally when usable remote CI exists. Remote failure must be observed, not assumed; heavy local execution needs explicit task-scoped authorization and does not close remote-platform evidence gaps.
 
+## Contract migrations: protect the gate without freezing an obsolete contract
+
+When a consumer intentionally replaces an interface/schema (for example, Site TOML → YAML-only), first compare the accepted Issue and candidate schema against **both** the target-owned CI harness and the candidate tests. A target/base harness importing an obsolete business-contract implementation is **version skew**, not evidence that the candidate must restore deprecated support. Fix the smallest affected test/fixture path within the existing PR and rerun authoritative remote CI. Do not build a second legacy compatibility layer, duplicate end-to-end framework, or new approval service just to satisfy the old harness.
+
+Keep the trusted control plane privileged only for immutable PR identity, isolation and receipt verification. Test the candidate's current contract **inside its existing low-privilege, credential-free environment**; have trusted code validate outcomes and source/merge SHAs. Never import or execute candidate-authored modules in a privileged gate or silently weaken an existing blocker. If the mismatch cannot safely be repaired in scope, report the exact failing CI run and blocker rather than manufacturing a green result. Prefer the already available remote CI to repeated heavyweight local debugging; bounded local deterministic feedback is optional and cannot substitute for remote acceptance.
+
 Examine the concrete workflow before triggering it: some GitHub `dev` push events deploy Workers or run remote D1 migrations. Use safe PR CI, disposable fixtures or approved remote execution; do not push production-capable branches merely to start tests. Keep secrets out of PR/NPC contexts; respect budget and isolation. Record tested SHA, run URL, runner, relevant image digest, artifact and cleanup evidence.
 
 ## Lifecycle drift checkpoints
@@ -63,5 +69,5 @@ The checker only verifies **structure and internal consistency of untrusted decl
 ## Rollout / test consumers
 
 - AiringCal: retain deploy/v3 Dockerfile + Compose; reuse existing GitHub Actions `v3_compose_e2e` and `v3_operator_smoke`. GitHub dev-push may deploy Cloudflare/D1: do not trigger it as a test shortcut. Its CNB migration #139 is project-local and independent of this ADS PR.
-- ALNILAM: remain GitHub Primary during P1. Hosted Actions run build/browser/CLS/Lighthouse; CNB #96 remains an optional pilot pending reviewed Provider cutover. Keep the existing Shirone/Core/Site work and ADS pin.
+- ALNILAM: GitHub Primary during historical P1 was a time-scoped baseline, not a permanent Provider decision. For later phases read the project's current approved Provider manifest, live CNB/GitHub refs and latest Owner handoff; use hosted CI for full build/browser acceptance. Preserve existing Core/Site history and pinned ADS until separately reviewed.
 - Consumers do not auto-upgrade to unpublished ADS development commits. Revalidate on adoption at exact SHA and keep old accepted releases available.
