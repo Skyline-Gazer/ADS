@@ -1,8 +1,22 @@
 # ADS Quality and Layered Verification
 
-Version: **v0.5.0 Lite candidate**. Released v0.4.x remains immutable; consumer pins advance only through reviewable submodule PRs.
+Version: **v0.6.0 Adaptive Goal Execution (dev)**. Released v0.4.x / v0.5.0 remain immutable pins; consumer pins advance only through reviewable submodule PRs.
 
 Choose checks from changed behavior, impact and consumers—not a mandatory test count. Docs: meaningful formatting/links. Ordinary code: impacted tests, types/lint/build as relevant. API/refactor: contract and integration tests. Sensitive changes: negative/security and recovery tests. Don't mask transitive impact with path filters.
+
+## Process, State, and Outcome evidence
+
+Keep three evidence classes distinct when claiming progress or completion ([v0.6.0](docs/releases/v0.6.0.md)):
+
+| Class | Answers | Examples |
+| --- | --- | --- |
+| **Process** | Was the operation invoked? | CLI/API exit 0, workflow started, Review job finished |
+| **State** | Did the system of record change? | Remote branch SHA, merged commit, published artifact digest |
+| **Outcome** | Does Acceptance for the Goal hold? | Behavior in the intended environment; material Review comments dispositioned on the **current** head |
+
+A Process success is never automatic Outcome. After Git push/merge, Review, or deploy-shaped actions, **re-read** live state (remote SHA, Review head, target URL/behavior). Partial failure requires a state reread before the next repair. Label skipped live checks `NOT RUN` / `NOT_VERIFIED` / `BLOCKED` — never PASS by inference.
+
+CNB comment closure and fresh-head re-review remain defined in [cnb-review.md](docs/cnb-review.md); do not restate that workflow here.
 
 ## Environment and verification reuse
 
