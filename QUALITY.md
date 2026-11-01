@@ -30,4 +30,4 @@ Use the project/provider's actual PR and Review rules. For CNB, dispose of mater
 
 When completing work, state the actual branch/PR/merge SHA, relevant tests/CI, review disposition, deployment scope, known limitations and any unverified outcome. Update project boards or close Issues only for requirements proved complete. A good report is short; an evidence archive or milestone receipt is not a requirement of ordinary ADS Lite work.
 
-Optional consumer tooling (CodeGraph, RTK), strict branch rules and lifecycle receipts are governed only by explicitly enabled [profiles](profiles/README.md); do not copy their checks into a default consumer.
+Optional consumer tooling (CodeGraph, RTK), strict branch rules and lifecycle receipts are governed only by explicitly enabled [profiles](profiles/README.md). ADS contributors follow [git governance](docs/git-governance.md); do not copy their checks into a default consumer.
