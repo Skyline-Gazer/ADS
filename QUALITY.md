@@ -1,6 +1,6 @@
 # ADS Quality and Layered Verification
 
-Version: **v0.6.0 Adaptive Goal Execution (dev)**. Released v0.4.x / v0.5.0 remain immutable pins; consumer pins advance only through reviewable submodule PRs.
+Version scope: **v0.7.0 development-first candidate (unreleased)**. Published tags remain immutable; consumers adopt only through an intentional reviewable update.
 
 Choose checks from changed behavior, impact and consumers—not a mandatory test count. Docs: meaningful formatting/links. Ordinary code: impacted tests, types/lint/build as relevant. API/refactor: contract and integration tests. For sensitive changes, targeted checks may be needed; broad security audit suites are not routine development prerequisites. Don't mask transitive impact with path filters.
 
