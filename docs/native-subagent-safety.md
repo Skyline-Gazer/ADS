@@ -1,8 +1,8 @@
-# AI-native Subagent safety preflight
+# Optional hardened native Subagent containment
 
-Apply [SAFETY.md](../SAFETY.md) and [STANDARD.md](../STANDARD.md). **Host-native Subagent support is not proof of authorization confinement or filesystem isolation.** Use the smallest check appropriate to the task. For a purely read-only low-risk analysis with no secrets or external data, ordinary project context and a prompt-bound contract may suffice. Before a child receives sensitive data, destructive capability, broad shell access or unreviewed writes, require demonstrable host/OS enforcement or choose serial work/abstention.
+**This guide is opt-in hardening, not a default preflight.** Follow [SAFETY.md](../SAFETY.md) and [STANDARD.md](../STANDARD.md). Subagents can carry out normal, authorized project coding and independent review without process/OS isolation tests. Project worktrees are not security boundaries; delegated authority never exceeds the parent grant. Record `ISOLATION_NOT_ENFORCED` or `NOT_VERIFIED` without claiming containment or automatically blocking ordinary features. For expressly hardened tasks and sensitive delegated effects, verify the effective boundary or limit only the unauthorized operation.
 
-## Minimum effective gate
+## Hardened verification procedure (only when enabled)
 
 1. Discover the **actual host version, active model and delegation mechanism**, configuration scope, environment and permission controls. Locate project instructions, native child agent definitions, shell permission policy, filesystem sandbox, task worktree configuration and any inherited environment or credential material. Use existing documentation and nonsecret metadata; do not dump settings, keys or policy contents.
 2. Distinguish **requested** permissions from the actual effective parent **and each child** permission set. A `read: deny` on the parent is not evidence the same deny exists in children. Explicitly restrict every spawned worker where the host does not inherit permission policies. Delegated grant = intersection of the parent's actual authorization and the child's own effective restrictions; an apparently broader native child config **must never** be used to expand the grant.
@@ -13,7 +13,7 @@ Apply [SAFETY.md](../SAFETY.md) and [STANDARD.md](../STANDARD.md). **Host-native
 
 **Host-specific denial syntax:** In tested Claude Code 2.1.304, an absolute Read deny needs a root-anchored `//absolute/path/**`; the accepted `Read(/absolute/path/**)` with a single leading slash silently denied nothing. This syntax is not portable across hosts. Test a denied synthetic path *and* one allowed-path positive control. An invocation-supplied Seatbelt policy is not proof of equivalent containment in a delegated child until inheritance/enforcement is actually tested.
 
-**Gate result:** `VERIFIED_BOUNDED` only for the tested version/route/tools/resources and negative controls; `PROMPT_ONLY` when limits are merely instructions; `UNSAFE` for a demonstrated successful boundary bypass; `BLOCKED` when a required independent check cannot run; `NOT TESTED` for remaining vectors. A successful application test does **not** override a safety fail. For a task requiring that unverified boundary, use narrower serial execution, a reliably sandboxed isolated worker or stop for a scoped owner decision.
+**Hardened evidence:** `VERIFIED_BOUNDED` applies only to tested versions/tools/resources and negative controls; `PROMPT_ONLY` means only instructions; `UNSAFE` means observed bypass; `NOT_TESTED` means unexercised paths. When explicitly selected hardened containment is required and fails, stop that hardened operation; otherwise continue normal authorized development and report the limit without calling it PASS.
 
 ## Current evidence (not portable guarantees)
 
