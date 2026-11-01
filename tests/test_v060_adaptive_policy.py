@@ -42,6 +42,22 @@ class V060AdaptivePolicyTests(unittest.TestCase):
         self.assertIn("lite default", template.lower())
         self.assertNotIn("Mandatory consumer developer toolchain", template)
 
+    def test_lite_standalone_and_submodule_are_both_supported(self):
+        template = (ROOT / "templates" / "AGENTS.md").read_text(encoding="utf-8")
+        adoption = (ROOT / "docs" / "lite-adoption.md").read_text(encoding="utf-8")
+        bootstrap = (ROOT / "skills" / "bootstrap" / "SKILL.md").read_text(encoding="utf-8")
+        adopt = (ROOT / "skills" / "adopt" / "SKILL.md").read_text(encoding="utf-8")
+
+        self.assertIn("Standalone (one file)", template)
+        self.assertIn("no `.ads` submodule", template)
+        self.assertIn("Pinned submodule (optional)", template)
+        for concept in ("Goal", "Acceptance", "Process", "State", "Outcome", "Delegation"):
+            self.assertIn(concept, template)
+        self.assertIn("Standalone:", adoption)
+        self.assertIn("Pinned:", adoption)
+        self.assertIn("Standalone requires no", bootstrap)
+        self.assertIn("do not require a submodule", adopt)
+
     def test_release_doc_states_design_constraint(self):
         plan = (ROOT / "docs" / "releases" / "v0.6.0.md").read_text(encoding="utf-8")
         self.assertIn("execution-semantics patch", plan)

@@ -13,7 +13,7 @@ ADS is a **lightweight development convention**, not an orchestration system, ap
 ## Start here
 
 1. Read [Lite adoption](docs/lite-adoption.md) and use the [project AGENTS.md template](templates/AGENTS.md) to record real project facts: purpose, build/tests, Git/deploy effects and sensitive operations.
-2. Add an **immutable ADS submodule pin** at `.ads` when you need shared versioned rules; see [bootstrap](skills/bootstrap/SKILL.md), [adopt](skills/adopt/SKILL.md) and [updates](docs/how-to-update.md). Existing projects keep their current integration until explicitly migrated.
+2. Choose **standalone** (commit the self-contained `AGENTS.md`, no ADS checkout) or **pinned submodule** (add `.ads` at an immutable approved SHA to load the extended rules). Both are valid Lite entries; see [bootstrap](skills/bootstrap/SKILL.md), [adopt](skills/adopt/SKILL.md) and [updates](docs/how-to-update.md). Existing projects keep their current integration unless deliberately changed.
 3. Implement a real task with the existing tools and relevant functional checks. Enable only the [optional profiles](profiles/README.md) you actually need; no separate security preflight or Docker requirement.
 
 ## Core rules
