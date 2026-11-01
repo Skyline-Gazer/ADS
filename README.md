@@ -1,22 +1,20 @@
 # ADS — Agent Development Standard
 
-ADS **v0.5.0 Lite is published:** [GitHub Release](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.5.0) at `9bd8b115fa7a3bff19c0d69c22c0423c7141e63f`. Notes: [v0.5.0-notes.md](docs/releases/v0.5.0-notes.md). Contract: [v0.5.0.md](docs/releases/v0.5.0.md). Consumers pin tag `v0.5.0` (or that full SHA).
+ADS is a **lightweight development convention**, not an orchestration system, approval engine, task database or OS sandbox. Its purpose is to help coding agents finish an authorized goal, verify what actually changed and avoid unnecessary development blockers.
 
-**In development:** [v0.6.0 Adaptive Goal Execution](docs/releases/v0.6.0.md) — execution-semantics patch on Lite (Goal / Adaptation / Outcome / Convergence). Not a published tag.
+**Version status:** `v0.7.0 Simplify to Deliver` is a **candidate**, not a published release. Its reduced core is merged to [`dev`](https://github.com/Skyline-Gazer/ADS/pull/110) and synchronized into CNB-specialized [`cnb/dev`](https://github.com/Skyline-Gazer/ADS/pull/111). [Release candidate PR #112](https://github.com/Skyline-Gazer/ADS/pull/112) remains unmerged. Consult [GitHub Releases](https://github.com/Skyline-Gazer/ADS/releases) for a published immutable tag and pin that tag or full commit SHA; never track a moving development branch without an explicit project decision.
 
-**Status:** Current released pin is **v0.5.0**. Prior **v0.4.x** tags remain immutable. Mac TUI host enforcement remains NOT_VERIFIED.
+**Default is development-first:** no Docker/VM/OS sandbox, SCA/SBOM/license inventory, security-only reassessment or extra CI is required just to develop ordinary project code. These are opt-in hardening capabilities. ADS does **not** enforce filesystem/process isolation, and an agent must still respect actual task scope, host/tool denials, secrets and consequential production/privilege/spending authorization.
 
-ADS is an agent-native development standard for personal software projects: **submodule + short `AGENTS.md` + core rules**, not a second app copied into your repo. It reuses the coding agent, GitHub and the host platform—no CLI, approval engine, task database, orchestrator or deployment controller.
+**What stays:** relevant build/tests/functional CI, material code review, the project's configured Git provider/PR workflow, and truthful **Process / State / Outcome** reporting. See [STANDARD](STANDARD.md), [SAFETY](SAFETY.md), [QUALITY](QUALITY.md). Optional tooling and stricter governance are in [profiles](profiles/README.md).
 
-**License:** [MIT](LICENSE) for ADS's own standard, Skills and templates.
+**License:** [MIT](LICENSE).
 
-## Start here (lite default)
+## Start here
 
-1. Read [docs/lite-adoption.md](docs/lite-adoption.md) — **default** for all consumer projects.
-2. New repo: [skills/bootstrap/SKILL.md](skills/bootstrap/SKILL.md). Existing repo: [skills/adopt/SKILL.md](skills/adopt/SKILL.md).
-3. Copy [templates/AGENTS.md](templates/AGENTS.md) to the project root and fill in **project facts**.
-4. Pin ADS as submodule `.ads`; see [docs/how-to-update.md](docs/how-to-update.md).
-5. Optional extra governance or tooling: [profiles/README.md](profiles/README.md) — enable **only** by naming profiles in project `AGENTS.md`.
+1. Read [Lite adoption](docs/lite-adoption.md) and use the [project AGENTS.md template](templates/AGENTS.md) to record real project facts: purpose, build/tests, Git/deploy effects and sensitive operations.
+2. Add an **immutable ADS submodule pin** at `.ads` when you need shared versioned rules; see [bootstrap](skills/bootstrap/SKILL.md), [adopt](skills/adopt/SKILL.md) and [updates](docs/how-to-update.md). Existing projects keep their current integration until explicitly migrated.
+3. Implement a real task with the existing tools and relevant functional checks. Enable only the [optional profiles](profiles/README.md) you actually need; no separate security preflight or Docker requirement.
 
 ## Core rules
 
