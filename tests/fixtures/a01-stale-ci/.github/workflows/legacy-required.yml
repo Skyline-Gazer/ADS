@@ -1,0 +1,8 @@
+name: legacy-consumer-ci
+on:
+  push:
+jobs:
+  required:
+    runs-on: ubuntu-latest
+    steps:
+      - run: python3 scripts/stale_ci.py
