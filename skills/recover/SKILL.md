@@ -18,9 +18,9 @@ description: Resume work from real repository state, take over stale task chains
 
 ## 3. Delegation and safety
 
-If work was delegated, inspect child output, surviving worktrees/CI, and effective permissions rather than trusting the last child message. On containment failure, stop affected children, preserve attempted tool commands, and continue serially or in a verified sandbox — [native-subagent-safety.md](../../docs/native-subagent-safety.md).
+If work was delegated, inspect child output, surviving worktrees/CI and actual authorization; do not trust a child's claimed success. A missing host sandbox is advisory for normal development, not a reason to abandon or repeat the task. For explicitly hardened work follow [native-subagent-safety.md](../../docs/native-subagent-safety.md).
 
-Project-outside access remains unauthorized unless explicitly granted; missing Host enforcement is `BLOCKED` / `NOT_VERIFIED`, not PASS — [host-filesystem-boundary.md](../../docs/host-filesystem-boundary.md).
+Project-outside access remains unauthorized unless explicitly granted. Missing isolation is `ISOLATION_NOT_ENFORCED` / `NOT_VERIFIED`, never PASS and never an automatic ordinary development blocker — [host-filesystem-boundary.md](../../docs/host-filesystem-boundary.md).
 
 ## 4. Repair and converge
 
