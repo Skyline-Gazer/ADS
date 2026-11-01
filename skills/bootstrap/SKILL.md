@@ -7,7 +7,7 @@ description: Initialize a new software project with only the structure, tests, C
 Follow [lite adoption](../../docs/lite-adoption.md) unless the owner already enabled optional profiles in `AGENTS.md`.
 
 1. Read the user's goal, host restrictions and chosen ADS pin. Do not copy ADS governance or toolchain scripts by default.
-2. On local TUI hosts, apply [project-only filesystem containment](../../docs/host-filesystem-boundary.md) before broad filesystem or index discovery when sensitive data is at risk. Use synthetic probes; do not scan real personal directories.
+2. Honor the actual project access grant. [Host filesystem containment](../../docs/host-filesystem-boundary.md) is optional and is not a preflight for ordinary development. Never probe private folders to claim a sandbox pass.
 3. Discover what exists: native Skills, installed runtimes, lockfiles, declared scripts. Record **installed**, **configured**, **verified** with a short read-only scan.
 4. Infer the smallest runnable stack from findings; ask only for consequential product decisions.
 5. Create a minimal vertical slice with lockfile, build/test scripts, and CI only if it materially improves verification.
