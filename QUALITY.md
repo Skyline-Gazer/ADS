@@ -1,70 +1,33 @@
-# ADS Quality and Layered Verification
+# ADS — Outcome and Verification
 
-Version scope: **v0.7.0 development-first candidate (unreleased)**. Published tags remain immutable; consumers adopt only through an intentional reviewable update.
+Version: **v0.7 development-first candidate** (unreleased). Preserve historical evidence; do not re-score old failures to make a new release green.
 
-Choose checks from changed behavior, impact and consumers—not a mandatory test count. Docs: meaningful formatting/links. Ordinary code: impacted tests, types/lint/build as relevant. API/refactor: contract and integration tests. For sensitive changes, targeted checks may be needed; broad security audit suites are not routine development prerequisites. Don't mask transitive impact with path filters.
+## Process / State / Outcome
 
-## Process, State, and Outcome evidence
+Do not confuse the work attempted with the result delivered:
 
-Keep three evidence classes distinct when claiming progress or completion ([v0.6.0](docs/releases/v0.6.0.md)):
-
-| Class | Answers | Examples |
+| Evidence | What it establishes | What it does **not** establish |
 | --- | --- | --- |
-| **Process** | Was the operation invoked? | CLI/API exit 0, workflow started, Review job finished |
-| **State** | Did the system of record change? | Remote branch SHA, merged commit, published artifact digest |
-| **Outcome** | Does Acceptance for the Goal hold? | Behavior in the intended environment; material Review comments dispositioned on the **current** head |
+| **Process** | A tool, CI job or Review ran | The expected target changed |
+| **State** | A remote SHA, merge commit, artifact or deployed revision actually changed | The desired behavior works |
+| **Outcome** | The goal's Acceptance holds in its intended environment | Any untested production condition |
 
-A Process success is never automatic Outcome. After Git push/merge, Review, or deploy-shaped actions, **re-read** live state (remote SHA, Review head, target URL/behavior). Partial failure requires a state reread before the next repair. Label skipped live checks `NOT RUN` / `NOT_VERIFIED` / `BLOCKED` — never PASS by inference.
+Example: `git push` exit 0 is Process. Read-back of the branch SHA is State. Required functional tests and the correct merged behavior are Outcome within their tested scope. After partial failure, merge or deployment, query **live state again** before repairing or claiming completion (A04). An open PR is not a merge. A Review PASS on an older head with unresolved material comments is not acceptance (A03).
 
-CNB comment closure and fresh-head re-review remain defined in [cnb-review.md](docs/cnb-review.md); do not restate that workflow here.
+Report `NOT RUN`, `NOT_VERIFIED` or a precise actual blocker where appropriate; never infer PASS from a mock, missing provider integration, an agent's own summary, or green CI for unrelated behavior.
 
-## Environment and verification reuse
+## Proportionate checks, not a new release ritual
 
-Reuse the project's existing runtimes, declared test commands, fixtures and caches before adding a framework, container or service for the same purpose. Pick the lowest-cost check that can actually detect the changed behavior: one existing targeted test or scoped real run usually suffices, while an unbounded integration re-run adds cost without adding evidence.
+Choose the **smallest checks capable of detecting the change's risk**. Documentation: meaningful link/format checks. Ordinary code: affected tests, type/lint/build as relevant. API or runtime changes: their actual contracts and integrations. Existing hosted CI is generally preferred when it exercises the target behavior; use real preview/production only when needed and authorized. Do not create long-lived test environments, subscriptions, local Docker or extra CI merely because ADS has an example.
 
-Keep evidence classes distinct and report the one actually performed: local deterministic tests, reuse of an existing test facility, isolated live exercise against real dependencies and production validation are not interchangeable. Reusing a local facility never stands in for an unperformed live integration, and a missing capability is a stated boundary rather than an implicit pass.
+Keep required functional CI and material source-review findings. Optional security-only scans, SBOM, supply-chain attestations and isolation probes are advisory unless the consumer expressly opts into them. Existing required-check configuration must be changed honestly through a reviewed update; a failed or unrun check is never a PASS. Neither a passing mock nor a remote CI green light proves an untested live dependency.
 
-## Remote-first execution and verification
+## Agent integration and completion
 
-For projects with existing hosted CI, make that CI the primary authoritative automated check instead of requiring every agent session to recreate the full test environment locally. Use isolated target-platform preview/staging environments only when the changed behavior depends on the real runtime, bindings or external integration. Keep quick local checks optional; reuse an already-installed facility and do not provision a persistent per-project local stack by default.
+Parent agents integrate child code and re-check affected combined behavior; children cannot independently declare Goal completion. Parallel experiments and model/host speed comparisons are research, **not** delivery gates: historical protocols remain under [scenarios](scenarios/), and any claimed acceleration requires comparable baseline and observed end-to-end cost.
 
-Choose checks by changed behavior and cost, not by an assumption that every test must run remotely. A remote CI pass does not prove an unexercised target-platform integration; a preview deployment does not prove production behavior; a local mock does not prove a live dependency. Keep commit SHA, workflow run, deployment revision, test data boundary and cleanup evidence traceable. Use synthetic data and least-privilege credentials, preserve required gates, and never run destructive tests against production by default.
+Use the project/provider's actual PR and Review rules. For CNB, dispose of material CodeBuddy comments against the current head per [CNB review](docs/cnb-review.md); do not add a duplicate GitHub dev PR (A06). Reuse existing task PRs (A02), do not revive obsolete contracts merely to satisfy stale harnesses (A01), and do not mistake non-enforced isolation for a verified boundary (A05).
 
-When a needed remote environment is absent, do not stop at reporting the gap: provision the smallest fit-for-purpose hosted CI or ephemeral preview/test environment autonomously when the existing credentials, permissions, quotas, budget and task authorization permit it. Prefer repo-native CI and provider-native preview capabilities over a new permanent service. If creation crosses a real authorization boundary (new recurring spend, plan upgrade, elevated IAM, missing owner-only credentials, production access or long-lived infrastructure), request only the specific missing user action, keep working on independent safe tasks, and report what remains unverified. Use local fallback only when remote execution is not needed or cannot be provisioned within scope. Start CI early and work on independent tasks while it runs to reduce perceived latency.
+When completing work, state the actual branch/PR/merge SHA, relevant tests/CI, review disposition, deployment scope, known limitations and any unverified outcome. Update project boards or close Issues only for requirements proved complete. A good report is short; an evidence archive or milestone receipt is not a requirement of ordinary ADS Lite work.
 
-See [scenarios/remote-first-verification.md](scenarios/remote-first-verification.md) for decision order and acceptance cases.
-
-## Optional profile: consumer developer-toolchain checks
-
-When the project enables the [consumer developer toolchain profile](profiles/consumer-devtoolchain/README.md), validate CodeGraph and the full RTK edition as required development capabilities. Check the official latest stable releases dynamically; do not treat an old pinned version as current. The consumer project must initialize the tools on a development branch and prove the active host integration works. Prefer CodeGraph native auto-sync, verify index freshness before graph-dependent analysis, and use explicit sync/status for recovery or when automatic reconciliation is unhealthy. A deterministic guard must reject consumer tool configuration, generated indexes/caches and binaries from the production branch and release artifacts. The generic guard itself may remain on production main because it does not configure either tool. These requirements apply to ADS consumers, not to the ADS standards repository. See [consumer-dev-toolchain.md](docs/consumer-dev-toolchain.md).
-
-## Multi-agent integration and efficiency evidence
-
-A child agent's summary, self-tested branch or reviewer finding is input to the main agent, not final verification. The main agent checks the combined diff, re-runs affected contract/integration checks after merging independent changes and reports skipped or unavailable checks. A delegated security review cannot widen authorization, and an AI-only review is not a substitute for deterministic CI. Never claim native Subagent permission containment without the matching host/child negative evidence; worktrees alone do not prove it. For ordinary work this evidence is optional and its absence must not block coding. Preserve an actual observed unauthorized read/write as a finding, not a PASS.
-
-For research claims about multi-agent efficiency (never a consumer delivery gate), compare against a **single-agent baseline** with the same goal, pinned code, test criteria and reasonably comparable host/model/tool permissions. Measure end-to-end wall time (including startup, integration, reruns and recovery), observable tokens/cost, independently verified outcome, retries and merge conflicts. Separate independent subtasks from coupled negative cases. Record missing metering as **NOT OBSERVED**, and absent or unexercised native capabilities as **NOT TESTED**, never zero cost or PASS. Compare multiple trials where practical and do not assert a universal speedup from one fixture. The native acceptance protocol is [scenarios/v0.3-multi-agent-acceptance.md](scenarios/v0.3-multi-agent-acceptance.md). To attribute efficiency to model choice, use the [controlled host/model matrix](scenarios/v0.3-subagent-model-matrix.md): verify the *actual* model used by the parent and every child, hold the host/fixture/sandbox constant for within-host contrasts, then attempt matched cross-host routes only if objectively available. Historical cross-host runs using different models are not a model-controlled comparison; unsafe or incorrect samples cannot establish speedup.
-
-
-
-1. **Local:** deterministic tests, fixtures and mocks for fast feedback.
-2. **Integration:** real dependencies in an authorized isolated/test environment when behavior actually depends on them.
-3. **Production:** only when authorized and necessary; distinguish deployment success, service health and real-world functional validation.
-
-Report each layer actually performed; a mocked test never proves live integration. Lack of live access is an unverified boundary, not success or automatic failure of unrelated code.
-
-## Milestone and ADS upgrade verification
-
-At Phase closure compare actual GitHub Project item fields and linked Issues against PR/CI, target commit and relevant contract/security evidence. Correct Project status drift only on verified facts, and distinguish historical acceptance FAIL/PARTIAL from evidence archived successfully. If the Project cannot be queried, record PROJECT_UNVERIFIED rather than silently declaring alignment.
-
-A consumer ADS submodule upgrade requires validating the old and new recorded gitlink commits, the upstream guideline diff, local AGENTS.md and native Skill discoverability, plus tests relevant to behavioral/safety changes. A passing ADS source repository CI cannot by itself prove that the consumer's upgraded project works. See [docs/milestone-reconciliation.md](docs/milestone-reconciliation.md) and [docs/how-to-update.md](docs/how-to-update.md).
-
-## Git governance and delivery evidence
-
-Follow the [Git development governance policy](docs/git-governance.md) when working in ADS itself or when the consumer enabled the [strict Git governance profile](profiles/strict-git-governance/README.md). Issue closure, PR merge, deployment and production validation are distinct evidence states. A workflow run is not server-side branch protection: verify required-check and protection settings separately when that profile is active, and disclose when the host/plan cannot enforce them.
-
-
-## CI and review
-
-Keep the repository's relevant required functional checks blocking and resolve actionable functional defects. Optional SCA/SBOM/license/isolation checks do not become required solely through ADS. Do not misreport a failed check as PASS or silently bypass an existing required check; change required-check policy in a reviewed PR if the owner has authorized making it advisory. Advisory AI reviews and irrelevant external review-service outages are not automatic blockers. Increase review rigor with change risk; routine low-risk code need not have two independent reviewers. Choose review tooling only after inspecting existing host capability; the v0.3 decision record is [docs/code-review-options.md](docs/code-review-options.md) and no third-party review service is required. Resolve concrete blocking findings, accurately report known limitations, then deliver under STANDARD.md and SAFETY.md.
-
-When the consumer toolchain profile is enabled, acceptance must cover missing tools without installation, uninitialized and healthy repeat sessions, controlled stale-index recovery, wrong edition/provenance, wrong worktree, source-channel failure, and clean/contaminated production trees and actual outputs. Fixed historical consumer snapshots test compatibility only; latest official releases are observed dynamically. Never label CI stdio MCP as native Agent Host verification.
+Optional consumer tooling (CodeGraph, RTK), strict branch rules and lifecycle receipts are governed only by explicitly enabled [profiles](profiles/README.md); do not copy their checks into a default consumer.
