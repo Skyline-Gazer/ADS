@@ -1,75 +1,25 @@
 ---
 name: deliver
-description: Execute an authorized software goal with adaptive path selection, real-state verification, and convergence inside existing authorization.
+description: Finish a scoped software goal using existing tools, relevant functional checks and real-state verification.
 ---
-# Goal-driven delivery (Adaptive Goal Execution)
+# Deliver a goal
 
-Design constraint: keep ADS Lite — no new framework, no mandatory ceremony beyond a short Goal Contract when useful.
+## Understand and act
 
-## 1. Goal Contract (session-local)
+Reuse the user's request or Issue/PR for the Goal, invariants, Acceptance, scope and real stop conditions. State a short session-local version only when complexity warrants it; do not create a mandatory contract file. Inspect the actual repository, open PRs, tools and tests, then make the **smallest change** that achieves the result. An obsolete fixture never licenses restoring a retired feature merely to green CI (A01).
 
-Before meaningful edits, state a compact contract in the session (or reuse clear Issue/PR text). **Do not** create a new file for ordinary tasks.
+Adapt the implementation path when it fails, not the Goal. Start relevant hosted CI early when available; use native subagents for independent work only when useful. Their worktree is not an OS sandbox, their claims are not verification and their delegation cannot broaden authorization.
 
-| Field | Meaning |
-| --- | --- |
-| Goal | What must be true when done |
-| Invariants | What must not change (security, deprecated contracts, production) |
-| Acceptance | How completion is proved (matched to task risk) |
-| Scope | Allowed resources / paths / operations |
-| Adaptation | What implementation details may change |
-| Stop | When to stop or ask (actual authorization, required functional acceptance) |
+## Default is development-first
 
-If a proposed path would violate an Invariant, change architecture for its own sake, revive a deprecated contract, switch Provider, or widen privilege, **stop** and realign to the Goal — do not silently drift.
+ADS is **not** a sandbox. No Docker daemon, host isolation, negative probe, SCA/SBOM or security-only review is required for ordinary authorized coding, PRs or merges. Report unavailable isolation as `ISOLATION_NOT_ENFORCED` / `NOT_VERIFIED`, never PASS or an automatic `BLOCKED`. Avoid unapproved external paths, secrets, production changes and spending. Apply stricter isolation only when the project expressly enables it.
 
-## 2. Path: environment first, then adapt
+## Verify, converge and report
 
-Reuse installed runtimes, declared scripts, hosted CI, and native Skills. Prefer the smallest existing facility.
+1. Run checks relevant to changed behavior and respect the **project's existing** functional CI and Review rules. A green tool exit is Process, a live remote SHA is State, and verified Acceptance is Outcome ([QUALITY](../../QUALITY.md)).
+2. Find and take over the existing branch/PR for the same goal before opening another (A02). Resolve material review comments against the current head, not an older Review PASS (A03).
+3. After failed partial operations, pushes, reviews and merges, reread actual remote state before proceeding (A04). Use the configured provider's native process; CNB Primary and GitHub Mirror are not duplicate development PRs (A06).
+4. Merge only within the actual grant and configured required checks; production deploy, provider cutover, elevated IAM, secrets and remote destruction require separate authorization. Close Issues only when Acceptance is proved.
+5. Report what truly happened: implemented, tests, PR link/current SHA, merged/not merged, deployed/not deployed, verified/unverified target. Do not stop at PR creation if a permitted next step remains.
 
-When the current path fails, classify and act:
-
-| Class | Action |
-| --- | --- |
-| Fixable technical fault | Narrow repair; re-verify |
-| Environment mismatch | Switch to a documented alternate that still meets Acceptance (e.g. remote CI instead of heavy local) |
-| Auth / safety / Provider ceiling | Request the exact missing Owner action; continue only independent safe work |
-
-Do not treat permission denial or missing production authority as a prompt to bypass. Same strategy with no new evidence → stop mechanical retries; re-diagnose.
-
-## 3. Evidence: Process / State / Outcome
-
-Report which class you actually have ([QUALITY.md](../../QUALITY.md)):
-
-- **Process** — the operation was invoked (API/CLI exited)
-- **State** — the system of record changed (remote SHA, branch tip, artifact)
-- **Outcome** — the Goal’s Acceptance holds in the target that matters
-
-Command Success, Review `passed`, or CI green alone is Process (or partial State), not Outcome. After Git/Review/merge, **re-read** live refs and Review HEAD. After partial failure, re-read actual state before the next edit.
-
-For CNB Primary comment disposition and fresh-head re-review, follow [cnb-review.md](../../docs/cnb-review.md) — do not duplicate it here.
-
-## 4. Implement and verify
-
-1. Follow Git rules in project `AGENTS.md`. ADS itself, or projects that enable [strict-git-governance](../../profiles/strict-git-governance/README.md), follow [git-governance.md](../../docs/git-governance.md).
-2. ADS does not provide host isolation. [Filesystem containment](../../docs/host-filesystem-boundary.md) is optional; missing Docker, sandbox or synthetic probes must not block ordinary authorized coding. Report unverified enforcement accurately without treating instructions as an OS boundary.
-3. Minimum sufficient change; native subagents only when overlap wins — [native-subagent-safety.md](../../docs/native-subagent-safety.md). Main agent owns integration and final verification.
-4. Run the lowest-cost checks that can detect the changed behavior. Do not claim mocks prove live integration.
-
-## 5. Convergence (authorized closure)
-
-Default end state is **not** “PR opened.” Inside existing authorization:
-
-1. Prefer one task branch/PR; before opening another, search for an open PR/branch for the same Goal and **take over**.
-2. Drive CI and material review comments to closure on the **current** head SHA.
-3. Merge when already authorized, low risk, required checks pass, and review gates for this Provider are satisfied.
-4. Re-read the target branch SHA after merge. Close Issues / update Project only for work that Acceptance actually proves.
-5. Stop at `BLOCKED_WITH_EVIDENCE` when a real ceiling remains.
-
-**Convergence never authorizes:** production deploy, Provider switch, IAM/secret expansion, unrelated file access or bypassing existing functional CI/Review requirements “to finish.”
-
-## Optional profiles
-
-- Strict lifecycle: [execution-and-drift-governance.md](../../docs/execution-and-drift-governance.md) when listed in `AGENTS.md`
-- Consumer toolchain: [consumer-dev-toolchain.md](../../docs/consumer-dev-toolchain.md) when listed
-- CNB Primary: [git-provider.md](../../docs/git-provider.md), [cnb-review.md](../../docs/cnb-review.md), [cnb-sync.md](../../docs/cnb-sync.md) — no duplicate GitHub development PRs
-
-No per-stage approval ritual or second evidence archive.
+See [SAFETY](../../SAFETY.md), [CNB review](../../docs/cnb-review.md) when applicable and [optional profiles](../../profiles/README.md). No second tracker or review ceremony.
