@@ -22,4 +22,4 @@ ADS is **not** a sandbox. No Docker daemon, host isolation, negative probe, SCA/
 4. Merge only within the actual grant and configured required checks; production deploy, provider cutover, elevated IAM, secrets and remote destruction require separate authorization. Close Issues only when Acceptance is proved.
 5. Report what truly happened: implemented, tests, PR link/current SHA, merged/not merged, deployed/not deployed, verified/unverified target. Do not stop at PR creation if a permitted next step remains.
 
-See [SAFETY](../../SAFETY.md), [CNB review](../../docs/cnb-review.md) when applicable and [optional profiles](../../profiles/README.md). No second tracker or review ceremony.
+Follow the project's root `AGENTS.md`; strict-git-governance consumers and ADS contributors follow [Git governance](../../docs/git-governance.md). See [SAFETY](../../SAFETY.md), [CNB review](../../docs/cnb-review.md) when applicable and [optional profiles](../../profiles/README.md). No second tracker or review ceremony.
