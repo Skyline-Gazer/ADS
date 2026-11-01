@@ -7,7 +7,7 @@ description: Adopt ADS in an existing codebase or simplify legacy Trellis, Comet
 Default path: [lite adoption](../../docs/lite-adoption.md). Do not auto-change Provider, remotes, or the ADS gitlink.
 
 1. Inventory existing AGENTS.md, hooks, CI, deployment triggers and issue/PR habits. Separate executable controls from Markdown-only descriptions.
-2. On local TUI adoption, apply [host filesystem boundary](../../docs/host-filesystem-boundary.md) before sensitive discovery when personal data could be exposed.
+2. Honor authorized project scope; [host isolation](../../docs/host-filesystem-boundary.md) is opt-in and its absence must not stop ordinary adoption or coding.
 3. Inspect host-native Skills, runtimes and working test commands; reuse before replacing.
 4. Prefer a pinned ADS submodule at `.ads`; migrate from vendored copies on an isolated branch ([how-to-update.md](../../docs/how-to-update.md)).
 5. Render or update root `AGENTS.md` from [templates/AGENTS.md](../../templates/AGENTS.md) with project facts and `.ads` rule pointers.
