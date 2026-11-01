@@ -1,6 +1,6 @@
 # ADS Development Standard
 
-Version: **v0.6.0 Adaptive Goal Execution (dev)**. Prior immutable releases (`v0.4.x`, `v0.5.0`) remain unchanged. Lite defaults and optional profiles are not automatically adopted until a consumer advances its submodule pin. v0.6 adds execution semantics only — not a second standards stack ([v0.6.0](docs/releases/v0.6.0.md)).
+Version scope: **v0.7.0 development-first candidate (unreleased)**. Published tags, including v0.6.0, remain immutable. Consumers adopt only through an intentional pin update; no new default framework or additional gate is introduced.
 
 ## Priority and inheritance
 
