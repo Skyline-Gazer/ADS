@@ -19,7 +19,7 @@ Sensitive operations: <what needs explicit owner approval>
 
 ## Working agreement
 
-Implement minimum sufficient changes for the current goal. Verify with the project's existing tests and CI when relevant. Prefer reusing installed runtimes and declared scripts before adding tooling. Ask once for a concrete missing permission; continue independent safe work inside scope. No extra task database, session journal, or per-phase approval ritual.
+Implement minimum sufficient changes for the current goal. Verify with the project's existing functional tests and CI when relevant. Host isolation, Docker, SCA/SBOM and security-only audits are optional unless this project explicitly enables them; missing evidence must be reported honestly but must not block ordinary development. ADS is not an OS sandbox. Prefer existing runtimes before adding tooling. Ask once for a concrete missing permission; continue independent safe work inside scope. No extra task database, session journal, or per-phase approval ritual.
 
 Optional ADS profiles (enable only when listed here):
 
