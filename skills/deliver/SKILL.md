@@ -17,7 +17,7 @@ Before meaningful edits, state a compact contract in the session (or reuse clear
 | Acceptance | How completion is proved (matched to task risk) |
 | Scope | Allowed resources / paths / operations |
 | Adaptation | What implementation details may change |
-| Stop | When to stop or ask (auth, isolation, missing live evidence) |
+| Stop | When to stop or ask (actual authorization, required functional acceptance) |
 
 If a proposed path would violate an Invariant, change architecture for its own sake, revive a deprecated contract, switch Provider, or widen privilege, **stop** and realign to the Goal — do not silently drift.
 
@@ -50,7 +50,7 @@ For CNB Primary comment disposition and fresh-head re-review, follow [cnb-review
 ## 4. Implement and verify
 
 1. Follow Git rules in project `AGENTS.md`. ADS itself, or projects that enable [strict-git-governance](../../profiles/strict-git-governance/README.md), follow [git-governance.md](../../docs/git-governance.md).
-2. Before access-sensitive local TUI work, apply [host-filesystem-boundary.md](../../docs/host-filesystem-boundary.md). Markdown prohibitions are not an OS sandbox; missing enforcement is `PROMPT_ONLY` / `BLOCKED` / `NOT_VERIFIED`.
+2. ADS does not provide host isolation. [Filesystem containment](../../docs/host-filesystem-boundary.md) is optional; missing Docker, sandbox or synthetic probes must not block ordinary authorized coding. Report unverified enforcement accurately without treating instructions as an OS boundary.
 3. Minimum sufficient change; native subagents only when overlap wins — [native-subagent-safety.md](../../docs/native-subagent-safety.md). Main agent owns integration and final verification.
 4. Run the lowest-cost checks that can detect the changed behavior. Do not claim mocks prove live integration.
 
@@ -64,7 +64,7 @@ Default end state is **not** “PR opened.” Inside existing authorization:
 4. Re-read the target branch SHA after merge. Close Issues / update Project only for work that Acceptance actually proves.
 5. Stop at `BLOCKED_WITH_EVIDENCE` when a real ceiling remains.
 
-**Convergence never authorizes:** production deploy, Provider switch, IAM/secret expansion, or skipping safety/Review gates “to finish.”
+**Convergence never authorizes:** production deploy, Provider switch, IAM/secret expansion, unrelated file access or bypassing existing functional CI/Review requirements “to finish.”
 
 ## Optional profiles
 
