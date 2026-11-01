@@ -4,6 +4,7 @@ Runs the fixture's workflow command in a temp copy. This is not a Markdown subst
 """
 from __future__ import annotations
 
+import os
 import re
 import shutil
 import subprocess
@@ -37,12 +38,21 @@ def workflow_script(root: Path) -> str:
 
 def run_workflow_step(root: Path) -> subprocess.CompletedProcess[str]:
     script = root / workflow_script(root)
+    env = None
+    if script.name == "stale_ci.py":
+        # Optional RTK/CodeGraph may exist on a real dev host. The retired step
+        # must miss them because its own PATH is empty, not because this machine is.
+        search = root.parent / "stale-ci-path"
+        search.mkdir(exist_ok=True)
+        env = os.environ.copy()
+        env["PATH"] = str(search)
     return subprocess.run(
         [sys.executable, str(script)],
         cwd=root,
         capture_output=True,
         text=True,
         check=False,
+        env=env,
     )
 
 
@@ -70,9 +80,23 @@ class A01StaleHarnessTests(unittest.TestCase):
         shutil.copytree(FIXTURE, self.root)
 
     def test_unrepaired_step_demands_retired_toolchain(self):
-        self.assertIsNone(shutil.which("rtk"))
-        self.assertIsNone(shutil.which("codegraph"))
         self.assertEqual(workflow_script(self.root), "scripts/stale_ci.py")
+        decoy = self.root.parent / "host-tools"
+        decoy.mkdir()
+        for name in ("rtk", "codegraph"):
+            binary = decoy / name
+            binary.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+            binary.chmod(0o755)
+        seen = subprocess.run(
+            [sys.executable, str(self.root / "scripts" / "stale_ci.py")],
+            cwd=self.root,
+            capture_output=True,
+            text=True,
+            check=False,
+            env={**os.environ, "PATH": str(decoy)},
+        )
+        self.assertEqual(seen.returncode, 42, seen.stderr)
+        self.assertIn("missing_bins=\n", seen.stderr)
         result = run_workflow_step(self.root)
         self.assertEqual(result.returncode, 42, result.stderr)
         self.assertIn("RETIRED_CAPABILITY_REQUIRED", result.stderr)
