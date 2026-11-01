@@ -37,7 +37,7 @@ Lite removes unnecessary script copies and ceremony. It does **not** remove, for
 
 - Task branches, PRs, Review, CI, Agent repair, and owner-authorized merge loops
 - CNB Primary CodeBuddy comment disposition, current-SHA re-review, CI, and Agent-initiated **manual** merge ([cnb-review.md](cnb-review.md))
-- Host/OS safety boundaries in [SAFETY.md](../SAFETY.md) and [host-filesystem-boundary.md](host-filesystem-boundary.md)
+- Actual authorization limits in [SAFETY.md](../SAFETY.md). Host/OS isolation in [host-filesystem-boundary.md](host-filesystem-boundary.md) is optional, not a prerequisite for ordinary coding or PRs.
 
 ## ADS repository itself
 
