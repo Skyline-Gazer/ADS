@@ -2,13 +2,13 @@
 
 **Status: normative default for projects adopting ADS.**
 
-ADS is a short, agent-readable rule set—not a second application copied into your repository. The default path keeps coupling low so feature work stays on your product code.
+ADS is lightweight agent guidance, not a separate application. **Either a self-contained project-root `AGENTS.md` or a project-root `AGENTS.md` plus a pinned `.ads` submodule is a valid Lite entry.** Choose one intentionally; neither requires new tooling, a Docker host or a security preflight.
 
 ## What lite adoption includes
 
-1. **Pinned submodule** at `.ads` (or another free path) pointing to an approved ADS release or commit.
-2. **Root `AGENTS.md`** rendered from [templates/AGENTS.md](../templates/AGENTS.md) with **project facts only**: purpose, build/test commands, deployment triggers, sensitive operations, and pointers to `.ads/STANDARD.md`, `.ads/SAFETY.md`, `.ads/QUALITY.md`.
-3. **Optional native Skill exposure** by copying or linking only the ADS skills you use (`bootstrap`, `adopt`, `deliver`, `recover`) into the host's documented skill path—after a harmless discovery test.
+1. **Standalone:** copy [templates/AGENTS.md](../templates/AGENTS.md) to project root, fill real project facts, commit the file. Its working agreement is self-contained; no `.ads` directory or further rule files are needed for ordinary development. The project's own Git commit is the immutable version of the copied instructions.
+2. **Pinned:** use the same root template plus an optional `.ads` submodule at an approved immutable ADS commit/tag. The template then points to `STANDARD.md`, `SAFETY.md`, `QUALITY.md` inside that exact gitlink. No auto-update.
+3. **Optional native Skills:** expose only needed Skills (`bootstrap`, `adopt`, `deliver`, `recover`) through the host's supported discovery path. Neither entry requires native Skills or a package installation.
 
 That is sufficient for autonomous agent development on most personal projects.
 
@@ -27,9 +27,11 @@ Use whatever branch and PR habit the **project `AGENTS.md`** declares. Lite temp
 
 If the owner wants ADS-style `dev` + Issue-linked PRs, enable the [strict Git governance profile](../profiles/strict-git-governance/README.md) in `AGENTS.md`—do not infer it from ADS alone.
 
-## Submodule updates
+## Updates
 
-Follow [how-to-update.md](how-to-update.md): one reviewable PR that advances the `.ads` gitlink when the owner approves. Do not auto-track ADS `main`. Updating ADS does not require upgrading optional profile scripts unless the owner uses those profiles.
+Standalone: update the project-root `AGENTS.md` through an ordinary reviewed project change, comparing relevant new guidance with the project's existing requirements. No external ADS fetch is needed to keep working on the current copy.
+
+Pinned submodule: follow [how-to-update.md](how-to-update.md): one reviewable PR advancing the `.ads` gitlink when the owner approves. Do not auto-track ADS `main`. Optional profile scripts update only if those profiles are enabled.
 
 ## What lite still preserves
 
@@ -37,10 +39,10 @@ Lite removes unnecessary script copies and ceremony. It does **not** remove, for
 
 - Task branches, PRs, Review, CI, Agent repair, and owner-authorized merge loops
 - CNB Primary CodeBuddy comment disposition, current-SHA re-review, CI, and Agent-initiated **manual** merge ([cnb-review.md](cnb-review.md))
-- Host/OS safety boundaries in [SAFETY.md](../SAFETY.md) and [host-filesystem-boundary.md](host-filesystem-boundary.md)
+- Actual authorization limits in [SAFETY.md](../SAFETY.md). Host/OS isolation in [host-filesystem-boundary.md](host-filesystem-boundary.md) is optional, not a prerequisite for ordinary coding or PRs.
 
 ## ADS repository itself
 
 Contributing to ADS still follows [git-governance.md](git-governance.md) in full. The ADS repo keeps both `dev` (general) and `cnb/dev` (CNB-specialized integration) lines; Lite lands on `dev` first, then integrates into `cnb/dev` without force-overwriting CNB workflow specialty. That dual-line requirement does not automatically apply to lite consumers.
 
-Consumers pin a **single** published release (for example v0.5.0)—there is no separate `v0.5.0-cnb` tag.
+Pinned consumers use one approved immutable release/commit (never a floating `cnb/dev` tag); standalone consumers version their copied `AGENTS.md` in the project itself. CNB specialization is integrated into the shared ADS rules, not released as a separate tag.

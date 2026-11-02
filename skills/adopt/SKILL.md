@@ -1,22 +1,13 @@
 ---
 name: adopt
-description: Adopt ADS in an existing codebase or simplify legacy Trellis, Comet, OpenSpec and agent workflows without weakening real safeguards.
+description: Adopt ADS in an existing project by preserving working workflows and removing unnecessary agent ceremony.
 ---
-# Adopt ADS safely
+# Adopt into an existing repository
 
-Default path: [lite adoption](../../docs/lite-adoption.md). Do not auto-change Provider, remotes, or the ADS gitlink.
+1. Inspect the existing `AGENTS.md`, source structure, hooks, CI, Git provider, deployment triggers and current build/tests. Do not mistake an instructional warning for an enforced security boundary.
+2. Preserve working architecture and user/project choices. Use a self-contained root [AGENTS.md](../../templates/AGENTS.md) as the standalone Lite entry; **do not require a submodule**. If the project chooses extended ADS rules, pin `.ads` to an immutable reviewed SHA and update by PR. Existing project integrations take precedence.
+3. **Do not** auto-activate strict Git, CodeGraph, RTK, lifecycle receipts, SCA/SBOM, Docker or host isolation. Existing project requirements remain as configured. Missing security-only extras are advisory, not a reason to stop ordinary feature work.
+4. Remove redundant copied rules or hooks only after checking what they actually enforce. Changing a required CI check needs an authorized, reviewable update; never conceal a failed check.
+5. Prove compatibility with one representative real task or affected project test, and distinguish Process/State/Outcome in the report.
 
-1. Inventory existing AGENTS.md, hooks, CI, deployment triggers and issue/PR habits. Separate executable controls from Markdown-only descriptions.
-2. On local TUI adoption, apply [host filesystem boundary](../../docs/host-filesystem-boundary.md) before sensitive discovery when personal data could be exposed.
-3. Inspect host-native Skills, runtimes and working test commands; reuse before replacing.
-4. Prefer a pinned ADS submodule at `.ads`; migrate from vendored copies on an isolated branch ([how-to-update.md](../../docs/how-to-update.md)).
-5. Render or update root `AGENTS.md` from [templates/AGENTS.md](../../templates/AGENTS.md) with project facts and `.ads` rule pointers.
-6. Enable optional profiles **only** when the owner names them in `AGENTS.md` ([profiles/README.md](../../profiles/README.md)): strict Git, consumer toolchain, strict lifecycle.
-7. Remove obsolete mandatory hooks or duplicated policy **only** after understanding operational effect; preserve legitimate security and release gates.
-8. Validate with one small real task or rehearsal; report checks not run.
-
-Never silently rewrite production configs, rotate credentials, or merge high-risk migrations without scoped authorization.
-
-## Provider note
-
-Read [provider selection](../../docs/git-provider.md). CNB adoption follows [CNB review](../../docs/cnb-review.md) only when the owner configured CNB Primary.
+Keep existing provider/remotes and deployed resources unchanged without a separate grant. Use [lite](../../docs/lite-adoption.md), [provider selection](../../docs/git-provider.md) and [scope](../../SAFETY.md).

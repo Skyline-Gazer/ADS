@@ -1,23 +1,13 @@
 ---
 name: bootstrap
-description: Initialize a new software project with only the structure, tests, CI and guidance justified by its goals and stack.
+description: Create the smallest runnable project and adopt ADS without mandatory runtime, sandbox or extra governance.
 ---
-# Bootstrap a new project
+# Bootstrap
 
-Follow [lite adoption](../../docs/lite-adoption.md) unless the owner already enabled optional profiles in `AGENTS.md`.
+1. Define the user's goal, stack constraints and actual authorization. Inspect the target project/host for existing code, lockfiles, native Skills, toolchain and CI; reuse before installing anything.
+2. Create only the minimal runnable vertical slice, declared build/test commands and tests able to detect the intended behavior. Add CI only if its value is real; do not force Docker, remote infrastructure or a second task system.
+3. Use the self-contained project-root [AGENTS.md template](../../templates/AGENTS.md), recording real project facts and permissions. **Standalone requires no `.ads` checkout.** Add a pinned `.ads` submodule only if the project explicitly chooses the extended-rules entry; never follow moving branches.
+4. Additional [profiles](../../profiles/README.md) and their scripts are **opt-in**. A missing OS sandbox, security audit, CodeGraph or RTK never prevents ordinary development. Do not misrepresent prompt-only restrictions as effective isolation.
+5. Run the smallest relevant functional check and report actual evidence, not assumed PASS.
 
-1. Read the user's goal, host restrictions and chosen ADS pin. Do not copy ADS governance or toolchain scripts by default.
-2. On local TUI hosts, apply [project-only filesystem containment](../../docs/host-filesystem-boundary.md) before broad filesystem or index discovery when sensitive data is at risk. Use synthetic probes; do not scan real personal directories.
-3. Discover what exists: native Skills, installed runtimes, lockfiles, declared scripts. Record **installed**, **configured**, **verified** with a short read-only scan.
-4. Infer the smallest runnable stack from findings; ask only for consequential product decisions.
-5. Create a minimal vertical slice with lockfile, build/test scripts, and CI only if it materially improves verification.
-6. Add ADS as a pinned submodule at `.ads` ([how-to-update.md](../../docs/how-to-update.md)); verify clone access without embedding secrets in `.gitmodules`.
-7. Render [templates/AGENTS.md](../../templates/AGENTS.md) at the repository root with actual commands, deploy effects and sensitive-operation boundaries.
-8. Copy optional profile assets **only** when listed in the rendered `AGENTS.md` ([profiles/README.md](../../profiles/README.md)).
-9. Validate with the lowest-cost checks that detect real behavior; prefer existing remote CI when available ([remote-first verification](../../scenarios/remote-first-verification.md)).
-
-Output: code-ready project and a concise summary. No multi-stage approval workflow.
-
-## Provider note
-
-Read [provider selection](../../docs/git-provider.md) before GitHub-specific automation. Preserve existing remotes unless the owner chooses otherwise.
+Keep existing Git provider and remote setup unless the owner separately authorizes a change. See [lite](../../docs/lite-adoption.md) and [provider selection](../../docs/git-provider.md). No multi-stage bootstrap approvals or automatic production changes.
