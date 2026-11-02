@@ -2,7 +2,7 @@
 
 ADS is a **lightweight development convention**, not an orchestration system, approval engine, task database or OS sandbox. Its purpose is to help coding agents finish an authorized goal, verify what actually changed and avoid unnecessary development blockers.
 
-**Version status:** `v0.7.0 Simplify to Deliver` is a **candidate**, not a published release. Its reduced core is merged to [`dev`](https://github.com/Skyline-Gazer/ADS/pull/110) and synchronized into CNB-specialized [`cnb/dev`](https://github.com/Skyline-Gazer/ADS/pull/111). [Release candidate PR #112](https://github.com/Skyline-Gazer/ADS/pull/112) remains unmerged. Consult [GitHub Releases](https://github.com/Skyline-Gazer/ADS/releases) for a published immutable tag and pin that tag or full commit SHA; never track a moving development branch without an explicit project decision.
+**Version status:** [v0.7.0 Simplify to Deliver](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.7.0) is **published**. [Release PR #112](https://github.com/Skyline-Gazer/ADS/pull/112) merged to `main`; the immutable release commit is `42ba05c6b6707690702689988c352d4d3a3cde6e`. Pin the published tag or full commit SHA; consumer updates remain separate reviewable changes. CNB-specific post-release guidance landed separately in [PR #118](https://github.com/Skyline-Gazer/ADS/pull/118) on `cnb/dev`.
 
 **Default is development-first:** no Docker/VM/OS sandbox, SCA/SBOM/license inventory, security-only reassessment or extra CI is required just to develop ordinary project code. These are opt-in hardening capabilities. ADS does **not** enforce filesystem/process isolation, and an agent must still respect actual task scope, host/tool denials, secrets and consequential production/privilege/spending authorization.
 
