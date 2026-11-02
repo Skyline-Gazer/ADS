@@ -10,6 +10,31 @@ ADS is a **lightweight development convention**, not an orchestration system, ap
 
 **License:** [MIT](LICENSE).
 
+## One-message agent adoption + Mission
+
+In an existing project, send your coding agent **one request**. Replace only the last line with your goal or a reference to an existing Plan, Spec, Issue or Project; no special task format or separate ADS installer is needed:
+
+```text
+Adopt ADS Lite from https://github.com/Skyline-Gazer/ADS at its current published release.
+Inspect this project first: existing AGENTS.md, source, build/tests, Git provider, PR/CI,
+deployment effects and permissions. Read that ADS release's templates/AGENTS.md and
+docs/lite-adoption.md. Reconcile the project's root AGENTS.md with verified facts,
+preserving local rules. Prefer standalone unless this project already uses or I explicitly
+request a pinned .ads submodule. Do not follow an unpinned ADS branch, change remotes,
+enable optional governance/tools, or touch production as a side effect of adoption.
+Then implement and verify my Mission using this project's existing workflow. Accept the
+input as-is (freeform/Plan/Spec/Issue/Project), infer reversible technical details from
+the repository, and do not demand another specification format. Continue through tests,
+review feedback, PR and authorized merge when available. Ask only for a truly missing
+owner preference or consequential authorization. If the Mission authorizes a backlog,
+keep taking the next unblocked item; otherwise finish and report the actual outcome.
+Mission: <my request or link to existing project requirements>
+```
+
+This is an **instruction to the agent**, not a new ADS runner. An agent that cannot read
+the release or lacks a required host permission must report the specific limitation
+instead of claiming that adoption or delivery succeeded.
+
 ## Start here
 
 1. Read [Lite adoption](docs/lite-adoption.md) and use the [project AGENTS.md template](templates/AGENTS.md) to record real project facts: purpose, build/tests, Git/deploy effects and sensitive operations.
