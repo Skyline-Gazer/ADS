@@ -19,7 +19,7 @@ Adopt ADS Lite from https://github.com/Skyline-Gazer/ADS at its current publishe
 release, unless this request names an exact ADS commit SHA for a pilot. Do not substitute
 a moving branch or the published release when an exact pilot SHA is specified.
 Inspect this project first: existing AGENTS.md, source, build/tests, Git provider, PR/CI,
-deployment effects and permissions. Read that ADS release's templates/AGENTS.md and
+deployment effects and permissions. Read that exact ADS revision's templates/AGENTS.md and
 docs/lite-adoption.md. Reconcile the project's root AGENTS.md with verified facts,
 preserving local rules. Prefer standalone unless this project already uses or I explicitly
 request a pinned .ads submodule. Do not follow an unpinned ADS branch, change remotes,
