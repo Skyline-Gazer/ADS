@@ -1,8 +1,12 @@
-# TEMPLATE ONLY: copy to consumer .cnb.yml through a dev-targeting PR.
+# OPTIONAL FEEDBACK TEMPLATE: integrate into existing consumer .cnb.yml if wanted.
+# Single-maintainer dev needs no mandatory protection or per-change approval.
+# Strict Git governance and its deterministic review gate are explicit opt-ins;
+# see docs/cnb-review.md. Existing required checks must not be silently bypassed.
 # Review image v1.22.2 is an official upstream tag observed 2026-10-26.
 # Verify/pin immutable image provenance at adoption; do not assume tag immutability.
 # This pipeline is designed for same-repo PRs (fork PRs require a CNB API
-# current-head lookup, not a guess from origin). Use a protected CI rule.
+# current-head lookup, not a guess from origin). This is functional feedback,
+# not proof of review approval; report findings and failures honestly.
 "**":
   pull_request:
     - docker:
@@ -23,13 +27,3 @@
             review_event: auto
             timeout_minutes: 20
             max_turns: 30
-        - name: current-sha-review-gate
-          script: |
-            set -eu
-            test -n "$CNB_PULL_REQUEST_BRANCH"
-            live_head="$(git ls-remote origin "refs/heads/$CNB_PULL_REQUEST_BRANCH" | cut -f1)"
-            test -n "$live_head"
-            python3 scripts/check-ads-cnb-review.py \
-              --result ./code_review.json \
-              --review-head "$CNB_PULL_REQUEST_SHA" \
-              --current-head "$live_head"
