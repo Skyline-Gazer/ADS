@@ -34,8 +34,8 @@ def validate(config):
     if git["primary"] == "cnb":
         if mirror != {"enabled": True, "direction": "cnb-to-github", "branches": [prod], "tags": "approved-releases-only"}:
             raise ProviderError("CNB requires one-way production-only mirror and approved tags")
-        if review["auto"] != "cnb-code-review" or review["npc"] != "on-demand-read-only":
-            raise ProviderError("CNB must enable automatic review and read-only NPC")
+        if review["auto"] not in ("cnb-code-review", "host-on-demand") or review["npc"] != "on-demand-read-only":
+            raise ProviderError("CNB review must be automatic or on demand, with read-only NPC")
     else:
         if mirror != {"enabled": False, "direction": "disabled", "branches": [], "tags": "disabled"}:
             raise ProviderError("GitHub primary must not mirror")

@@ -15,6 +15,15 @@ class ProviderTests(unittest.TestCase):
     def test_cnb(self):
         self.assertEqual(validate(self.cfg)["git"]["primary"], "cnb")
 
+    def test_cnb_review_feedback_choices(self):
+        for choice in ("host-on-demand", "cnb-code-review"):
+            with self.subTest(choice=choice):
+                self.cfg["review"]["auto"] = choice
+                self.assertEqual(validate(self.cfg)["review"]["auto"], choice)
+        self.cfg["review"]["auto"] = "silently-approve"
+        with self.assertRaises(ProviderError):
+            validate(self.cfg)
+
     def test_github_compatibility(self):
         self.cfg["git"]["primary"] = "github"
         self.cfg["git"]["github_mirror"] = {"enabled": False, "direction": "disabled", "branches": [], "tags": "disabled"}
