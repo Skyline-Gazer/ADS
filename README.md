@@ -2,13 +2,38 @@
 
 ADS is a **lightweight development convention**, not an orchestration system, approval engine, task database or OS sandbox. Its purpose is to help coding agents finish an authorized goal, verify what actually changed and avoid unnecessary development blockers.
 
-**Version status:** `v0.7.0 Simplify to Deliver` is a **candidate**, not a published release. Its reduced core is merged to [`dev`](https://github.com/Skyline-Gazer/ADS/pull/110) and synchronized into CNB-specialized [`cnb/dev`](https://github.com/Skyline-Gazer/ADS/pull/111). [Release candidate PR #112](https://github.com/Skyline-Gazer/ADS/pull/112) remains unmerged. Consult [GitHub Releases](https://github.com/Skyline-Gazer/ADS/releases) for a published immutable tag and pin that tag or full commit SHA; never track a moving development branch without an explicit project decision.
+**Version status:** [v0.7.0 Simplify to Deliver](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.7.0) is **published**. [Release PR #112](https://github.com/Skyline-Gazer/ADS/pull/112) merged to `main`; the immutable release commit is `42ba05c6b6707690702689988c352d4d3a3cde6e`. Pin the published tag or full commit SHA; consumer updates remain separate reviewable changes. CNB-specific post-release guidance landed separately in [PR #118](https://github.com/Skyline-Gazer/ADS/pull/118) on `cnb/dev`.
 
 **Default is development-first:** no Docker/VM/OS sandbox, SCA/SBOM/license inventory, security-only reassessment or extra CI is required just to develop ordinary project code. These are opt-in hardening capabilities. ADS does **not** enforce filesystem/process isolation, and an agent must still respect actual task scope, host/tool denials, secrets and consequential production/privilege/spending authorization.
 
 **What stays:** relevant build/tests/functional CI, material code review, the project's configured Git provider/PR workflow, and truthful **Process / State / Outcome** reporting. See [STANDARD](STANDARD.md), [SAFETY](SAFETY.md), [QUALITY](QUALITY.md). Optional tooling and stricter governance are in [profiles](profiles/README.md).
 
 **License:** [MIT](LICENSE).
+
+## One-message agent adoption + Mission
+
+In an existing project, send your coding agent **one request**. Replace only the last line with your goal or a reference to an existing Plan, Spec, Issue or Project; no special task format or separate ADS installer is needed:
+
+```text
+Adopt ADS Lite from https://github.com/Skyline-Gazer/ADS at its current published release.
+Inspect this project first: existing AGENTS.md, source, build/tests, Git provider, PR/CI,
+deployment effects and permissions. Read that ADS release's templates/AGENTS.md and
+docs/lite-adoption.md. Reconcile the project's root AGENTS.md with verified facts,
+preserving local rules. Prefer standalone unless this project already uses or I explicitly
+request a pinned .ads submodule. Do not follow an unpinned ADS branch, change remotes,
+enable optional governance/tools, or touch production as a side effect of adoption.
+Then implement and verify my Mission using this project's existing workflow. Accept the
+input as-is (freeform/Plan/Spec/Issue/Project), infer reversible technical details from
+the repository, and do not demand another specification format. Continue through tests,
+review feedback, PR and authorized merge when available. Ask only for a truly missing
+owner preference or consequential authorization. If the Mission authorizes a backlog,
+keep taking the next unblocked item; otherwise finish and report the actual outcome.
+Mission: <my request or link to existing project requirements>
+```
+
+This is an **instruction to the agent**, not a new ADS runner. An agent that cannot read
+the release or lacks a required host permission must report the specific limitation
+instead of claiming that adoption or delivery succeeded.
 
 ## Start here
 
