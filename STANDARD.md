@@ -1,6 +1,6 @@
 # ADS — Development Standard
 
-Version: **v0.7 development-first candidate** (unreleased). Existing tags remain immutable; consumer updates require a deliberate pin change.
+Version: **v0.7.0 Simplify to Deliver** ([published release](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.7.0)). Existing tags remain immutable; consumer updates require a deliberate pin change.
 
 ## Purpose and precedence
 

@@ -1,6 +1,6 @@
 # ADS — Outcome and Verification
 
-Version: **v0.7 development-first candidate** (unreleased). Preserve historical evidence; do not re-score old failures to make a new release green.
+Version: **v0.7.0 Simplify to Deliver** ([published release](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.7.0)). Preserve historical evidence; do not re-score old failures to make a new release green.
 
 ## Process / State / Outcome
 

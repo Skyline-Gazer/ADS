@@ -1,6 +1,6 @@
 # ADS — Scope and Authorization
 
-Version: **v0.7 development-first candidate** (unreleased). Published pins are unchanged.
+Version: **v0.7.0 Simplify to Deliver** ([published release](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.7.0)). Published pins are unchanged.
 
 ## Real authorization, not invented gates
 
