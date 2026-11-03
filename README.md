@@ -15,9 +15,11 @@ ADS is a **lightweight development convention**, not an orchestration system, ap
 In an existing project, send your coding agent **one request**. Replace only the last line with your goal or a reference to an existing Plan, Spec, Issue or Project; no special task format or separate ADS installer is needed:
 
 ```text
-Adopt ADS Lite from https://github.com/Skyline-Gazer/ADS at its current published release.
+Adopt ADS Lite from https://github.com/Skyline-Gazer/ADS at its current published
+release, unless this request names an exact ADS commit SHA for a pilot. Do not substitute
+a moving branch or the published release when an exact pilot SHA is specified.
 Inspect this project first: existing AGENTS.md, source, build/tests, Git provider, PR/CI,
-deployment effects and permissions. Read that ADS release's templates/AGENTS.md and
+deployment effects and permissions. Read that exact ADS revision's templates/AGENTS.md and
 docs/lite-adoption.md. Reconcile the project's root AGENTS.md with verified facts,
 preserving local rules. Prefer standalone unless this project already uses or I explicitly
 request a pinned .ads submodule. Do not follow an unpinned ADS branch, change remotes,
@@ -30,6 +32,8 @@ owner preference or consequential authorization. If the Mission authorizes a bac
 keep taking the next unblocked item; otherwise finish and report the actual outcome.
 Mission: <my request or link to existing project requirements>
 ```
+
+For a pre-release cold-start pilot, append `ADS candidate SHA: <full commit SHA>` to the same request; the Agent must fetch that exact revision and must not claim it is a published release. Count actual owner-interaction rounds, not just the questions asked within a round.
 
 This is an **instruction to the agent**, not a new ADS runner. An agent that cannot read
 the release or lacks a required host permission must report the specific limitation
