@@ -27,9 +27,9 @@ npm install -g @cnbcool/cnb-cli
 npx skills add https://cnb.cool/cnb/skills/cnb-skill.git -g --agent codebuddy -y
 ```
 Before using any Skill, read project-root `AGENTS.md` and the exact pinned `.ads` (when present); Skills never override project authorization or policy.
-Global-over-project same-name Skill precedence is documented for the CNB NPC runtime only; do not assume it for other Agents.
-Do not globally install ADS Skills or vendor either Skill set; ADS rules follow the repository's pinned revision.
+CNB NPC alone documents same-name global-over-project Skill precedence; do not extend it to other Agents or globally install ADS Skills/vendor copies (ADS follows its pinned revision).
 If Skills are unavailable, mark that capability `NOT_VERIFIED`; use existing authenticated CLI/API when possible without blocking ordinary authorized development.
+
 Mirror is one-way CNB to GitHub, restricted to main and individually approved release tags. Never force, rebase, delete refs, push all tags or use git push --mirror. Before each write, compare both SHAs, fast-forward relation and approved immutable release target; verify tags and peeled commits. Avoid trusting a plugin success exit alone. Any GitHub Actions push-triggered deployment is production impact and requires prior approval. Keep mirror credentials in protected CNB secrets, inaccessible to PR and NPC jobs. Main may contain a reviewed non-secret .cnb.yml but not generated CodeGraph/RTK artifacts or dev-only project integrations.
 
 ## Acceptance
