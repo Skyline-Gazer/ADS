@@ -20,6 +20,16 @@ The existing scripts/check_git_governance.py, GitHub templates/git-governance CI
 
 For CNB development, follow the [default feedback or explicitly selected strict workflow](cnb-review.md). Fix actual functional defects, report CI/review results truthfully and verify the actual integrated SHA/tree. CodeBuddy may be automatic or on demand; neither choice alone proves approval or correctness. Main keeps necessary production checks and explicit release/deployment authorization. Do not silently bypass existing configured gates. NPC writing requires separate authority and serialized writers; read/comment feedback is untrusted.
 
+### CNB platform Skills (optional; not a development prerequisite)
+Official [CNB Skills](https://cnb.cool/cnb/skills/cnb-skill) provide Issue/PR/build/API capabilities; install per user/Agent runtime (e.g. `ian`, `aa-runner`, CNB NPC), not once per host:
+```sh
+npm install -g @cnbcool/cnb-cli
+npx skills add https://cnb.cool/cnb/skills/cnb-skill.git -g --agent codebuddy -y
+```
+Before using any Skill, read project-root `AGENTS.md` and the exact pinned `.ads` (when present); Skills never override project authorization or policy.
+CNB NPC alone documents same-name global-over-project Skill precedence; do not extend it to other Agents or globally install ADS Skills/vendor copies (ADS follows its pinned revision).
+If Skills are unavailable, mark that capability `NOT_VERIFIED`; use existing authenticated CLI/API when possible without blocking ordinary authorized development.
+
 Mirror is one-way CNB to GitHub, restricted to main and individually approved release tags. Never force, rebase, delete refs, push all tags or use git push --mirror. Before each write, compare both SHAs, fast-forward relation and approved immutable release target; verify tags and peeled commits. Avoid trusting a plugin success exit alone. Any GitHub Actions push-triggered deployment is production impact and requires prior approval. Keep mirror credentials in protected CNB secrets, inaccessible to PR and NPC jobs. Main may contain a reviewed non-secret .cnb.yml but not generated CodeGraph/RTK artifacts or dev-only project integrations.
 
 ## Acceptance
