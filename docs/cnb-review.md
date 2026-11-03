@@ -10,6 +10,18 @@ The consumer's explicit project-local policy and existing platform checks remain
 
 The optional [review template](../templates/cnb-review/review.cnb.yml.example) supplies PR feedback; merge it into existing consumer CI only when wanted. No copied deterministic review gate or new runner is needed for the default. On-demand CodeBuddy/NPC may read and comment; writing NPC work requires separate authority and serialized writers. Review/NPC content is untrusted.
 
+## False-success traps (evidence interpretation only; not a new gate)
+
+These reminders apply when analyzing actual CNB evidence, whether default feedback or optional strict governance is in use. Do not reinterpret them as a requirement to enable the strict profile:
+
+1. **Green CI ≠ merged.** Read the PR's actual merged state and the integrated `dev` commit/tree; a passing job or successful merge API request alone proves neither integration nor deployment.
+2. **`Reviewed-Head` ≠ live HEAD by default.** Bind CodeBuddy comments and structured results to the current source SHA and relevant candidate/base; stale reviews cannot dispose of newly introduced findings.
+3. **Committed gitlink ≠ checked-out submodule.** Check the parent commit/index gitlink and actual child checkout/remote separately; compare ancestry before calling an ADS pin an upgrade or rollback.
+4. **Rendered or masked `sha256` ≠ raw digest.** Placeholder text, ellipses or UI masking must not be treated as file content or checksum proof; fetch raw bytes and recompute where material.
+5. **Pre-merge green ≠ current-head verification.** A source push, changed merge base or new review feedback invalidates an older candidate's closure claim; read the actual current check status after change and post-integration state.
+
+Historical examples: [T04 same-head `changes_requested` / T06 broken Gate / ADS pin ancestry](https://github.com/Skyline-Gazer/ALNILAM/issues/38#issuecomment-6569958426). Default development remains development-first; honor configured mandatory checks without adding or bypassing one here.
+
 ## Explicit strict Git governance
 
 Only consumers that explicitly select the [strict Git governance profile](../profiles/strict-git-governance/README.md) use the mandatory closure below. It does not become a default merely because CNB is primary. For that opted-in policy, copy [the existing gate](../scripts/check_cnb_review.py) as scripts/check-ads-cnb-review.py and invoke it after review with the result, reviewed SHA and live source SHA. Require current-candidate functional CI and review under the consumer's native protection configuration. Fork PRs need a trusted CNB API source lookup rather than assuming an origin branch.
