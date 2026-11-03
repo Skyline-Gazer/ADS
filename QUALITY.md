@@ -14,6 +14,12 @@ Do not confuse the work attempted with the result delivered:
 
 Example: `git push` exit 0 is Process. Read-back of the branch SHA is State. Required functional tests and the correct merged behavior are Outcome within their tested scope. After partial failure, merge or deployment, query **live state again** before repairing or claiming completion (A04). An open PR is not a merge. A Review PASS on an older head with unresolved material comments is not acceptance (A03).
 
+**Four incident-linked evidence reminders (no new gate):**
+- **T04 / review:** CNB PR #37 was merged despite a same-head `changes_requested`; a prior green check cannot erase an unresolved material review ([historical correction](https://github.com/Skyline-Gazer/ALNILAM/issues/38#issuecomment-6569958426)).
+- **T06 / CI bootstrap:** a trusted Gate harness missing its own workflow inputs yielded real `ENOENT` failures; repair and read back the actual Gate/merge state, never relabel the broken run PASS ([before/after evidence](https://github.com/Skyline-Gazer/ALNILAM/issues/38#issuecomment-6569958426)).
+- **Pin ancestry:** `375fc71` was an **ancestor**, not a newer replacement, of the `b8d9cfc` ADS candidate; compare committed gitlink, checkout and ancestry before claiming upgrade or rollback ([corrected chain](https://github.com/Skyline-Gazer/ALNILAM/issues/38#issuecomment-6569958426)).
+- **Displayed digest:** presentation-layer `sha256` placeholders, masking or ellipses are not source hashes; inspect raw bytes and compute/compare the real digest before treating them as evidence (historical display-layer mismatch; raw artifact link not independently verified).
+
 Report `NOT RUN`, `NOT_VERIFIED` or a precise actual blocker where appropriate; never infer PASS from a mock, missing provider integration, an agent's own summary, or green CI for unrelated behavior.
 
 ## Proportionate checks, not a new release ritual
