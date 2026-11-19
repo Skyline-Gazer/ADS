@@ -28,9 +28,15 @@ Choose the **smallest checks capable of detecting the change's risk**. Documenta
 
 Keep required functional CI and material source-review findings. Optional security-only scans, SBOM, supply-chain attestations and isolation probes are advisory unless the consumer expressly opts into them. Existing required-check configuration must be changed honestly through a reviewed update; a failed or unrun check is never a PASS. Neither a passing mock nor a remote CI green light proves an untested live dependency.
 
+When new or changed tests are cited as required-CI evidence, verify that the intended tests were discovered and actually executed for the tested SHA. Explicit manifests, filters and test-selection rules must not silently omit those tests. Any integrity guard relied upon must itself be executed. A green workflow alone is not proof of test coverage.
+
+For reproducible defects and high-risk assertions, prefer deterministic regression evidence that distinguishes incorrect from correct behavior: for example, a test that fails on the original defect or a controlled negative case and passes after the fix. Use mutation selectively when valuable; do not require mutation testing for every test.
+
 ## Agent integration and completion
 
 Parent agents integrate child code and re-check affected combined behavior; children cannot independently declare Goal completion. Parallel experiments and model/host speed comparisons are research, **not** delivery gates: historical protocols remain under [scenarios](scenarios/), and any claimed acceleration requires comparable baseline and observed end-to-end cost.
+
+Where a project voluntarily records engineering lessons, classify realized failure events as confirmed triggers and risks intercepted before realization as near-misses. Count them separately and preserve original records. Do not require per-PR lessons or create work to meet a quota.
 
 Use the project/provider's actual PR and Review rules. For CNB, dispose of material CodeBuddy comments against the current head per [CNB review](docs/cnb-review.md); do not add a duplicate GitHub dev PR (A06). Reuse existing task PRs (A02), do not revive obsolete contracts merely to satisfy stale harnesses (A01), and do not mistake non-enforced isolation for a verified boundary (A05).
 
