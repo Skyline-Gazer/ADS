@@ -20,7 +20,7 @@ Example: `git push` exit 0 is Process. Read-back of the branch SHA is State. Req
 - **Pin ancestry:** `375fc71` was an **ancestor**, not a newer replacement, of the `b8d9cfc` ADS candidate; compare committed gitlink, checkout and ancestry before claiming upgrade or rollback ([corrected chain](https://github.com/Skyline-Gazer/ALNILAM/issues/38#issuecomment-6569958426)).
 - **Displayed digest:** presentation-layer `sha256` placeholders, masking or ellipses are not source hashes; inspect raw bytes and compute/compare the real digest before treating them as evidence (historical display-layer mismatch; raw artifact link not independently verified).
 
-Report `NOT RUN`, `NOT_VERIFIED` or a precise actual blocker where appropriate; never infer PASS from a mock, missing provider integration, an agent's own summary, or green CI for unrelated behavior.
+Report `NOT RUN`, `NOT_VERIFIED` or a precise actual blocker where appropriate; never infer PASS from a mock, missing provider integration, an agent's own summary, or green CI for unrelated behavior. When an optional Skill or capability is unavailable, ordinary authorized development may continue, but report any material verification limitation explicitly (`PARTIAL`, `NOT_VERIFIED`, or `BLOCKED_WITH_EVIDENCE`)—never a silent false PASS.
 
 ## Proportionate checks, not a new release ritual
 

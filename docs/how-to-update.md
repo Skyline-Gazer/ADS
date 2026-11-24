@@ -56,7 +56,7 @@ Then use the consumer's existing test command, review the diff and open a PR. On
 
 ## Rollback and clean setup
 
-If an update fails before merging, return the proposed gitlink to the consumer's original recorded SHA in the task branch, restore only changes made by that update, and rerun applicable checks. After a reviewed rollback commit, collaborators run:
+If an update fails before merging, return the proposed gitlink to that consumer's **actual previously verified ADS pin** (never assume a universal `v0.7.0` rollback target), restore any changed Skill revisions and associated configuration from that update, and rerun applicable checks. After a reviewed rollback commit, collaborators run:
 
 ```sh
 git submodule sync --recursive
