@@ -15,13 +15,14 @@ def object_with_keys(value, name, keys):
     return value
 
 def valid_branch(name):
-    return (
-        isinstance(name, str)
-        and bool(re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._/-]*", name))
-        and "//" not in name
-        and ".." not in name
-        and not name.endswith(("/", ".", ".lock"))
-    )
+    if not isinstance(name, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._/-]*", name):
+        return False
+    if "//" in name or ".." in name:
+        return False
+    for part in name.split("/"):
+        if not part or part.startswith(".") or part.endswith((".lock", ".")):
+            return False
+    return True
 
 def validate(config):
     object_with_keys(config, "root", {"schema_version", "git", "review", "release"})
@@ -36,7 +37,11 @@ def validate(config):
     mirror = object_with_keys(git["github_mirror"], "github_mirror", {"enabled", "direction", "branches", "tags"})
     review = object_with_keys(config["review"], "review", {"auto", "npc", "max_fix_rounds"})
     release = object_with_keys(config["release"], "release", {"approval_required", "force_push"})
-    if release != {"approval_required": True, "force_push": False}:
+    if (
+        type(release["approval_required"]) is not bool
+        or type(release["force_push"]) is not bool
+        or release != {"approval_required": True, "force_push": False}
+    ):
         raise ProviderError("release must require authorization and prohibit force push")
     if type(review["max_fix_rounds"]) is not int or not 1 <= review["max_fix_rounds"] <= 3:
         raise ProviderError("fix rounds must be 1 through 3")

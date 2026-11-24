@@ -2,7 +2,7 @@
 
 ADS is a **lightweight development convention**, not an orchestration system, approval engine, task database or OS sandbox. Its purpose is to help coding agents finish an authorized goal, verify what actually changed and avoid unnecessary development blockers.
 
-**Version status:** [v0.7.0 Simplify to Deliver](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.7.0) is **published**. [Release PR #112](https://github.com/Skyline-Gazer/ADS/pull/112) merged to `main`; the immutable release commit is `42ba05c6b6707690702689988c352d4d3a3cde6e`. Pin the published tag or full commit SHA; consumer updates remain separate reviewable changes. CNB-specific post-release guidance landed separately in [PR #118](https://github.com/Skyline-Gazer/ADS/pull/118) on `cnb/dev`.
+**Version status:** [v0.7.0 Simplify to Deliver](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.7.0) is **published** ([Release PR #112](https://github.com/Skyline-Gazer/ADS/pull/112), immutable commit `42ba05c6b6707690702689988c352d4d3a3cde6e`). Pin the published tag or full commit SHA; consumer updates remain separate reviewable changes. Active normative policy and conditional provider capabilities are maintained on canonical `dev`/`main`.
 
 **Default is development-first:** no Docker/VM/OS sandbox, SCA/SBOM/license inventory, security-only reassessment or extra CI is required just to develop ordinary project code. These are opt-in hardening capabilities. ADS does **not** enforce filesystem/process isolation, and an agent must still respect actual task scope, host/tool denials, secrets and consequential production/privilege/spending authorization.
 
@@ -55,7 +55,7 @@ instead of claiming that adoption or delivery succeeded.
 ## Skills and profiles
 
 - [skills/](skills/) — bootstrap, adopt, deliver, recover.
-- [profiles/](profiles/) — optional strict Git, consumer toolchain, lifecycle, stack hints.
+- [profiles/](profiles/) — optional strict Git, consumer toolchain, lifecycle.
 
 ## Further reference
 

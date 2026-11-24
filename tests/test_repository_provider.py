@@ -137,7 +137,10 @@ class ProviderTests(unittest.TestCase):
             lambda c: c["git"].update(development_branch="../main"),
             lambda c: c["git"].update(development_branch="dev//bad"),
             lambda c: c["git"].update(development_branch="dev.lock"),
+            lambda c: c["git"].update(development_branch="a.lock/b"),
+            lambda c: c["git"].update(development_branch="feature/.hidden"),
             lambda c: c["git"].update(production_branch="main/"),
+            lambda c: c["git"].update(production_branch="release./v1"),
             lambda c: c["git"]["github_mirror"].update(enabled=1),
             lambda c: c["git"]["github_mirror"].update(branches=["main", "dev"]),
             lambda c: c["git"]["github_mirror"].update(direction="github-to-cnb"),
@@ -146,7 +149,9 @@ class ProviderTests(unittest.TestCase):
             lambda c: c["review"].update(max_fix_rounds=True),
             lambda c: c["review"].update(max_fix_rounds=5),
             lambda c: c["release"].update(force_push=True),
+            lambda c: c["release"].update(force_push=0),
             lambda c: c["release"].update(approval_required=False),
+            lambda c: c["release"].update(approval_required=1),
             lambda c: c.update(gh_token="secret"),
         ]
         for mutate in cases:
