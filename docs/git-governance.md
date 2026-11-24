@@ -2,7 +2,7 @@
 
 **Status: normative for the ADS repository.** Consumer projects use [lite adoption](lite-adoption.md) by default and are **not** bound by this policy unless root `AGENTS.md` enables the [strict Git governance profile](../profiles/strict-git-governance/README.md). When enabled, project-local guidance may add detail but must not silently relax these rules.
 
-ADS maintains `dev` as its single canonical development and integration branch (`main` for stable releases). The historical `cnb/dev` branch is a preserved retirement candidate—not an ongoing parallel normative branch—though explicit `ADS_DEVELOPMENT_BRANCH=cnb/dev` remains recognized for historical compatibility. Recognized task-branch prefixes include Cloud Agent `cursor/*` in addition to the conventional `feat`/`fix`/`chore`/… set.
+ADS maintains `dev` as its single canonical development and integration branch (`main` for stable releases). The historical `cnb/dev` branch has been retired and preserved via the immutable archival tag `archive/cnb-dev-final` (`16b99f4b49769555acc66a0c57b8cfcb8c8bac60`; do not move or delete; not a published release). Recognized task-branch prefixes include Cloud Agent `cursor/*` in addition to the conventional `feat`/`fix`/`chore`/… set.
 
 ## Branch model
 
