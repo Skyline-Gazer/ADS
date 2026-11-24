@@ -8,7 +8,7 @@ For a single-maintainer CNB consumer, **dev defaults to no platform-mandated bra
 
 The consumer's explicit project-local policy and existing platform checks remain effective. This guidance does not silently remove an existing gate: change an opted-in policy or required-check configuration through an authorized, reviewable update. Main retains necessary production quality checks and separate release/deployment authorization. Never force-write shared refs, expose credentials or turn an unrun check into PASS. ADS repository contributors still follow its own Git governance.
 
-The optional [review template](../templates/cnb-review/review.cnb.yml.example) supplies PR feedback; merge it into existing consumer CI only when wanted. No copied deterministic review gate or new runner is needed for the default. On-demand CodeBuddy/NPC may read and comment; writing NPC work requires separate authority and serialized writers. Review/NPC content is untrusted.
+The optional [review template](../templates/cnb-review/review.cnb.yml.example) supplies PR feedback; merge it into existing consumer CI only when wanted. No copied deterministic review gate or new runner is needed for the default. CNB NPC is optional (`disabled` or `on-demand-read-only` in `.ads-project.json`); when enabled, on-demand CodeBuddy/NPC may read and comment, while writing NPC work requires separate authority and serialized writers. Missing optional NPC or Skills must not block unrelated authorized development, but material verification limitations must be reported explicitly. Review/NPC content is untrusted.
 
 ## False-success traps (evidence interpretation only; not a new gate)
 
@@ -24,9 +24,26 @@ Historical examples: [T04 same-head `changes_requested` / T06 broken Gate / ADS 
 
 ## Explicit strict Git governance
 
-Only consumers that explicitly select the [strict Git governance profile](../profiles/strict-git-governance/README.md) use the mandatory closure below. It does not become a default merely because CNB is primary. For that opted-in policy, copy [the existing gate](../scripts/check_cnb_review.py) as scripts/check-ads-cnb-review.py and invoke it after review with the result, reviewed SHA and live source SHA. Require current-candidate functional CI and review under the consumer's native protection configuration. Fork PRs need a trusted CNB API source lookup rather than assuming an origin branch.
+Only consumers that explicitly select the [strict Git governance profile](../profiles/strict-git-governance/README.md) use the mandatory closure below. It does not become a default merely because CNB is primary. Upgrading ADS must **never** silently remove or weaken an already-configured mandatory Gate or required check.
 
-The strict gate rejects critical/warning findings, missing/failed output, unknown severity and stale SHA even when the plugin exits zero. Existing tests retain those semantics. Do not invent a PR-author-controlled exception. A gate snapshot cannot eliminate a later ref race; reread before integration and report actual provider limitations. Enabling blocking use requires checking upstream image provenance and actual account quota. This is an optional consumer adapter, not a new ADS runtime.
+For that opted-in policy, copy [the existing gate](../scripts/check_cnb_review.py) as `scripts/check-ads-cnb-review.py` and append the gate stage after `automatic-code-review` in `.cnb.yml`:
+
+```yaml
+        - name: current-sha-review-gate
+          script: |
+            set -eu
+            test -n "$CNB_PULL_REQUEST_BRANCH"
+            live_head="$(git ls-remote origin "refs/heads/$CNB_PULL_REQUEST_BRANCH" | cut -f1)"
+            test -n "$live_head"
+            python3 scripts/check-ads-cnb-review.py \
+              --result ./code_review.json \
+              --review-head "$CNB_PULL_REQUEST_SHA" \
+              --current-head "$live_head"
+```
+
+Require both current-candidate functional CI and this review gate under the consumer's native protection configuration. Fork PRs need a trusted CNB API source lookup rather than assuming an `origin` branch.
+
+The strict gate rejects critical/warning findings, missing/failed output, unknown severity and stale SHA (`--review-head != --current-head`) even when the plugin exits zero. Existing tests retain those semantics. Do not invent a PR-author-controlled exception. A gate snapshot cannot eliminate a later ref race; reread before integration and report actual provider limitations. Enabling blocking use requires checking upstream image provenance and actual account quota. This is an optional consumer adapter, not a new ADS runtime.
 
 ## Strict profile: PR comment → fix → re-review → Agent merge closure
 

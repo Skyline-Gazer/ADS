@@ -14,6 +14,15 @@ def object_with_keys(value, name, keys):
         raise ProviderError(f"{name}: expected fields {sorted(keys)}")
     return value
 
+def valid_branch(name):
+    return (
+        isinstance(name, str)
+        and bool(re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._/-]*", name))
+        and "//" not in name
+        and ".." not in name
+        and not name.endswith(("/", ".", ".lock"))
+    )
+
 def validate(config):
     object_with_keys(config, "root", {"schema_version", "git", "review", "release"})
     if type(config["schema_version"]) is not int or config["schema_version"] != 1:
@@ -22,8 +31,8 @@ def validate(config):
     if git["primary"] not in ("github", "cnb") or git["issue_provider"] not in ("github", "cnb"):
         raise ProviderError("unknown provider")
     dev, prod = git["development_branch"], git["production_branch"]
-    if dev != "dev" or not isinstance(prod, str) or prod == dev or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._/-]*", prod) or "//" in prod or ".." in prod:
-        raise ProviderError("dev required, production branch invalid")
+    if not valid_branch(dev) or not valid_branch(prod):
+        raise ProviderError("development or production branch invalid")
     mirror = object_with_keys(git["github_mirror"], "github_mirror", {"enabled", "direction", "branches", "tags"})
     review = object_with_keys(config["review"], "review", {"auto", "npc", "max_fix_rounds"})
     release = object_with_keys(config["release"], "release", {"approval_required", "force_push"})
@@ -34,12 +43,14 @@ def validate(config):
     if git["primary"] == "cnb":
         disabled_mirror = {"enabled": False, "direction": "disabled", "branches": [], "tags": "disabled"}
         mode_a_mirror = {"enabled": True, "direction": "cnb-to-github", "branches": [prod], "tags": "approved-releases-only"}
-        if mirror not in (disabled_mirror, mode_a_mirror):
+        if type(mirror["enabled"]) is not bool or mirror not in (disabled_mirror, mode_a_mirror):
             raise ProviderError("CNB mirror must be disabled or one-way production-only Mode A with approved tags")
-        if review["auto"] not in ("cnb-code-review", "host-on-demand") or review["npc"] != "on-demand-read-only":
-            raise ProviderError("CNB review must be automatic or on demand, with read-only NPC")
+        if mirror["enabled"] and dev == prod:
+            raise ProviderError("Mode A mirror requires distinct development and production branches")
+        if review["auto"] not in ("cnb-code-review", "host-on-demand") or review["npc"] not in ("disabled", "on-demand-read-only"):
+            raise ProviderError("CNB review must be automatic or on demand, with NPC disabled or on-demand read-only")
     else:
-        if mirror != {"enabled": False, "direction": "disabled", "branches": [], "tags": "disabled"}:
+        if type(mirror["enabled"]) is not bool or mirror != {"enabled": False, "direction": "disabled", "branches": [], "tags": "disabled"}:
             raise ProviderError("GitHub primary must not mirror")
         if review["auto"] != "host-on-demand" or review["npc"] != "disabled":
             raise ProviderError("GitHub primary uses existing reviewer")

@@ -18,6 +18,7 @@ Do **not** copy these into a consumer repository unless the owner explicitly ena
 
 - CodeGraph / RTK preflight scripts or manifests ([consumer developer toolchain profile](../profiles/consumer-devtoolchain/README.md))
 - `ensure-ads-branch-protection.py`, consumer `check_git_governance.py`, or other governance scripts ([strict Git governance profile](../profiles/strict-git-governance/README.md))
+- `.ads-project.json` provider manifests (optional when provider choice is needed; not a Lite adoption prerequisite)
 - Lifecycle drift receipts or post-merge SHA reconciliation rituals ([strict lifecycle profile](../profiles/strict-lifecycle/README.md))
 - Phase-end GitHub Project reconciliation (only when the owner tracks Phases in Project)
 
@@ -38,7 +39,7 @@ Pinned submodule: follow [how-to-update.md](how-to-update.md): one reviewable PR
 Lite removes unnecessary script copies and ceremony. It does **not** remove, for projects that already use them:
 
 - Task branches, PRs, Review, CI, Agent repair, and owner-authorized merge loops
-- CNB Primary CodeBuddy comment disposition, current-SHA re-review, CI, and Agent-initiated **manual** merge ([cnb-review.md](cnb-review.md))
+- Existing CNB Primary CodeBuddy feedback, CI, and (where explicitly opted into strict governance) current-SHA re-review, comment disposition, and Agent-initiated **manual** merge ([cnb-review.md](cnb-review.md))
 - Actual authorization limits in [SAFETY.md](../SAFETY.md). Host/OS isolation in [host-filesystem-boundary.md](host-filesystem-boundary.md) is optional, not a prerequisite for ordinary coding or PRs.
 
 ## ADS repository itself

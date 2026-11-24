@@ -2,7 +2,7 @@
 
 **Not part of lite adoption.** Enable only when the project `AGENTS.md` lists this profile.
 
-When enabled, the consumer follows [docs/git-governance.md](../../docs/git-governance.md): `dev` integration branch, Issue-linked task branches, PRs to `dev`, separate release promotion.
+When enabled, the consumer follows [docs/git-governance.md](../../docs/git-governance.md): dedicated `dev` integration branch (distinct from production), Issue-linked task branches, PRs to `dev`, separate release promotion. For CNB Primary strict opt-in, see [docs/cnb-review.md](../../docs/cnb-review.md) for the optional `scripts/check_cnb_review.py` current-SHA gate integration.
 
 Optional automation (copy via reviewable PR when the owner wants it):
 

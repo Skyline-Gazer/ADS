@@ -6,17 +6,15 @@
     "production_branch": "main",
     "issue_provider": "github",
     "github_mirror": {
-      "enabled": true,
-      "direction": "cnb-to-github",
-      "branches": [
-        "main"
-      ],
-      "tags": "approved-releases-only"
+      "enabled": false,
+      "direction": "disabled",
+      "branches": [],
+      "tags": "disabled"
     }
   },
   "review": {
     "auto": "host-on-demand",
-    "npc": "on-demand-read-only",
+    "npc": "disabled",
     "max_fix_rounds": 3
   },
   "release": {
