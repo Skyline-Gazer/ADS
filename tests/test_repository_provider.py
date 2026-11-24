@@ -15,6 +15,50 @@ class ProviderTests(unittest.TestCase):
     def test_cnb(self):
         self.assertEqual(validate(self.cfg)["git"]["primary"], "cnb")
 
+    def test_cnb_review_feedback_choices(self):
+        for choice in ("host-on-demand", "cnb-code-review"):
+            with self.subTest(choice=choice):
+                self.cfg["review"]["auto"] = choice
+                self.assertEqual(validate(self.cfg)["review"]["auto"], choice)
+        self.cfg["review"]["auto"] = "silently-approve"
+        with self.assertRaises(ProviderError):
+            validate(self.cfg)
+
+    def test_cnb_primary_lite_without_mirror(self):
+        self.cfg["git"]["github_mirror"] = {"enabled": False, "direction": "disabled", "branches": [], "tags": "disabled"}
+        self.cfg["review"]["auto"] = "host-on-demand"
+        self.assertEqual(validate(self.cfg)["git"]["primary"], "cnb")
+
+    def test_cnb_github_composition_mode_a(self):
+        self.cfg["git"]["issue_provider"] = "github"
+        self.cfg["git"]["github_mirror"] = {
+            "enabled": True,
+            "direction": "cnb-to-github",
+            "branches": ["main"],
+            "tags": "approved-releases-only",
+        }
+        self.assertEqual(validate(self.cfg)["git"]["issue_provider"], "github")
+
+    def test_unified_core_and_conditional_provider_contracts(self):
+        root = Path(__file__).resolve().parents[1]
+        provider_doc = (root / "docs" / "git-provider.md").read_text(encoding="utf-8")
+        cnb_review_doc = (root / "docs" / "cnb-review.md").read_text(encoding="utf-8")
+        quality_doc = (root / "QUALITY.md").read_text(encoding="utf-8")
+        update_doc = (root / "docs" / "how-to-update.md").read_text(encoding="utf-8")
+
+        for state in ("DETECTED", "CONFIGURED", "VERIFIED", "BLOCKED"):
+            self.assertIn(state, provider_doc)
+        self.assertIn("CNB Primary — Lite", provider_doc)
+        self.assertIn("CNB Primary — Strict Opt-in", provider_doc)
+        self.assertIn("CNB platform Skills", provider_doc)
+        self.assertIn("False-success traps", cnb_review_doc)
+        self.assertIn("Explicit strict Git governance", cnb_review_doc)
+        self.assertIn("discovered and actually executed", quality_doc)
+        self.assertIn("material verification limitation", quality_doc)
+        self.assertIn("actual previously verified ADS pin", update_doc)
+        for skill in ("bootstrap", "adopt", "deliver", "recover"):
+            self.assertTrue((root / "skills" / skill / "SKILL.md").is_file(), skill)
+
     def test_github_compatibility(self):
         self.cfg["git"]["primary"] = "github"
         self.cfg["git"]["github_mirror"] = {"enabled": False, "direction": "disabled", "branches": [], "tags": "disabled"}

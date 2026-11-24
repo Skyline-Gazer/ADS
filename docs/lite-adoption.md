@@ -43,6 +43,6 @@ Lite removes unnecessary script copies and ceremony. It does **not** remove, for
 
 ## ADS repository itself
 
-Contributing to ADS still follows [git-governance.md](git-governance.md) in full. The ADS repo keeps both `dev` (general) and `cnb/dev` (CNB-specialized integration) lines; Lite lands on `dev` first, then integrates into `cnb/dev` without force-overwriting CNB workflow specialty. That dual-line requirement does not automatically apply to lite consumers.
+Contributing to ADS still follows [git-governance.md](git-governance.md) in full on canonical `dev` (`main` for stable releases). The former dual-line `dev`-to-`cnb/dev` sync is superseded; CNB capabilities live conditionally inside the unified ADS tree and `cnb/dev` is a preserved historical retirement candidate. That ADS-repo governance requirement does not automatically apply to lite consumers.
 
-Pinned consumers use one approved immutable release/commit (never a floating `cnb/dev` tag); standalone consumers version their copied `AGENTS.md` in the project itself. CNB specialization is integrated into the shared ADS rules, not released as a separate tag.
+Pinned consumers use one approved immutable release/commit (never a floating branch or `cnb/dev` tag); standalone consumers version their copied `AGENTS.md` in the project itself. Provider capabilities are resolved conditionally from the unified ADS tree, not released as a separate provider tag.

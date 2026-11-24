@@ -32,10 +32,12 @@ def validate(config):
     if type(review["max_fix_rounds"]) is not int or not 1 <= review["max_fix_rounds"] <= 3:
         raise ProviderError("fix rounds must be 1 through 3")
     if git["primary"] == "cnb":
-        if mirror != {"enabled": True, "direction": "cnb-to-github", "branches": [prod], "tags": "approved-releases-only"}:
-            raise ProviderError("CNB requires one-way production-only mirror and approved tags")
-        if review["auto"] != "cnb-code-review" or review["npc"] != "on-demand-read-only":
-            raise ProviderError("CNB must enable automatic review and read-only NPC")
+        disabled_mirror = {"enabled": False, "direction": "disabled", "branches": [], "tags": "disabled"}
+        mode_a_mirror = {"enabled": True, "direction": "cnb-to-github", "branches": [prod], "tags": "approved-releases-only"}
+        if mirror not in (disabled_mirror, mode_a_mirror):
+            raise ProviderError("CNB mirror must be disabled or one-way production-only Mode A with approved tags")
+        if review["auto"] not in ("cnb-code-review", "host-on-demand") or review["npc"] != "on-demand-read-only":
+            raise ProviderError("CNB review must be automatic or on demand, with read-only NPC")
     else:
         if mirror != {"enabled": False, "direction": "disabled", "branches": [], "tags": "disabled"}:
             raise ProviderError("GitHub primary must not mirror")

@@ -15,7 +15,7 @@
     }
   },
   "review": {
-    "auto": "cnb-code-review",
+    "auto": "host-on-demand",
     "npc": "on-demand-read-only",
     "max_fix_rounds": 3
   },
