@@ -1,6 +1,6 @@
 # ADS — Outcome and Verification
 
-Version: **v0.8.0 Personal Engineering Glue candidate** (unreleased; current published release: [v0.7.0 Simplify to Deliver](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.7.0)). Preserve historical evidence; do not re-score old failures to make a new release green.
+Version: **v0.8.0 Personal Engineering Glue** ([release contract](docs/releases/v0.8.0.md), [GitHub Releases](https://github.com/Skyline-Gazer/ADS/releases)). Preserve historical evidence; do not re-score old failures to make a new release green.
 
 ## Process / State / Outcome
 
