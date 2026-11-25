@@ -37,7 +37,12 @@ class V081AdoptionEntryTests(unittest.TestCase):
         self.assertIn("adopted revision", template)
         self.assertIn("full ADS commit SHA (required)", template)
         update = read("docs/how-to-update.md")
-        self.assertIn("adopted ADS release tag and full source commit SHA", update)
+        self.assertIn("adopted ADS full source commit SHA (required)", update)
+        adoption = read("docs/agent-adoption.md")
+        self.assertIn("adopted ADS full source commit SHA (required)", adoption)
+        # SHA-only (pilot) adoption must remain satisfiable: tag is conditional.
+        for doc in (update, adoption, template):
+            self.assertIn("when the copy came from a tagged release", doc)
 
     def test_install_example_matches_declared_release(self):
         # Derive the version from the declared release instead of hardcoding it:

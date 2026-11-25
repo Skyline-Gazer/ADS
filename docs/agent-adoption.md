@@ -7,7 +7,7 @@ ADS is not a daemon, CLI or centralized policy delivery service. A file existing
 Follow [lite-adoption.md](lite-adoption.md) and choose **one** entry intentionally; existing projects keep their current integration unless deliberately changed:
 
 1. Pick an approved ADS release or immutable full commit SHA.
-2. **Standalone:** copy [templates/AGENTS.md](../templates/AGENTS.md) to the repository root, fill in real project facts and commit it. The copied working agreement is self-contained; record the adopted ADS release tag and full source commit SHA at the `Source:` line. No `.ads` checkout, clone access or external rule fetch is required.
+2. **Standalone:** copy [templates/AGENTS.md](../templates/AGENTS.md) to the repository root, fill in real project facts and commit it. The copied working agreement is self-contained; record the adopted ADS full source commit SHA (required) — plus the release tag when the copy came from a tagged release — at the `Source:` line. No `.ads` checkout, clone access or external rule fetch is required.
 3. **Pinned:** add ADS as a Git submodule at `.ads` at that exact approved SHA ([how-to-update.md](how-to-update.md)), with authorized clone access, then render the same template with real project facts and pointers to `.ads/STANDARD.md`, `.ads/SAFETY.md` and `.ads/QUALITY.md`. Never follow a moving branch.
 4. Expose needed skills through the host's documented discovery path; test with a harmless prompt. Native Skill discovery is host-specific: when it is unavailable, keep the explicit document-pointer route instead of inventing an ADS-specific installer or loading protocol.
 

@@ -6,7 +6,7 @@
 
 **Pinned submodule (optional):** If this project explicitly uses `.ads`, read the **pinned** `.ads/STANDARD.md`, `.ads/SAFETY.md` and `.ads/QUALITY.md`, plus only relevant Skills. Check the actual gitlink, never a moving branch. If the project has declared this path and it is inaccessible, report the specific dependency without pretending to have read it. Do **not** require or install a submodule when the project chose standalone.
 
-Source: https://github.com/Skyline-Gazer/ADS — adopted revision: <full ADS commit SHA (required) and/or release tag actually copied from>
+Source: https://github.com/Skyline-Gazer/ADS — adopted revision: <full ADS commit SHA (required), plus the release tag when the copy came from a tagged release>
 
 ## Project facts — replace placeholders
 

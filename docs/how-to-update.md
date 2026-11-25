@@ -4,7 +4,7 @@ ADS is guidance, **not an auto-updating executable**. Default [Lite adoption](li
 
 ## Standalone Lite — no submodule
 
-Copy [templates/AGENTS.md](../templates/AGENTS.md) to the repository root, fill in actual project facts and record the **adopted ADS release tag and full source commit SHA** at the `Source:` line, then commit it using the project's existing branch/PR process. The copied working agreement is self-contained: no `.ads`, GitHub authentication or external policy fetch is required to begin authorized coding. Review any future template update as an ordinary change to that tracked file; do not silently overwrite project-local instructions.
+Copy [templates/AGENTS.md](../templates/AGENTS.md) to the repository root, fill in actual project facts and record the **adopted ADS full source commit SHA (required), plus the release tag when the copy came from a tagged release**, at the `Source:` line, then commit it using the project's existing branch/PR process. The copied working agreement is self-contained: no `.ads`, GitHub authentication or external policy fetch is required to begin authorized coding. Review any future template update as an ordinary change to that tracked file; do not silently overwrite project-local instructions.
 
 ## Optional pinned submodule — install once
 
