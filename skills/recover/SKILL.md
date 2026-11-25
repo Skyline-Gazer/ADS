@@ -4,7 +4,7 @@ description: Continue an interrupted task from live repository facts without sta
 ---
 # Recover and finish
 
-1. Recover the actual Goal and Acceptance from the user request, Issue, open PRs, commits, workspace and CI. Reuse the existing task branch/PR rather than opening a parallel chain.
+1. Recover the actual Goal and Acceptance from the user request, Issue, open PRs, commits, workspace and CI. Reuse the existing task branch/PR rather than opening a parallel chain. Before touching temporary resources, inventory them — `git worktree list`, candidate branches and per-worktree `git status --short --ignored` — and classify each as active, integrated or unknown ownership; another live session's worktree is not yours to remove. Keep and report anything unclassifiable, and defer state-changing `git worktree prune`/`remove` until classification is complete.
 2. After a partial command, broken CI or interrupted merge, **reread real state** before a repair. Identify whether the cause is source behavior, stale tests, missing integration access or an advisory service failure. Do not restore retired behavior to satisfy an old fixture.
 3. Repair the smallest related fault, rerun relevant checks and continue review/authorized merge on the current SHA. Resolve actual material review comments; distinguish unmerged code, merged code and deployed behavior.
 4. For delegated work, inspect integrated changes rather than trusting child reports. Git worktrees do not enforce filesystem boundaries, but absent host isolation never blocks ordinary authorized project coding. Disclose `ISOLATION_NOT_ENFORCED` or `NOT_VERIFIED` without claiming PASS.

@@ -12,6 +12,7 @@ ADS maintains `dev` as its single canonical development and integration branch (
 - Use names that make the task and preferably its Issue discoverable, for example `feat/123-user-auth`, `fix/124-timeout`, or `chore/125-dependency-update`. Do not encode secrets, personal data or machine paths in branch names.
 - Do not commit ordinary task changes directly to `dev` or the production branch. Deliver them through a PR targeting `dev`.
 - Do not use a shared task branch for unrelated work. Concurrent agents or contributors must use isolated branches/worktrees or explicitly disjoint write ownership; a worktree is Git isolation, not a general filesystem security boundary.
+- Temporary worktrees, clones and scratch directories are task-scoped resources. Create them for a named task or Issue, at a discoverable location tied to that task (project-local convention; no fixed absolute path is mandated), with their purpose evident so later sessions can recognize ownership. No separate registry service or mandatory metadata file is required: `git worktree list`, branch naming and the Issue reference are the registry.
 
 ## Issue and PR traceability
 
@@ -25,7 +26,10 @@ ADS maintains `dev` as its single canonical development and integration branch (
 
 1. Start from the latest `dev`, create a task branch, implement the scoped change, run checks selected by impact, and open a PR to `dev`.
 2. Merge only after the applicable CI and review/safety requirements pass. Use the repository's approved merge method; squash merge is the default for ordinary task PRs when it preserves required traceability.
-3. Verify the actual merge SHA and the post-merge `dev` integration result. Clean up the merged task branch when no other work depends on it.
+3. Verify the actual merge SHA and the post-merge `dev` integration result, then clean up the merged task's branch, worktrees, temporary clones and scratch when no other work depends on them:
+   - Do not base deletion on branch ancestry alone: with the default squash merge (or a rebase), `git branch -d` and `merge-base --is-ancestor` can both misclassify an integrated branch. Confirm the live PR head SHA and integration result from provider state, and use patch equivalence (`git cherry` / patch-id) where applicable — `git cherry` does not fully cover every multi-commit squash.
+   - Before removal, check for unique commits beyond the verified head (`git log <verified-pr-head>..<branch>`), uncommitted changes, untracked files and valuable ignored content (`git status --ignored --short`); an empty `git status --short` is not clearance, because ignored files stay invisible and even non-forced `git worktree remove` deletes them. Never remove worktrees owned by another active session (a `git worktree lock` refuses both plain and `--force` removal).
+   - Prefer non-forced Git-native cleanup: untracked or modified content makes plain `git worktree remove` refuse, and unmerged commits make `git branch -d` refuse, so the work is preserved. A forced `git worktree remove --force` or `git branch -D` requires that any remaining local data is proven reproducible or safely retained. Keep resources that fail the safety check and state the retain reason in the delivery report; no separate receipt file is required.
 4. Promote `dev` to the production branch through a separate, reviewable release PR. Include release scope, verification evidence, version/changelog changes where applicable, and deployment effects. A release branch, when needed, must be cut from `dev`; release-only fixes must be carried back to `dev`.
 5. Production/release authorization remains separate from ordinary coding authorization. Merging source code is not proof of deployment or production validation.
 
