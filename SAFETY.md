@@ -1,6 +1,6 @@
 # ADS — Scope and Authorization
 
-Version: **v0.7.0 Simplify to Deliver** ([published release](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.7.0)). Published pins are unchanged.
+Version: **v0.8.0 Personal Engineering Glue candidate** (unreleased; current published release: [v0.7.0 Simplify to Deliver](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.7.0)). Published pins are unchanged.
 
 ## Real authorization, not invented gates
 
