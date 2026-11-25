@@ -1,6 +1,6 @@
 # ADS — Development Standard
 
-Version: **v0.8.0 Personal Engineering Glue candidate** (unreleased; current published release: [v0.7.0 Simplify to Deliver](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.7.0)). Existing tags remain immutable; consumer updates require a deliberate pin change.
+Version: **v0.8.0 Personal Engineering Glue** ([release contract](docs/releases/v0.8.0.md), [GitHub Releases](https://github.com/Skyline-Gazer/ADS/releases)). Existing tags remain immutable; consumer updates require a deliberate pin change.
 
 ## Purpose and precedence
 
