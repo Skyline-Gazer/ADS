@@ -4,12 +4,12 @@ ADS is not a daemon, CLI or centralized policy delivery service. A file existing
 
 ## Default: lite adoption
 
-Follow [lite-adoption.md](lite-adoption.md):
+Follow [lite-adoption.md](lite-adoption.md) and choose **one** entry intentionally; existing projects keep their current integration unless deliberately changed:
 
 1. Pick an approved ADS release or immutable full commit SHA.
-2. Add ADS as a pinned Git submodule at `.ads` ([how-to-update.md](how-to-update.md)), with authorized clone access.
-3. Render [templates/AGENTS.md](../templates/AGENTS.md) at the repository root with **project facts** and pointers to `.ads/STANDARD.md`, `.ads/SAFETY.md`, `.ads/QUALITY.md`.
-4. Expose needed skills through the host's documented discovery path; test with a harmless prompt.
+2. **Standalone:** copy [templates/AGENTS.md](../templates/AGENTS.md) to the repository root, fill in real project facts and commit it. The copied working agreement is self-contained; record the adopted ADS release tag and full source commit SHA at the `Source:` line. No `.ads` checkout, clone access or external rule fetch is required.
+3. **Pinned:** add ADS as a Git submodule at `.ads` at that exact approved SHA ([how-to-update.md](how-to-update.md)), with authorized clone access, then render the same template with pointers to `.ads/STANDARD.md`, `.ads/SAFETY.md` and `.ads/QUALITY.md`. Never follow a moving branch.
+4. Expose needed skills through the host's documented discovery path; test with a harmless prompt. Native Skill discovery is host-specific: when it is unavailable, keep the explicit document-pointer route instead of inventing an installer.
 
 Do **not** copy ADS scripts, governance checkers, or toolchain preflights unless the owner enables an [optional profile](../profiles/README.md) in `AGENTS.md`.
 
@@ -24,6 +24,16 @@ At owner request or a configured periodic trigger, compare approved upstream rel
 | [Strict Git governance](../profiles/strict-git-governance/README.md) ([git-governance.md](git-governance.md)) | Owner wants `dev`, Issue-linked PRs, optional branch-protection helper |
 | [Consumer developer toolchain](../profiles/consumer-devtoolchain/README.md) | Owner wants CodeGraph + full RTK and production-boundary guards |
 | [Strict lifecycle](../profiles/strict-lifecycle/README.md) | Owner wants drift receipts and strict post-merge reconciliation |
+
+## Optional third-party Skills (advisory, never required)
+
+Skill files follow the open [Agent Skills specification](https://github.com/agentskills/agentskills) (`SKILL.md` + frontmatter, progressive disclosure: metadata catalog → body on match → bundled references on demand); ADS's own Skills conform to it. ADS adds **no** loading protocol, registry, lockfile schema or router of its own.
+
+- **Install (optional):** copy the skill folder into a host-discoverable project path yourself, or use a mature existing installer such as the `skills` CLI (vercel-labs/skills, MIT; `1.9.0` verified on 2026-11-25 — a point-in-time observation, not a permanent ADS tool policy) with telemetry disabled (`DISABLE_TELEMETRY=1`). Its `skills-lock.json` records the source commit SHA and content hash; a plain copy with a source URL + full SHA + license note is equally valid. Nothing here is mandatory, and no upstream script is executed on install without review.
+- **Evidence ladder — report each level separately:** installation → host discovery → explicit read → recommendation applied → behavioral adoption. Installation never proves discovery; adoption requires observed task outcomes; an absent optional Skill degrades to ordinary authorized work, never a false PASS.
+- **Host interop:** the CLI's canonical flat `.agents/skills/<name>/SKILL.md` layout matches what `omp/19.1.1` was observed to discover non-recursively — that is **passive interop, not native support** (OMP and CNB are absent from the CLI's host list). Nested installer layouts may not be discovered at all; verify one harmless prompt per host after any change.
+- **Effective external references:** when reproducibility is intended, pin what the Skill *reads or fetches at use time* too (guideline docs, remote checklists): record the immutable revision, integrity and applicable license, and verify material dependencies at adoption. A pinned Skill file alone does not pin its external rule references.
+- **ADS-owned Skills boundary:** the relative links inside `.ads/skills/*/SKILL.md` resolve within the pinned ADS tree, so those Skills require the **pinned** entry to be readable as published. Standalone adoption carries the needed guidance through the self-contained root `AGENTS.md`; do not claim standalone installation of ADS's own Skills.
 
 ## Boundaries
 

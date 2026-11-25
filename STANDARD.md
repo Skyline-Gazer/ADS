@@ -28,6 +28,8 @@ Use current host-native Skills, tools and subagents when they help. Parallelize 
 
 **Delegation never expands the parent's authorization.** Child permission policy might differ, and worktrees only separate Git changes, not OS file access. Do not mistake a child summary for verification. Without an opted-in isolation policy, normal authorized project coding continues; avoid only operations needing additional authority.
 
+When a model, subagent or tool route is unavailable, prefer the host's **already-authorized native recovery** — configured retry/fallback, model switch, cancelling a stalled child — then re-delegate or take the work over; do not wait indefinitely or repeat the same failing request, and do not add a router, scheduler or runner because the host already provides the capability. A substitution never widens authorization and never substitutes for a required independent review. Report a child by its actual terminal result — finished is not succeeded.
+
 ## Git, provider and delivery
 
 - Honor the **consumer project's declared** Git/CI/review workflow. Lite does not require a new `dev` branch, Issue-per-change, branch-protection scripts, or CodeGraph/RTK. Strict Git, lifecycle and developer-toolchain policies apply only when the project explicitly selects their existing [profiles](profiles/README.md).

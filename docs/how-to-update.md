@@ -4,7 +4,7 @@ ADS is guidance, **not an auto-updating executable**. Default [Lite adoption](li
 
 ## Standalone Lite — no submodule
 
-Copy [templates/AGENTS.md](../templates/AGENTS.md) to the repository root, fill in actual project facts and commit it using the project's existing branch/PR process. The copied working agreement is self-contained: no `.ads`, GitHub authentication or external policy fetch is required to begin authorized coding. Review any future template update as an ordinary change to that tracked file; do not silently overwrite project-local instructions.
+Copy [templates/AGENTS.md](../templates/AGENTS.md) to the repository root, fill in actual project facts and record the **adopted ADS release tag and full source commit SHA** at the `Source:` line, then commit it using the project's existing branch/PR process. The copied working agreement is self-contained: no `.ads`, GitHub authentication or external policy fetch is required to begin authorized coding. Review any future template update as an ordinary change to that tracked file; do not silently overwrite project-local instructions.
 
 ## Optional pinned submodule — install once
 
@@ -12,12 +12,12 @@ Run in the consumer repo with an existing working Git checkout and confirmed acc
 
 ```sh
 git submodule add https://github.com/Skyline-Gazer/ADS.git .ads
-git -C .ads checkout v0.7.0
+git -C .ads checkout v0.8.0
 git add .gitmodules .ads AGENTS.md
 git commit -m "chore: adopt ADS as pinned submodule"
 ```
 
-`v0.7.0` above is an example **published release**. Use the latest owner-approved released tag or full commit SHA after checking its availability and compatibility. The Git checkout commit, not the mutable tag spelling or branch, is the effective pin. The root `AGENTS.md` must contain actual project facts and point to `.ads/STANDARD.md`, `.ads/SAFETY.md`, `.ads/QUALITY.md`, and relevant `.ads/skills/*/SKILL.md`. Populate AGENTS.md before staging; the command assumes it exists. Do not copy duplicated rules into host adapters. Native Skill discovery is host-specific: symlink/copy only selected skills into the documented path, then actually test loading after installing and after upgrading.
+`v0.8.0` above is an example **published release**. Use the latest owner-approved released tag or full commit SHA after checking its availability and compatibility. The Git checkout commit, not the mutable tag spelling or branch, is the effective pin. Pin validation proves the pinned commit's **reachability** — a direct fetch or, after a ref retirement, fetch via an archival retention tag; historical origin-branch strings recorded in consumer metadata are provenance notes, never bootstrap or validation preconditions. The root `AGENTS.md` must contain actual project facts and point to `.ads/STANDARD.md`, `.ads/SAFETY.md`, `.ads/QUALITY.md`, and relevant `.ads/skills/*/SKILL.md`. Populate AGENTS.md before staging; the command assumes it exists. Do not copy duplicated rules into host adapters. Native Skill discovery is host-specific: symlink/copy only selected skills into the documented path, then actually test loading after installing and after upgrading.
 
 Because ADS may be **private**, the clone/update runner needs legitimate repository read access. Public Actions checkout credentials do not automatically grant another private repository access. Never put a PAT or secret-bearing URL into `.gitmodules`; use existing authorized credentials in the host/CI. Inaccessible submodule is a BLOCKER, not successful adoption. Existing repo with `.ads` or a different submodule? Inspect and plan a non-destructive migration instead of overwriting.
 
