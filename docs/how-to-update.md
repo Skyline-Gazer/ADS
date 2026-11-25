@@ -1,4 +1,4 @@
-# How to install and update ADS (AI-native Git Submodule)
+# How to install and update ADS — standalone or pinned submodule
 
 ADS is guidance, **not an auto-updating executable**. Default [Lite adoption](lite-adoption.md) offers two valid options: a self-contained root `AGENTS.md` alone, or that same file plus an immutable pinned `.ads` Git submodule for extended rules. Neither requires copied scripts unless an optional profile is enabled. Read [SAFETY.md](../SAFETY.md) for actual authorization limits.
 
