@@ -12,12 +12,12 @@ Run in the consumer repo with an existing working Git checkout and confirmed acc
 
 ```sh
 git submodule add https://github.com/Skyline-Gazer/ADS.git .ads
-git -C .ads checkout v0.2
+git -C .ads checkout v0.7.0
 git add .gitmodules .ads AGENTS.md
 git commit -m "chore: adopt ADS as pinned submodule"
 ```
 
-`v0.2` above is an example **published release**, not an instruction to use the unreleased v0.3 candidate. Use the latest owner-approved released tag or SHA after checking its availability and compatibility. The Git checkout commit, not the mutable tag spelling or branch, is the effective pin. The root `AGENTS.md` must contain actual project facts and point to `.ads/STANDARD.md`, `.ads/SAFETY.md`, `.ads/QUALITY.md`, and relevant `.ads/skills/*/SKILL.md`. Populate AGENTS.md before staging; the command assumes it exists. Do not copy duplicated rules into host adapters. Native Skill discovery is host-specific: symlink/copy only selected skills into the documented path, then actually test loading after installing and after upgrading.
+`v0.7.0` above is an example **published release**. Use the latest owner-approved released tag or full commit SHA after checking its availability and compatibility. The Git checkout commit, not the mutable tag spelling or branch, is the effective pin. The root `AGENTS.md` must contain actual project facts and point to `.ads/STANDARD.md`, `.ads/SAFETY.md`, `.ads/QUALITY.md`, and relevant `.ads/skills/*/SKILL.md`. Populate AGENTS.md before staging; the command assumes it exists. Do not copy duplicated rules into host adapters. Native Skill discovery is host-specific: symlink/copy only selected skills into the documented path, then actually test loading after installing and after upgrading.
 
 Because ADS may be **private**, the clone/update runner needs legitimate repository read access. Public Actions checkout credentials do not automatically grant another private repository access. Never put a PAT or secret-bearing URL into `.gitmodules`; use existing authorized credentials in the host/CI. Inaccessible submodule is a BLOCKER, not successful adoption. Existing repo with `.ads` or a different submodule? Inspect and plan a non-destructive migration instead of overwriting.
 
@@ -56,7 +56,7 @@ Then use the consumer's existing test command, review the diff and open a PR. On
 
 ## Rollback and clean setup
 
-If an update fails before merging, return the proposed gitlink to the consumer's original recorded SHA in the task branch, restore only changes made by that update, and rerun applicable checks. After a reviewed rollback commit, collaborators run:
+If an update fails before merging, return the proposed gitlink to that consumer's **actual previously verified ADS pin** (never assume a universal `v0.7.0` rollback target), restore any changed Skill revisions and associated configuration from that update, and rerun applicable checks. After a reviewed rollback commit, collaborators run:
 
 ```sh
 git submodule sync --recursive

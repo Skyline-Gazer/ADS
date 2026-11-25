@@ -18,6 +18,7 @@ Do **not** copy these into a consumer repository unless the owner explicitly ena
 
 - CodeGraph / RTK preflight scripts or manifests ([consumer developer toolchain profile](../profiles/consumer-devtoolchain/README.md))
 - `ensure-ads-branch-protection.py`, consumer `check_git_governance.py`, or other governance scripts ([strict Git governance profile](../profiles/strict-git-governance/README.md))
+- `.ads-project.json` provider manifests (optional when provider choice is needed; not a Lite adoption prerequisite)
 - Lifecycle drift receipts or post-merge SHA reconciliation rituals ([strict lifecycle profile](../profiles/strict-lifecycle/README.md))
 - Phase-end GitHub Project reconciliation (only when the owner tracks Phases in Project)
 
@@ -38,11 +39,11 @@ Pinned submodule: follow [how-to-update.md](how-to-update.md): one reviewable PR
 Lite removes unnecessary script copies and ceremony. It does **not** remove, for projects that already use them:
 
 - Task branches, PRs, Review, CI, Agent repair, and owner-authorized merge loops
-- CNB Primary CodeBuddy comment disposition, current-SHA re-review, CI, and Agent-initiated **manual** merge ([cnb-review.md](cnb-review.md))
+- Existing CNB Primary CodeBuddy feedback, CI, and (where explicitly opted into strict governance) current-SHA re-review, comment disposition, and Agent-initiated **manual** merge ([cnb-review.md](cnb-review.md))
 - Actual authorization limits in [SAFETY.md](../SAFETY.md). Host/OS isolation in [host-filesystem-boundary.md](host-filesystem-boundary.md) is optional, not a prerequisite for ordinary coding or PRs.
 
 ## ADS repository itself
 
-Contributing to ADS still follows [git-governance.md](git-governance.md) in full. The ADS repo keeps both `dev` (general) and `cnb/dev` (CNB-specialized integration) lines; Lite lands on `dev` first, then integrates into `cnb/dev` without force-overwriting CNB workflow specialty. That dual-line requirement does not automatically apply to lite consumers.
+Contributing to ADS still follows [git-governance.md](git-governance.md) in full on canonical `dev` (`main` for stable releases). The former dual-line `dev`-to-`cnb/dev` sync is superseded; CNB capabilities live conditionally inside the unified ADS tree, and `cnb/dev` is retired and preserved via the immutable archival tag `archive/cnb-dev-final` (not a published release). That ADS-repo governance requirement does not automatically apply to lite consumers.
 
-Pinned consumers use one approved immutable release/commit (never a floating `cnb/dev` tag); standalone consumers version their copied `AGENTS.md` in the project itself. CNB specialization is integrated into the shared ADS rules, not released as a separate tag.
+Pinned consumers use one approved immutable release/commit (never a floating branch or `cnb/dev` tag); standalone consumers version their copied `AGENTS.md` in the project itself. Provider capabilities are resolved conditionally from the unified ADS tree, not released as a separate provider tag.

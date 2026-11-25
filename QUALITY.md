@@ -1,6 +1,6 @@
 # ADS — Outcome and Verification
 
-Version: **v0.7.0 Simplify to Deliver** ([published release](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.7.0)). Preserve historical evidence; do not re-score old failures to make a new release green.
+Version: **v0.8.0 Personal Engineering Glue** ([release contract](docs/releases/v0.8.0.md), [GitHub Releases](https://github.com/Skyline-Gazer/ADS/releases)). Preserve historical evidence; do not re-score old failures to make a new release green.
 
 ## Process / State / Outcome
 
@@ -14,7 +14,13 @@ Do not confuse the work attempted with the result delivered:
 
 Example: `git push` exit 0 is Process. Read-back of the branch SHA is State. Required functional tests and the correct merged behavior are Outcome within their tested scope. After partial failure, merge or deployment, query **live state again** before repairing or claiming completion (A04). An open PR is not a merge. A Review PASS on an older head with unresolved material comments is not acceptance (A03).
 
-Report `NOT RUN`, `NOT_VERIFIED` or a precise actual blocker where appropriate; never infer PASS from a mock, missing provider integration, an agent's own summary, or green CI for unrelated behavior.
+**Four incident-linked evidence reminders (no new gate):**
+- **T04 / review:** CNB PR #37 was merged despite a same-head `changes_requested`; a prior green check cannot erase an unresolved material review ([historical correction](https://github.com/Skyline-Gazer/ALNILAM/issues/38#issuecomment-6569958426)).
+- **T06 / CI bootstrap:** a trusted Gate harness missing its own workflow inputs yielded real `ENOENT` failures; repair and read back the actual Gate/merge state, never relabel the broken run PASS ([before/after evidence](https://github.com/Skyline-Gazer/ALNILAM/issues/38#issuecomment-6569958426)).
+- **Pin ancestry:** `375fc71` was an **ancestor**, not a newer replacement, of the `b8d9cfc` ADS candidate; compare committed gitlink, checkout and ancestry before claiming upgrade or rollback ([corrected chain](https://github.com/Skyline-Gazer/ALNILAM/issues/38#issuecomment-6569958426)).
+- **Displayed digest:** presentation-layer `sha256` placeholders, masking or ellipses are not source hashes; inspect raw bytes and compute/compare the real digest before treating them as evidence (historical display-layer mismatch; raw artifact link not independently verified).
+
+Report `NOT RUN`, `NOT_VERIFIED` or a precise actual blocker where appropriate; never infer PASS from a mock, missing provider integration, an agent's own summary, or green CI for unrelated behavior. When an optional Skill or capability is unavailable, ordinary authorized development may continue, but report any material verification limitation explicitly (`PARTIAL`, `NOT_VERIFIED`, or `BLOCKED_WITH_EVIDENCE`)—never a silent false PASS.
 
 ## Proportionate checks, not a new release ritual
 
@@ -22,9 +28,15 @@ Choose the **smallest checks capable of detecting the change's risk**. Documenta
 
 Keep required functional CI and material source-review findings. Optional security-only scans, SBOM, supply-chain attestations and isolation probes are advisory unless the consumer expressly opts into them. Existing required-check configuration must be changed honestly through a reviewed update; a failed or unrun check is never a PASS. Neither a passing mock nor a remote CI green light proves an untested live dependency.
 
+When new or changed tests are cited as required-CI evidence, verify that the intended tests were discovered and actually executed for the tested SHA. Explicit manifests, filters and test-selection rules must not silently omit those tests. Any integrity guard relied upon must itself be executed. A green workflow alone is not proof of test coverage.
+
+For reproducible defects and high-risk assertions, prefer deterministic regression evidence that distinguishes incorrect from correct behavior: for example, a test that fails on the original defect or a controlled negative case and passes after the fix. Use mutation selectively when valuable; do not require mutation testing for every test.
+
 ## Agent integration and completion
 
 Parent agents integrate child code and re-check affected combined behavior; children cannot independently declare Goal completion. Parallel experiments and model/host speed comparisons are research, **not** delivery gates: historical protocols remain under [scenarios](scenarios/), and any claimed acceleration requires comparable baseline and observed end-to-end cost.
+
+Where a project voluntarily records engineering lessons, classify realized failure events as confirmed triggers and risks intercepted before realization as near-misses. Count them separately and preserve original records. Do not require per-PR lessons or create work to meet a quota.
 
 Use the project/provider's actual PR and Review rules. For CNB, dispose of material CodeBuddy comments against the current head per [CNB review](docs/cnb-review.md); do not add a duplicate GitHub dev PR (A06). Reuse existing task PRs (A02), do not revive obsolete contracts merely to satisfy stale harnesses (A01), and do not mistake non-enforced isolation for a verified boundary (A05).
 
