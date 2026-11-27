@@ -17,7 +17,7 @@ def read(rel: str) -> str:
 LIVENESS_CONCEPTS = (
     "finished is not succeeded",
     "never widens authorization",
-    "scheduler",
+    "router, scheduler or runner",
     "model switch",
     "independent review",
 )
@@ -62,12 +62,12 @@ class V081ExecutionLivenessTests(unittest.TestCase):
             self.assertIn(concept, template, f"standalone entry missing: {concept}")
 
     def test_retry_budget_consistent_with_stop_rule(self):
-        standard = read("STANDARD.md").lower()
-        self.assertIn("three unsuccessful related attempts", standard)
+        for rel in ("STANDARD.md", "templates/AGENTS.md"):
+            self.assertIn("at most three unsuccessful", read(rel).lower(), rel)
 
     def test_no_invented_infrastructure(self):
         template = read("templates/AGENTS.md").lower()
-        self.assertIn("never invent a scheduler or router", template)
+        self.assertIn("never invent a router, scheduler or runner", template)
 
 
 class V081SkillsAdvisoryTests(unittest.TestCase):
@@ -83,10 +83,10 @@ class V081SkillsAdvisoryTests(unittest.TestCase):
 
     def test_five_level_evidence_ladder_ordered(self):
         doc = read("docs/agent-adoption.md").lower()
+        normalized = re.sub(r"\s+", " ", doc)
         self.assertIn(
-            "installation → host discovery → explicit read "
-            "→ recommendation applied → behavioral adoption",
-            doc.replace("\n", " "),
+            "installation → host discovery → explicit read → recommendation applied → behavioral adoption",
+            normalized,
         )
 
     def test_effective_external_reference_guidance(self):
@@ -101,9 +101,9 @@ class V081SkillsAdvisoryTests(unittest.TestCase):
         self.assertIn("only if you also vendor the paths they reference", lite)
 
     def test_no_ads_proprietary_lockfile_or_registry(self):
-        doc = read("docs/agent-adoption.md")
+        doc = read("docs/agent-adoption.md").replace("*", "")
         self.assertIn(
-            "ADS adds **no** loading protocol, registry, lockfile schema or router of its own",
+            "ADS adds no loading protocol, registry, lockfile schema or router of its own",
             doc,
         )
 
