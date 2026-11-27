@@ -123,5 +123,76 @@ class V081WorkspaceAndPinTests(unittest.TestCase):
         self.assertIn("never bootstrap or validation preconditions", doc)
 
 
+class V081RequirementAuthorityTests(unittest.TestCase):
+    def test_standard_requirement_authority(self):
+        doc = read("STANDARD.md")
+        self.assertIn("does not authorize every requirement", doc)
+        self.assertIn("not new Owner authorization", doc)
+        self.assertIn("forwarded reports", doc)
+        self.assertIn("does not approve its proposals", doc)
+        self.assertIn("latest actual Owner scope decision", doc)
+        self.assertIn("do not silently drop Owner-approved scope", doc)
+        self.assertIn("keep genuine product, security and required-CI obligations", doc)
+
+    def test_standalone_template_requirement_authority_parity(self):
+        doc = read("templates/AGENTS.md")
+        self.assertIn("format does not authorize every requirement", doc)
+        self.assertIn("forwarded reports", doc)
+        self.assertIn("do not silently drop Owner-approved scope", doc)
+        self.assertIn("retire the rejected obligation", doc)
+
+    def test_supervision_challenges_unsupported_work(self):
+        doc = read("STANDARD.md")
+        self.assertIn("derive Acceptance from the authorized objective", doc)
+        self.assertIn("challenge unsupported or disproportionate work", doc)
+        self.assertIn("rather than returning to the Owner as a scheduler", doc)
+
+
+class V081AcceptanceIntegrityTests(unittest.TestCase):
+    def test_quality_matches_acceptance_to_execution_path(self):
+        doc = read("QUALITY.md")
+        self.assertIn("match the claimed acceptance scope to the execution path", doc)
+        self.assertIn("substituted adapter/test double proves only that scope", doc)
+        self.assertIn("never perform an unapproved live mutation solely to obtain evidence", doc)
+
+    def test_quality_partial_external_effects(self):
+        doc = read("QUALITY.md")
+        self.assertIn("failed composite operation may already have changed external state", doc)
+        self.assertIn("completed-step list", doc)
+        self.assertIn("reconcile material side effects before retrying", doc)
+
+    def test_template_carries_acceptance_scope_and_partial_effects(self):
+        doc = read("templates/AGENTS.md")
+        self.assertIn("Match the tested journey to the claimed scope", doc)
+        self.assertIn("possibly present until reconciled", doc)
+
+
+class V081PolicyMigrationTests(unittest.TestCase):
+    def test_update_guidance_distinguishes_pin_from_migration(self):
+        doc = read("docs/how-to-update.md")
+        self.assertIn("A pin advance is not a policy migration", doc)
+        self.assertIn("retire superseded ADS-derived procedures", doc)
+        self.assertIn("distinguish historical records from current obligations", doc)
+        self.assertIn("A pin-only refresh with no applicable policy change needs no migration exercise", doc)
+
+    def test_reviewed_checks_and_production_boundaries_preserved(self):
+        doc = read("docs/how-to-update.md")
+        self.assertIn("reviewed required-check configuration or production boundaries stay untouched", doc)
+
+
+class V081CapabilitySelectionTests(unittest.TestCase):
+    def test_route_chosen_by_fit_in_both_entries(self):
+        for rel in ("STANDARD.md", "templates/AGENTS.md"):
+            doc = read(rel)
+            self.assertIn("task fit", doc, rel)
+            self.assertIn("rather than host lock-in", doc, rel)
+
+    def test_sufficient_equivalent_evidence_in_both_entries(self):
+        for rel in ("STANDARD.md", "templates/AGENTS.md"):
+            doc = read(rel)
+            self.assertIn("sufficient equivalent independent evidence", doc, rel)
+            self.assertIn("mandatory gate stays binding", doc, rel)
+
+
 if __name__ == "__main__":
     unittest.main()
