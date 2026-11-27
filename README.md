@@ -2,7 +2,7 @@
 
 ADS is a **lightweight development convention**, not an orchestration system, approval engine, task database or OS sandbox. Its purpose is to help coding agents finish an authorized goal, verify what actually changed and avoid unnecessary development blockers.
 
-**Version status:** **v0.8.1 Refine, Don't Reinvent** is a **release candidate on canonical `dev`** ([release notes](docs/releases/v0.8.1.md); the `dev → main` Release PR is open and unmerged; merge, tag and publication require explicit Owner GO). [v0.8.0 Personal Engineering Glue](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.8.0) remains the **published** release (immutable commit `178212c41cce8fbf9354d4066e0f77341f6f23c4`). Pin the published tag or full commit SHA; consumer updates remain separate reviewable changes. Active normative policy and conditional provider capabilities are maintained on canonical `dev`/`main`.
+**Version status:** [v0.8.1 Refine, Don't Reinvent](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.8.1) is the **published, final framework release** ([release notes](docs/releases/v0.8.1.md), Release PR #148); the ADS framework is frozen at this version. The previous baseline, [v0.8.0 Personal Engineering Glue](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.8.0), remains immutable at `178212c41cce8fbf9354d4066e0f77341f6f23c4`. Pin a published tag or full commit SHA; consumer updates remain separate reviewable changes.
 
 ## Status — the active deliverable is personal instructions
 

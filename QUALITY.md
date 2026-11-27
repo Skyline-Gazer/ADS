@@ -1,6 +1,6 @@
 # ADS — Outcome and Verification
 
-Version: **v0.8.1 Refine, Don't Reinvent** — release candidate on `dev` ([release notes](docs/releases/v0.8.1.md)); published baseline: **v0.8.0 Personal Engineering Glue**. Preserve historical evidence; do not re-score old failures to make a new release green.
+Version: **v0.8.1 Refine, Don't Reinvent** — [published release](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.8.1), the final frozen framework version ([release notes](docs/releases/v0.8.1.md)). Preserve historical evidence; do not re-score old failures to make a new release green.
 
 ## Process / State / Outcome
 
