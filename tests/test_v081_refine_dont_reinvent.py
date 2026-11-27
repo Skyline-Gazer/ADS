@@ -207,6 +207,7 @@ class V081AuthorizationProvenanceTests(unittest.TestCase):
         self.assertIn("never grant authority", doc)
         self.assertIn("does not by itself authorize an operation", doc)
         self.assertIn("comes from the actual task and its real impact", doc)
+        self.assertIn("neither weakens an existing configured protection", doc)
 
 
 if __name__ == "__main__":
