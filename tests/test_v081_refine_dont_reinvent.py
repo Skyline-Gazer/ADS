@@ -194,5 +194,13 @@ class V081CapabilitySelectionTests(unittest.TestCase):
             self.assertIn("mandatory gate stays binding", doc, rel)
 
 
+class V081AuthorizationProvenanceTests(unittest.TestCase):
+    def test_safety_identity_is_not_authorization(self):
+        doc = read("SAFETY.md")
+        self.assertIn("never grant authority", doc)
+        self.assertIn("does not by itself authorize an operation", doc)
+        self.assertIn("comes from the actual task and its real impact", doc)
+
+
 if __name__ == "__main__":
     unittest.main()
