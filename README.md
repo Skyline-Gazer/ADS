@@ -4,6 +4,12 @@ ADS is a **lightweight development convention**, not an orchestration system, ap
 
 **Version status:** **v0.8.1 Refine, Don't Reinvent** is a **release candidate on canonical `dev`** ([release notes](docs/releases/v0.8.1.md); the `dev → main` Release PR is open and unmerged; merge, tag and publication require explicit Owner GO). [v0.8.0 Personal Engineering Glue](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.8.0) remains the **published** release (immutable commit `178212c41cce8fbf9354d4066e0f77341f6f23c4`). Pin the published tag or full commit SHA; consumer updates remain separate reviewable changes. Active normative policy and conditional provider capabilities are maintained on canonical `dev`/`main`.
 
+## Status — the active deliverable is personal instructions
+
+ADS stops growing as a framework at v0.8.1. The active deliverable is [personal/AGENTS.md](personal/AGENTS.md): one short file, independent of host, stack and provider, installed as your global agent instructions. A project's own `AGENTS.md` then adds only real project facts and constraints, versioned by that project's ordinary Git history.
+
+Install it by copying `personal/AGENTS.md` into the host's global instruction file (for example `~/.claude/CLAUDE.md` or `~/.codex/AGENTS.md`), keeping any host-specific imports around it; updating it is an ordinary reviewed commit. Everything else here is frozen, published reference history. The Lite adoption flow below stays valid for projects that want the fuller standard, but it is no longer the recommended default.
+
 **Default is development-first:** no Docker/VM/OS sandbox, SCA/SBOM/license inventory, security-only reassessment or extra CI is required just to develop ordinary project code. These are opt-in hardening capabilities. ADS does **not** enforce filesystem/process isolation, and an agent must still respect actual task scope, host/tool denials, secrets and consequential production/privilege/spending authorization.
 
 **What stays:** relevant build/tests/functional CI, material code review, the project's configured Git provider/PR workflow, and truthful **Process / State / Outcome** reporting. See [STANDARD](STANDARD.md), [SAFETY](SAFETY.md), [QUALITY](QUALITY.md). Optional tooling and stricter governance are in [profiles](profiles/README.md).
