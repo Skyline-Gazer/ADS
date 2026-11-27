@@ -11,3 +11,5 @@ ADS itself must follow [docs/git-governance.md](docs/git-governance.md): ordinar
 Provider-aware adoption: [docs/git-provider.md](docs/git-provider.md). ADS itself remains GitHub Primary unless separately authorized to migrate. Mode B stays cancelled. Exact-SHA Mode A mirror and consumer GitHub sync-branch PR flows are **not** interchangeable ([docs/cnb-sync.md](docs/cnb-sync.md)).
 
 Keep released v0.4.x history immutable. Single published consumer tag for v0.5.0 (no `v0.5.0-cnb`).
+
+**Direction is frozen at v0.8.1.** Do not open a v0.8.2 or v0.9 cycle, and do not add new framework surface. The active deliverable is the portable [personal agent instructions](personal/AGENTS.md); the rest of the tree is published reference history kept as-is. Do not delete or archive this repository, change consumer pins, or modify global host configuration without separate authorization.
