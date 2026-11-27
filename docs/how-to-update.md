@@ -1,10 +1,10 @@
-# How to install and update ADS (AI-native Git Submodule)
+# How to install and update ADS — standalone or pinned submodule
 
 ADS is guidance, **not an auto-updating executable**. Default [Lite adoption](lite-adoption.md) offers two valid options: a self-contained root `AGENTS.md` alone, or that same file plus an immutable pinned `.ads` Git submodule for extended rules. Neither requires copied scripts unless an optional profile is enabled. Read [SAFETY.md](../SAFETY.md) for actual authorization limits.
 
 ## Standalone Lite — no submodule
 
-Copy [templates/AGENTS.md](../templates/AGENTS.md) to the repository root, fill in actual project facts and commit it using the project's existing branch/PR process. The copied working agreement is self-contained: no `.ads`, GitHub authentication or external policy fetch is required to begin authorized coding. Review any future template update as an ordinary change to that tracked file; do not silently overwrite project-local instructions.
+Copy [templates/AGENTS.md](../templates/AGENTS.md) to the repository root, fill in actual project facts and record the **adopted ADS full source commit SHA (required), plus the release tag when the copy came from a tagged release**, at the `Source:` line, then commit it using the project's existing branch/PR process. The copied working agreement is self-contained: no `.ads`, GitHub authentication or external policy fetch is required to begin authorized coding. Review any future template update as an ordinary change to that tracked file; do not silently overwrite project-local instructions.
 
 ## Optional pinned submodule — install once
 
@@ -12,12 +12,12 @@ Run in the consumer repo with an existing working Git checkout and confirmed acc
 
 ```sh
 git submodule add https://github.com/Skyline-Gazer/ADS.git .ads
-git -C .ads checkout v0.7.0
+git -C .ads checkout v0.8.0
 git add .gitmodules .ads AGENTS.md
 git commit -m "chore: adopt ADS as pinned submodule"
 ```
 
-`v0.7.0` above is an example **published release**. Use the latest owner-approved released tag or full commit SHA after checking its availability and compatibility. The Git checkout commit, not the mutable tag spelling or branch, is the effective pin. The root `AGENTS.md` must contain actual project facts and point to `.ads/STANDARD.md`, `.ads/SAFETY.md`, `.ads/QUALITY.md`, and relevant `.ads/skills/*/SKILL.md`. Populate AGENTS.md before staging; the command assumes it exists. Do not copy duplicated rules into host adapters. Native Skill discovery is host-specific: symlink/copy only selected skills into the documented path, then actually test loading after installing and after upgrading.
+`v0.8.0` above is an example **published release**. Use the latest owner-approved released tag or full commit SHA after checking its availability and compatibility. The Git checkout commit, not the mutable tag spelling or branch, is the effective pin. Pin validation proves the pinned commit's **reachability** — a direct fetch or, after a ref retirement, fetch via an archival retention tag; historical origin-branch strings recorded in consumer metadata are provenance notes, never bootstrap or validation preconditions. The root `AGENTS.md` must contain actual project facts and point to `.ads/STANDARD.md`, `.ads/SAFETY.md`, `.ads/QUALITY.md`, and relevant `.ads/skills/*/SKILL.md`. Populate AGENTS.md before staging; the command assumes it exists. Do not copy duplicated rules into host adapters. Native Skill discovery is host-specific: symlink/copy only selected skills into the documented path, then actually test loading after installing and after upgrading.
 
 Because ADS may be **private**, the clone/update runner needs legitimate repository read access. Public Actions checkout credentials do not automatically grant another private repository access. Never put a PAT or secret-bearing URL into `.gitmodules`; use existing authorized credentials in the host/CI. Inaccessible submodule is a BLOCKER, not successful adoption. Existing repo with `.ads` or a different submodule? Inspect and plan a non-destructive migration instead of overwriting.
 
@@ -40,7 +40,7 @@ An agent should:
 1. Identify the pinned `.ads` gitlink commit and current accessible rules. Check working tree and nested submodule cleanliness; avoid touching unrelated modifications.
 2. Discover trusted published releases/tags and compare the current SHA to the selected **approved target**, using existing authorized GitHub integration or Git transport. Do not infer that a larger version string is safe; classify status as **CURRENT / UPDATE_AVAILABLE / INACCESSIBLE / DIRTY / UNKNOWN**. An unreleased candidate is not a stable default.
 3. If a newer approved revision exists, review `git diff OLD_SHA..NEW_SHA` (from the ADS repository) covering `STANDARD.md`, `SAFETY.md`, `QUALITY.md`, Skills, templates and migration notes. Classify compatibility with project-specific rules, currently installed host Skills, CI/security gates and deployment effects. Summarize breaking/adaptation changes.
-4. For a safe scoped change, make an isolated project branch, advance the submodule gitlink to the approved exact commit and update root AGENTS.md pin/pointers or host-native skill links only as needed. Execute targeted project tests, Skill discovery and CI; create a concise PR explaining old/new SHAs and migration effects. Never silently merge a change that alters security/production authorization or auto-deploy semantics.
+4. For a safe scoped change, make an isolated project branch, advance the submodule gitlink to the approved exact commit and update root AGENTS.md pin/pointers or host-native skill links only as needed. Execute targeted project tests, Skill discovery and CI; create a concise PR explaining old/new SHAs and migration effects. Never silently merge a change that alters security/production authorization or auto-deploy semantics. **A pin advance is not a policy migration:** when the approved update changes applicable operating guidance, reconcile the affected active project instructions inside the same grant — preserve actual Owner requirements, project rules and material constraints; retire superseded ADS-derived procedures and their gate status; distinguish historical records from current obligations; disclose unresolved material conflicts without inventing authority. A pin-only refresh with no applicable policy change needs no migration exercise, and reviewed required-check configuration or production boundaries stay untouched.
 5. At the relevant Phase boundary, reconcile the update Issue/Project status using [milestone-reconciliation.md](milestone-reconciliation.md). Do not confuse ADS pin change with successful adoption or production validation.
 
 To prepare a proposed upgrade inside the consumer's task branch, after verifying the target is trusted and accessible:

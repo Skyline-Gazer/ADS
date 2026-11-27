@@ -1,6 +1,6 @@
 # ADS — Outcome and Verification
 
-Version: **v0.8.0 Personal Engineering Glue** ([published release](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.8.0)). Preserve historical evidence; do not re-score old failures to make a new release green.
+Version: **v0.8.1 Refine, Don't Reinvent** — [published release](https://github.com/Skyline-Gazer/ADS/releases/tag/v0.8.1), the final frozen framework version ([release notes](docs/releases/v0.8.1.md)). Preserve historical evidence; do not re-score old failures to make a new release green.
 
 ## Process / State / Outcome
 
@@ -31,6 +31,8 @@ Keep required functional CI and material source-review findings. Optional securi
 When new or changed tests are cited as required-CI evidence, verify that the intended tests were discovered and actually executed for the tested SHA. Explicit manifests, filters and test-selection rules must not silently omit those tests. Any integrity guard relied upon must itself be executed. A green workflow alone is not proof of test coverage.
 
 For reproducible defects and high-risk assertions, prefer deterministic regression evidence that distinguishes incorrect from correct behavior: for example, a test that fails on the original defect or a controlled negative case and passes after the fix. Use mutation selectively when valuable; do not require mutation testing for every test.
+
+For a material user workflow, match the claimed acceptance scope to the execution path and implementation layers actually exercised: a verified prompt, preview, early exit, cancellation or substituted adapter/test double proves only that scope; retain relevant real internal behavior with controlled external boundaries where practical, or disclose what remains unverified — and never perform an unapproved live mutation solely to obtain evidence. A failed composite operation may already have changed external state; a completed-step list or empty change set does not establish zero effects, so reconcile material side effects before retrying or claiming unchanged state, and disclose unknown outcomes.
 
 ## Agent integration and completion
 

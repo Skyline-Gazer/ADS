@@ -6,9 +6,9 @@ ADS is lightweight agent guidance, not a separate application. **Either a self-c
 
 ## What lite adoption includes
 
-1. **Standalone:** copy [templates/AGENTS.md](../templates/AGENTS.md) to project root, fill real project facts, commit the file. Its working agreement is self-contained; no `.ads` directory or further rule files are needed for ordinary development. The project's own Git commit is the immutable version of the copied instructions.
+1. **Standalone:** copy [templates/AGENTS.md](../templates/AGENTS.md) to project root, fill real project facts, record the adopted ADS full source commit SHA (plus the release tag when the copy came from a tagged release) at the `Source:` line, and commit the file. Its working agreement is self-contained; no `.ads` directory or further rule files are needed for ordinary development. The project's own Git commit is the immutable version of the copied instructions.
 2. **Pinned:** use the same root template plus an optional `.ads` submodule at an approved immutable ADS commit/tag. The template then points to `STANDARD.md`, `SAFETY.md`, `QUALITY.md` inside that exact gitlink. No auto-update.
-3. **Optional native Skills:** expose only needed Skills (`bootstrap`, `adopt`, `deliver`, `recover`) through the host's supported discovery path. Neither entry requires native Skills or a package installation.
+3. **Optional native Skills:** expose only needed Skills (`bootstrap`, `adopt`, `deliver`, `recover`) through the host's supported discovery path. Neither entry requires native Skills or a package installation. Under standalone, ADS's own Skill files load as published only if you also vendor the paths they reference (see [agent-adoption.md](agent-adoption.md)); the self-contained `AGENTS.md` itself needs nothing extra.
 
 That is sufficient for autonomous agent development on most personal projects.
 
