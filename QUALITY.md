@@ -32,6 +32,8 @@ When new or changed tests are cited as required-CI evidence, verify that the int
 
 For reproducible defects and high-risk assertions, prefer deterministic regression evidence that distinguishes incorrect from correct behavior: for example, a test that fails on the original defect or a controlled negative case and passes after the fix. Use mutation selectively when valuable; do not require mutation testing for every test.
 
+For a material user workflow, match the claimed acceptance scope to the execution path and implementation layers actually exercised: a verified prompt, preview, early exit, cancellation or substituted adapter/test double proves only that scope; retain relevant real internal behavior with controlled external boundaries where practical, or disclose what remains unverified — and never perform an unapproved live mutation solely to obtain evidence. A failed composite operation may already have changed external state; a completed-step list or empty change set does not establish zero effects, so reconcile material side effects before retrying or claiming unchanged state, and disclose unknown outcomes.
+
 ## Agent integration and completion
 
 Parent agents integrate child code and re-check affected combined behavior; children cannot independently declare Goal completion. Parallel experiments and model/host speed comparisons are research, **not** delivery gates: historical protocols remain under [scenarios](scenarios/), and any claimed acceleration requires comparable baseline and observed end-to-end cost.

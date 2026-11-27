@@ -59,7 +59,7 @@ instead of claiming that adoption or delivery succeeded.
 
 ## Further reference
 
-- [docs/agent-adoption.md](docs/agent-adoption.md) — host discovery and submodule updates.
+- [docs/agent-adoption.md](docs/agent-adoption.md) — dual-entry adoption, host Skill discovery and submodule updates.
 - [docs/git-governance.md](docs/git-governance.md) — **mandatory inside ADS**; optional profile for consumers.
 - [docs/host-filesystem-boundary.md](docs/host-filesystem-boundary.md) — local TUI read/write containment guidance.
 - [docs/native-subagent-safety.md](docs/native-subagent-safety.md) — delegation boundaries.
