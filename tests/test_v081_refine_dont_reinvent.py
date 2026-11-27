@@ -44,13 +44,20 @@ class V081AdoptionEntryTests(unittest.TestCase):
         for doc in (update, adoption, template):
             self.assertIn("when the copy came from a tagged release", doc)
 
-    def test_install_example_matches_declared_release(self):
-        # Derive the version from the declared release instead of hardcoding it:
-        # a future release PR must not be gated on a stale example string (A01).
-        declared = re.search(r"v\d+\.\d+\.\d+", read("STANDARD.md"))
-        self.assertIsNotNone(declared, "STANDARD.md must declare a released version")
+    def test_install_example_matches_published_release(self):
+        # The pinned example must name the latest PUBLISHED release, not the
+        # current candidate on dev. Derive it from docs/releases/*.md so a
+        # release PR is never gated on a stale hardcoded string (A01).
+        versions = []
+        for path in (ROOT / "docs" / "releases").glob("v*.md"):
+            match = re.match(r"v(\d+)\.(\d+)\.(\d+)", path.name)
+            if match and "**Status:** published" in path.read_text(encoding="utf-8"):
+                versions.append((tuple(int(x) for x in match.groups()), match.group(0)))
+        self.assertTrue(versions, "no published release notes found")
+        published = max(versions)[1]
         update = read("docs/how-to-update.md")
-        self.assertIn(f"git -C .ads checkout {declared.group(0)}", update)
+        self.assertIn(f"git -C .ads checkout {published}", update)
+        self.assertIn(f"`{published}` above is an example **published release**", update)
 
 
 class V081ExecutionLivenessTests(unittest.TestCase):
